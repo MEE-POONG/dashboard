@@ -1,0 +1,443 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Address {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  addressline String?
+  addressno   String?
+  createdAt   DateTime? @db.Date
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  deleted_at  Json?
+  district    String
+  lname       String?
+  name        String?
+  note        String?
+  phonenumber String?
+  province    String
+  subdistrict String
+  typeaddress String?
+  updatedAt   DateTime? @db.Date
+  /// Multiple data types found: String: 50%, String (ObjectId): 50% out of 16 sampled entries
+  userId      Json?
+  zipcode     String
+}
+
+model Admin {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model AgentIncomeSystem {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model Appointment {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  email     String
+  fname     String
+  lname     String
+  message   String
+  request   String
+  status    String?
+  tel       String
+  time      String
+  updatedAt DateTime? @db.Date
+  userId    String?   @db.ObjectId
+  video     String?
+}
+
+model Blog {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  author   String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  date     Json?
+  detail   String
+  img      String
+  img1     String
+  subtitle String
+  title    String
+}
+
+model Cart {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model CartItems {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model Category {
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  ProductbrandId String?   @db.ObjectId
+  categorybrand  String?
+  categoryname   String
+  categoryprice  String?
+  updatedAt      DateTime? @db.Date
+}
+
+model DeliveryLocation {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  Location String
+  UserId   String @db.ObjectId
+  name     String
+  tel      String
+}
+
+model InvestmentUser {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model MastertIncomeSystem {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model Member {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model Messenger {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  chat     String
+  date     String
+  detail   String
+  emoji    String
+  img      String
+  subtitle String
+  title    String
+}
+
+model MinusIncome {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model News {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  author   String
+  date     String
+  detail   String
+  img      String
+  refer    String
+  subtitle String
+  title    String
+}
+
+model Order {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @db.Date
+  status    String
+  updatedAt DateTime @db.Date
+}
+
+model OrderList {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @db.Date
+  status    String
+  updatedAt DateTime @db.Date
+}
+
+model Partner {
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  actuallypaid       Boolean
+  adjustPercentage   Boolean
+  commission         Boolean
+  createdAt          DateTime @db.Date
+  customerCommission Boolean
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  deleted_at         Json?
+  memberId           String?  @db.ObjectId
+  originAG           String
+  overdue            Boolean
+  pay                Boolean
+  percent            BigInt
+  position           String
+  recommender        String?
+  updatedAt          DateTime @db.Date
+  userAG             String
+}
+
+model PastAG {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  Account          String
+  Amount           Float
+  CompanyCom       Float
+  CompanyValid     Float
+  CompanyWL        Float
+  CompanyWLCom     Float
+  Contact          String
+  Cur              String
+  GrossCom         Float
+  MemberCom        Float
+  MemberCount      Float
+  MemberWL         Float
+  MemberWLCom      Float
+  StakeCount       Float
+  SuperProfitCom   Float
+  SuperProfitValid Float
+  SuperProfitWL    Float
+  SuperProfitWLCom Float
+  ValidAmount      Float
+  agentId          String?
+  createdAt        DateTime @db.Date
+  customerId       String
+  masterId         String?
+  position         String
+  queueBotId       String   @db.ObjectId
+  updatedAt        DateTime @db.Date
+}
+
+model PastBETFLIX {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model Payment {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model Product {
+  id               String  @id @default(auto()) @map("_id") @db.ObjectId
+  categoryId       String? @db.ObjectId
+  productbrand     String
+  productcost      String?
+  productdetail    String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  productim1       Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  productim2       Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  productim3       Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  productim4       Json?
+  productimg       String
+  productmodel     String
+  productname      String
+  productprice     String?
+  productremaining String?
+  producttype      String
+}
+
+model Productbrand {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  Namebrand  String
+  createdAt  DateTime @db.Date
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  deleted_at Json?
+  updatedAt  DateTime @db.Date
+}
+
+model Products {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  categoryId       String?  @db.ObjectId
+  createdAt        DateTime @db.Date
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  deleted_at       Json?
+  productbrand     String?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  productcost      Json?
+  productdetail    String?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  productim1       Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  productim2       Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  productim3       Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  productim4       Json?
+  productimg       String?
+  productimg1      String?
+  productimg2      String?
+  productimg3      String?
+  productimg4      String?
+  productmodel     String?
+  productname      String?
+  productprice     String?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  productremaining Json?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  producttype      Json?
+  subcategoryId    String?  @db.ObjectId
+  updatedAt        DateTime @db.Date
+}
+
+model Profile {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  birthday   String
+  createdAt  DateTime? @db.Date
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  deleted_at Json?
+  email      String
+  fname      String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  img        Json?
+  lname      String
+  phone      String
+  updatedAt  DateTime  @db.Date
+}
+
+model Promote {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model QueueBot {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @db.Date
+  endDate   String
+  file_name String?
+  position  String
+  startDate String
+  status    String
+  title     String
+  updatedAt DateTime @db.Date
+  username  String
+}
+
+model Repairman {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  brithday  String
+  email     String
+  fname     String
+  lname     String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  tel       Json?
+  updatedAt DateTime @db.Date
+}
+
+model ReportProduct {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model Reser {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model Reservation {
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  email   String?
+  fname   String?
+  lname   String?
+  message String
+  request String?
+  status  String?
+  tel     String?
+  time    String
+  userId  String? @db.ObjectId
+}
+
+model Reserve {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model ReserveDetail {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model ReserveProductTpye {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  reservename String
+}
+
+model RightsManagement {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model Session {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  /// Field referred in an index, but found no data to define the type.
+  sessionToken Json?  @unique
+}
+
+model SubType {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model Subcategory {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  CategoryId      String   @db.ObjectId
+  ProductbrandId  String?  @db.ObjectId
+  createdAt       DateTime @db.Date
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  deleted_at      Json?
+  subcategoryname String
+  updatedAt       DateTime @db.Date
+}
+
+model Taxinvoice {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  Location String
+  UserId   String @db.ObjectId
+  name     String
+  tel      String
+}
+
+model Tex {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model TransferSummary {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model Type {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model User {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  AddressId       String?  @db.ObjectId
+  FavoriteItems   String[]
+  ProductsItems   String[]
+  birthday        String?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  comfirmPassword Json?
+  email           String?
+  facebook        String?
+  fname           String?
+  google          String?
+  lname           String?
+  password        String?
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  secretKey       Json?
+  tel             String?
+}
+
+model UserAG {
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  actuallypaid       Boolean
+  adjustPercentage   Boolean
+  commission         Boolean
+  createdAt          DateTime @db.Date
+  customerCommission Boolean
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  memberId           Json?
+  originAG           String
+  overdue            Boolean
+  pay                Boolean
+  percent            BigInt
+  position           String
+  recommender        String
+  updatedAt          DateTime @db.Date
+  username           String
+}
+
+model UserName {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model VerificationToken {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  /// Field referred in an index, but found no data to define the type.
+  identifier Json?
+  /// Field referred in an index, but found no data to define the type.
+  token      Json?  @unique
+
+  @@unique([identifier, token])
+}
+
+/// This collection uses a JSON Schema defined in the database, which requires additional setup for migrations. Visit https://pris.ly/d/mongodb-json-schema for more info.
+model test {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
