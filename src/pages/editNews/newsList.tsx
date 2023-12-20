@@ -5,7 +5,7 @@ import useAxios from "axios-hooks";
 import { News } from "@prisma/client";
 import Link from "next/link";
 import DeleteMemberModal from "@/components/Modal/DeleteAlertModal";
-import Pagination from "@/components/Pagination ";
+import { FaPen } from "react-icons/fa";
 
 interface Params {
     page: number;
@@ -106,31 +106,6 @@ const NewsList: React.FC = (props) => {
     };
 
 
-    const [showModal, setShowModal] = useState(false);
-    const [editedData, setEditedData] = useState({}); // ตัวแปรเก็บข้อมูลที่จะแก้ไข
-
-    // ฟังก์ชันเปิด Modal และกำหนดข้อมูลที่จะแก้ไข
-    const openModal = (data: any) => {
-        setEditedData(data);
-        setShowModal(true);
-    };
-
-    // ฟังก์ชันปิด Modal
-    const closeModal = () => {
-        setShowModal(false);
-    };
-
-    // ฟังก์ชันที่จะใช้ในการบันทึกการแก้ไขข้อมูล
-    const saveChanges = () => {
-        // ทำบางอย่างเมื่อกดปุ่มบันทึก
-        // เช่น เรียก API ส่งข้อมูลไปบันทึก
-        // แล้วปิด Modal
-        // ...
-
-        closeModal();
-    };
-
-
     return (
         <div className="overflow-hidden rounded-lg lg:shadow-xl m-2">
             <table className="border-collapse w-full">
@@ -179,23 +154,20 @@ const NewsList: React.FC = (props) => {
                                     <span className=" bg-[#1e293b] text-white lg:hidden p-2 w-20 md:w-28 h-full">Actions</span>
                                     <div className="flex justify-end px-5 gap-3">
                                         <DeleteMemberModal data={news} apiDelete={() => deletenews(news.id)} />
-
+                                        <Link
+                                            href={`/editNews/${news.id}`}
+                                            className="text-green-500 hover:text-green-700"
+                                        >
+                                            <FaPen />
+                                        </Link>
+                                        
                                         {/* <button onClick={openEditNewsModal} className="text-green-500 hover:text-green-700" ><MdOutlineEdit /></button> */}
                                     </div>
                                 </td>
                             </tr>
                         ))}
                 </tbody>
-                {/* <EditNewsModal isEditModalOpen={isEditNewsModalOpen} onClose={closeEditNewsModal}/> */}
-
             </table>
-
-            <Pagination
-                page={params.page}
-                totalPages={newsData?.pagination?.total}
-                onChangePage={handleChangePage}
-                onChangePageSize={handleChangePageSize}
-            />
         </div>
     )
 }
