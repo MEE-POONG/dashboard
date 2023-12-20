@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import React from 'react';
+import { FaSpider } from 'react-icons/fa';
 
 interface AddModalProps {
     checkAlertShow: string;
@@ -22,8 +23,10 @@ const AddModal: React.FC<AddModalProps> = ({ checkAlertShow, setCheckAlertShow, 
         variant = 'bg-blue-500';
         heading = (
             <>
-                <div className="animate-spin mr-2 inline-block"></div>
-                {'กำลังเพิ่มข้อมูล'}
+                <div className="animate-spin mr-2 inline-block text-cyan-600">
+                    <FaSpider/> {'กำลังเพิ่มข้อมูล'}
+                </div>
+               
             </>
         );
     } else if (checkAlertShow === 'danger') {
