@@ -1,7 +1,6 @@
 // components/Modal.tsx
+import AddModalAlert from '@/components/Modal/AddAlertModal';
 import axios from 'axios';
-import useAxios from 'axios-hooks';
-import Link from 'next/link';
 import React, { ChangeEvent, useState } from 'react';
 import { MdClose } from "react-icons/md";
 
@@ -15,22 +14,17 @@ interface AddNewsModalProps {
 const AddNewsModal: React.FC<AddNewsModalProps> = ({ isAddModalOpen, onClose }) => {
     if (!isAddModalOpen) return null;
 
-    const [{ error: errorMessage, loading: newsLoading }, executenews] = useAxios({ url: '/api/news', method: 'POST' }, { manual: true });
     const [title, settitle] = useState<string>("");
     const [subtitle, setsubtitle] = useState<string>("");
     const [detail, setdetail] = useState<string>("");
     const [date, setdate] = useState<string>("");
     const [author, setauthor] = useState<string>("");
     const [refer, setrefer] = useState<string>("");
-    // const [img, setimg] = useState<string>("");
     const [img, setimg] = useState<File | null>(null);
-
-
 
     const [alertForm, setAlertForm] = useState<string>("not");
     const [inputForm, setInputForm] = useState<boolean>(false);
     const [checkBody, setCheckBody] = useState<string>("");
-
 
     const handleInputChange = (setter: any) => (event: any) => {
         const newValue = event.target.value;
@@ -38,6 +32,7 @@ const AddNewsModal: React.FC<AddNewsModalProps> = ({ isAddModalOpen, onClose }) 
             setter(newValue);
         }
     };
+
     const reloadPage = () => {
         clear();
     };
@@ -49,21 +44,16 @@ const AddNewsModal: React.FC<AddNewsModalProps> = ({ isAddModalOpen, onClose }) 
         setdate("");
         setauthor("");
         setrefer("");
-        // setimg("");
-
-
         setimg(null);
-        // setauthor("");
-
         setAlertForm("not");
         setInputForm(false);
         setCheckBody("");
-    }
+    };
 
     const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files && event.target.files[0];
         if (file) {
-            setimg(file); // Store the File object
+            setimg(file);
         }
     };
 
@@ -71,7 +61,6 @@ const AddNewsModal: React.FC<AddNewsModalProps> = ({ isAddModalOpen, onClose }) 
         event.preventDefault();
         event.stopPropagation();
         let missingFields = [];
-        // Check for missing fields here...
         if (!title) missingFields.push("title");
         if (!subtitle) missingFields.push("subtitle");
         if (!detail) missingFields.push("detail");
@@ -80,20 +69,16 @@ const AddNewsModal: React.FC<AddNewsModalProps> = ({ isAddModalOpen, onClose }) 
         if (!refer) missingFields.push("refer");
         if (!img) missingFields.push("img");
 
-
         if (missingFields.length > 0) {
-            // Handle missing fields...
             setAlertForm("warning");
             setInputForm(true);
             setCheckBody(`กรอกข้อมูลไม่ครบ: ${missingFields.join(', ')}`);
         } else {
             try {
-                setAlertForm("primary"); // set to loading
-
-                // Upload the image
+                setAlertForm("primary");
                 if (img) {
                     const formData = new FormData();
-                    formData.append("file", img); // Assuming 'img' is a File object
+                    formData.append("file", img);
                     const uploadResponse = await axios.post(
                         "https://upload-image.me-prompt-technology.com/",
                         formData
@@ -103,7 +88,6 @@ const AddNewsModal: React.FC<AddNewsModalProps> = ({ isAddModalOpen, onClose }) 
                         const responseData = uploadResponse.data;
                         const imageId = responseData.result.id;
 
-                        // Prepare the data to send
                         const data = {
                             title,
                             subtitle,
@@ -111,11 +95,10 @@ const AddNewsModal: React.FC<AddNewsModalProps> = ({ isAddModalOpen, onClose }) 
                             date,
                             author,
                             refer,
-                            img: imageId, // Use the uploaded image ID
-                            // author,
+                            img: imageId,
                         };
 
-                        const response = await executenews({ data });
+                        const response = await axios.post("/api/news", data);
                         if (response && response.status === 201) {
                             setAlertForm("success");
                             setTimeout(() => {
@@ -140,6 +123,7 @@ const AddNewsModal: React.FC<AddNewsModalProps> = ({ isAddModalOpen, onClose }) 
     return (
         <div className="fixed top-0 left-0 w-full h-screen flex items-center justify-center bg-black bg-opacity-25 p-2">
             <div className="bg-white p-3 md:p-6 rounded shadow-md ">
+                <AddModalAlert checkAlertShow={alertForm} setCheckAlertShow={setAlertForm} checkBody={checkBody} />
                 <div className='flex items-center justify-between'>
                     <h2 className='text-xl font-bold'>เพิ่มข่าว</h2>
                     <button className=" bg-blue-500 text-white p-2 rounded" onClick={onClose}>
@@ -148,20 +132,92 @@ const AddNewsModal: React.FC<AddNewsModalProps> = ({ isAddModalOpen, onClose }) 
                 </div>
 
                 <div>
-                    <div>
-                        <label htmlFor="">ชื่อ/หัวข้อ</label>
-                        <input type="text"
-                            value={title}
-                            onChange={e => settitle(e.target.value)} 
-                            className='block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6'
-                        />
+                    <div className="d-flex space-between my-10">
+                        <div className="mb-3">
+                            <label className="block text-sm font-medium text-gray-700">ชื่อข่าว</label>
+                            <input
+                                type="text"
+                                value={title}
+                                onChange={(e) => settitle(e.target.value)}
+                                className={`mt-1 p-2 border w-full ${inputForm && title === "" ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+                                placeholder="ชื่อข่าว"
+                            />
+                        </div>
+                        <div className="mb-3">
+                            <label className="block text-sm font-medium text-gray-700">หัวข้อข่าวย่อย</label>
+                            <input
+                                type="text"
+                                value={subtitle}
+                                onChange={(e) => setsubtitle(e.target.value)}
+                                className={`mt-1 p-2 border w-full ${inputForm && subtitle === "" ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+                                placeholder="หัวข้อข่าวย่อย"
+                            />
+                        </div>
+                        <div className="mb-3">
+                            <label className="block text-sm font-medium text-gray-700">รายละเอียด</label>
+                            <input
+                                type="text"
+                                value={detail}
+                                onChange={(e) => setdetail(e.target.value)}
+                                className={`mt-1 p-2 border w-full ${inputForm && detail === "" ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+                                placeholder="รายละเอียด"
+                            />
+                        </div>
+                        <div className="mb-3">
+                            <label className="block text-sm font-medium text-gray-700">วันที่</label>
+                            <input
+                                type="date"
+                                value={date}
+                                onChange={(e) => setdate(e.target.value)}
+                                className={`mt-1 p-2 border w-full ${inputForm && date === "" ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+                                placeholder="วันที่"
+                            />
+                        </div>
+                        <div className="mb-3">
+                            <label className="block text-sm font-medium text-gray-700">ผู้เขียน</label>
+                            <input
+                                type="text"
+                                value={author}
+                                onChange={(e) => setauthor(e.target.value)}
+                                className={`mt-1 p-2 border w-full ${inputForm && author === "" ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+                                placeholder="ผู้เขียน"
+                            />
+                        </div>
+                        <div className="mb-3">
+                            <label className="block text-sm font-medium text-gray-700">อ้างอิง</label>
+                            <input
+                                type="text"
+                                value={refer}
+                                onChange={(e) => setrefer(e.target.value)}
+                                className={`mt-1 p-2 border w-full ${inputForm && refer === "" ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+                                placeholder="อ้างอิง"
+                            />
+                        </div>
+                        <div className="mb-3">
+                            <label className="block text-sm font-medium text-gray-700">รูปภาพ</label>
+                            <input
+                                type="file"
+                                onChange={handleFileUpload}
+                                className={`mt-1 border w-full ${inputForm && img === null ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+                                placeholder="รูปภาพ"
+                            />
+                        </div>
                     </div>
                 </div>
-
-                <div className="card-footer text-end">
-                    <button className="btn btn-success mx-2" onClick={handleSubmit}>
+                <div className="text-end">
+                    <button
+                        className="bg-green-500 text-white px-4 py-2 rounded-md mx-2"
+                        onClick={handleSubmit}
+                    >
                         ยืนยัน
                     </button>
+                    <button
+                        className="bg-red-500 text-white px-4 py-2 rounded-md mx-2"
+                        onClick={reloadPage}
+                    >
+                        ล้าง
+                    </button>
+                    {/* <button onClick={onClose} className="bg-blue-500 text-white px-4 py-2 rounded-md mx-2">ปิด</button> */}
                 </div>
 
             </div>

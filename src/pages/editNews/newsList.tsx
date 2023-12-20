@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { MdOutlineEdit, MdDelete } from "react-icons/md";
-import EditNewsModal from "./EditNews";
+import EditNewsModal from "./[id]";
 import useAxios from "axios-hooks";
 import { News } from "@prisma/client";
 import Link from "next/link";
+import DeleteMemberModal from "@/components/Modal/DeleteAlertModal";
+import Pagination from "@/components/Pagination ";
 
 interface Params {
     page: number;
@@ -12,7 +14,7 @@ interface Params {
     totalPages: number;
 }
 
-const NewsList: React.FC = () => {
+const NewsList: React.FC = (props) => {
 
     const [params, setParams] = useState<Params>({
         page: 1,
@@ -94,6 +96,41 @@ const NewsList: React.FC = () => {
     }, [newsData, params.searchKey]);
 
 
+    const [isEditNewsModalOpen, setEditNewsModalOpen] = useState(false);
+    const openEditNewsModal = () => {
+        setEditNewsModalOpen(true);
+    };
+
+    const closeEditNewsModal = () => {
+        setEditNewsModalOpen(false);
+    };
+
+
+    const [showModal, setShowModal] = useState(false);
+    const [editedData, setEditedData] = useState({}); // ตัวแปรเก็บข้อมูลที่จะแก้ไข
+
+    // ฟังก์ชันเปิด Modal และกำหนดข้อมูลที่จะแก้ไข
+    const openModal = (data: any) => {
+        setEditedData(data);
+        setShowModal(true);
+    };
+
+    // ฟังก์ชันปิด Modal
+    const closeModal = () => {
+        setShowModal(false);
+    };
+
+    // ฟังก์ชันที่จะใช้ในการบันทึกการแก้ไขข้อมูล
+    const saveChanges = () => {
+        // ทำบางอย่างเมื่อกดปุ่มบันทึก
+        // เช่น เรียก API ส่งข้อมูลไปบันทึก
+        // แล้วปิด Modal
+        // ...
+
+        closeModal();
+    };
+
+
     return (
         <div className="overflow-hidden rounded-lg lg:shadow-xl m-2">
             <table className="border-collapse w-full">
@@ -106,50 +143,59 @@ const NewsList: React.FC = () => {
                     </tr>
                 </thead>
 
-                
+
                 <tbody>
-                {filterednewssData
-                  .slice() // สร้างสำเนาของอาร์เรย์เพื่อป้องกันการเปลี่ยนแปลงต้นฉบับ
-                  .sort((a, b) => new Date(1.30).getTime() - new Date(30.1).getTime()) // เรียงลำดับข้อมูลตามวันที่จากใหม่สู่เก่า
-                  .map((news, index) => (
-                    <tr key={news.id}
-                        className="bg-gray-50 hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap 
-                        lg:flex-no-wrap mb-10 lg:mb-0 shadow-xl rounded-lg text-xs md:text-base"
-                    >
-                        <td className="flex items-center lg:table-cell w-full lg:w-auto border-b">
-                            <span className=" bg-[#1e293b] text-white lg:hidden p-2 md:w-28 h-full">หัวข้อ </span>
-                            <p className="px-3 py-1 md:p-3 w-3/4 md:w-64 md:truncate ">{news.title}</p>
-                        </td>
+                    {filterednewssData
+                        .slice() // สร้างสำเนาของอาร์เรย์เพื่อป้องกันการเปลี่ยนแปลงต้นฉบับ
+                        .sort((a, b) => new Date(1.30).getTime() - new Date(30.1).getTime()) // เรียงลำดับข้อมูลตามวันที่จากใหม่สู่เก่า
+                        .map((news, index) => (
+                            <tr key={news.id}
+                                className="bg-gray-50 hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap 
+                        lg:flex-no-wrap mb-10 lg:mb-0 shadow-xl rounded-lg text-xs md:text-sm xl:text-base"
+                            >
+                                <td className="flex items-center lg:table-cell w-full lg:w-auto border-b">
+                                    <span className=" bg-[#1e293b] text-white lg:hidden p-2 w-20 md:w-28 h-full">หัวข้อ </span>
+                                    <p className="px-3 py-1 md:p-3 w-full line-clamp-2 md:w-64 md:truncate ">{news.title}</p>
+                                </td>
 
-                        <td className="flex items-center lg:table-cell w-full lg:w-auto border-b">
-                            <span className=" bg-[#1e293b] text-white lg:hidden p-2 md:w-28 h-full">รูปภาพ</span>
-                            <div className="w-3/4">
-                                <img
-                                    className="p-2"
-                                    src={`https://imagedelivery.net/QZ6TuL-3r02W7wQjQrv5DA/${news.img}/public`} alt=""
-                                />
-                            </div>
-                        </td>
+                                <td className="flex items-center lg:table-cell w-full lg:w-auto border-b ">
+                                    <span className=" bg-[#1e293b] text-white lg:hidden p-2 w-20 md:w-28 h-full">รูปภาพ</span>
+                                    <div className="w-16 md:w-44 ">
+                                        <img
+                                            className="p-2"
+                                            src={`https://imagedelivery.net/QZ6TuL-3r02W7wQjQrv5DA/${news.img}/public`} alt=""
+                                        />
+                                    </div>
+                                </td>
 
-                        <td className="flex items-center lg:table-cell lg:w-auto border-b ">
-                            <span className="bg-[#1e293b] text-white lg:hidden p-2 md:w-28 h-full">รายละเอียด</span>
-                            <div className="px-3 py-1 line-clamp-1 ">
-                                {news.detail}
-                            </div>
-                        </td>
+                                <td className="flex items-center lg:table-cell lg:w-auto border-b ">
+                                    <span className="bg-[#1e293b] text-white lg:hidden p-2 w-20 md:w-28 h-full">รายละเอียด</span>
+                                    <div className="px-3 py-1 line-clamp-1 ">
+                                        {news.detail}
+                                    </div>
+                                </td>
 
-                        <td className="flex items-center lg:table-cell w-full lg:w-auto border-b">
-                            <span className=" bg-[#1e293b] text-white lg:hidden p-2 md:w-28 h-full">Actions</span>
-                            <div className="flex justify-end px-5 gap-3">
-                                <Link href="#" className="text-red-400 hover:text-red-700"> <MdDelete /></Link>
-                                <Link href="#" className="text-green-500 hover:text-green-700" ><MdOutlineEdit /></Link>
-                            </div>
-                        </td>
-                    </tr>
-                  ))}
+                                <td className="flex items-center lg:table-cell w-full lg:w-auto border-b">
+                                    <span className=" bg-[#1e293b] text-white lg:hidden p-2 w-20 md:w-28 h-full">Actions</span>
+                                    <div className="flex justify-end px-5 gap-3">
+                                        <DeleteMemberModal data={news} apiDelete={() => deletenews(news.id)} />
+
+                                        {/* <button onClick={openEditNewsModal} className="text-green-500 hover:text-green-700" ><MdOutlineEdit /></button> */}
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
                 </tbody>
+                {/* <EditNewsModal isEditModalOpen={isEditNewsModalOpen} onClose={closeEditNewsModal}/> */}
 
             </table>
+
+            <Pagination
+                page={params.page}
+                totalPages={newsData?.pagination?.total}
+                onChangePage={handleChangePage}
+                onChangePageSize={handleChangePageSize}
+            />
         </div>
     )
 }

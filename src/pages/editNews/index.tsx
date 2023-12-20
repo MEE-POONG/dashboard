@@ -5,10 +5,6 @@ import AddNewsModal from "./AddNews";
 
 
 const EditNews: React.FC = () => {
-  type Props = {
-    children: React.ReactNode;
-  };
-
   const [isAddModalOpen, setAddModalOpen] = useState(false);
   const openAddModal = () => {
     setAddModalOpen(true);
@@ -29,7 +25,7 @@ const EditNews: React.FC = () => {
           </button>
         </div>
         <NewsList />
-
+        
         <AddNewsModal isAddModalOpen={isAddModalOpen} onClose={closeAddModal} />
 
       </div>
