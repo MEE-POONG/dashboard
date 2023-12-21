@@ -89,7 +89,7 @@ const SideNav: React.FC<SidenavProps> = ({ openSidebar }) => {
         <>
             <div className="fixed w-full z-30 flex bg-white p-2 items-center justify-center h-16 px-10">
                 <div className="logo ml-14 text-black font-bold transform ease-in-out duration-500 flex-none h-full flex items-center justify-center">
-                    Dashboard Test                
+                    MNR - Dashboard              
                 </div>
                 {/* <!-- SPACER --> */}
                 <div className="grow h-full flex items-center justify-center"></div>
@@ -125,9 +125,10 @@ const SideNav: React.FC<SidenavProps> = ({ openSidebar }) => {
                             </div>
                         </div >
                     </div>
-                    <div className="flex items-center space-x-3 group bg-gradient-to-r dark:from-cyan-500 dark:to-blue-500 from-indigo-500 via-purple-500 to-purple-500  pl-10 pr-2 py-1 rounded-full text-white  ">
-                        <div className="transform ease-in-out duration-300 mr-12">
-                            Dashboard                        </div>
+                    <div className="flex items-center space-x-3 group bg-gradient-to-r dark:from-cyan-500 dark:to-blue-500 from-indigo-500 via-purple-500 to-purple-500  pl-10 pr-1 py-1 rounded-full text-white  ">
+                        <div className="transform ease-in-out duration-300 mr-12 font-bold">
+                           MNR - Dashboard                       
+                        </div>
                     </div>
                 </div>
                 <div onClick={openNav} className="-right-6 transition transform ease-in-out duration-500 flex border-4 border-white dark:border-[#0F172A] bg-[#1E293B] dark:hover:bg-blue-500 hover:bg-purple-500 absolute top-2 p-3 rounded-full text-white hover:rotate-45">

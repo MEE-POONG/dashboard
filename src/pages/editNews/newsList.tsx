@@ -6,6 +6,7 @@ import { News } from "@prisma/client";
 import Link from "next/link";
 import DeleteMemberModal from "@/components/Modal/DeleteAlertModal";
 import { FaPen } from "react-icons/fa";
+import Pagination from "@/components/Pagination";
 
 interface Params {
     page: number;
@@ -106,15 +107,23 @@ const NewsList: React.FC = (props) => {
     };
 
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const totalPages = 5; // Replace with the actual total number of pages.
+
+    const handlePageChange = (page: number) => {
+        // You can implement fetching data for the selected page here
+        setCurrentPage(page);
+    };
+
     return (
-        <div className="overflow-hidden rounded-lg lg:shadow-xl m-2">
+        <div className="overflow-hidden rounded-lg  m-2">
             <table className="border-collapse w-full">
                 <thead className="bg-[#1e293b] text-white  ">
                     <tr className="">
-                        <th className="p-3 uppercase font-medium text-sm hidden lg:table-cell text-left ">หัวข้อ</th>
-                        <th className="p-3 uppercase font-medium text-sm hidden lg:table-cell text-left">รูปภาพ</th>
-                        <th className="p-3 uppercase font-medium text-sm hidden lg:table-cell text-left">รายละเอียด</th>
-                        <th className="p-3 uppercase font-medium text-sm hidden lg:table-cell text-right">Actions</th>
+                        <th className="p-3 uppercase font-semibold text-sm lg:text-xl hidden lg:table-cell text-left ">หัวข้อ</th>
+                        <th className="p-3 uppercase font-semibold text-sm lg:text-xl hidden lg:table-cell text-left">รูปภาพ</th>
+                        <th className="p-3 uppercase font-semibold text-sm lg:text-xl hidden lg:table-cell text-left">รายละเอียด</th>
+                        <th className="p-3 uppercase font-semibold text-sm lg:text-xl hidden lg:table-cell text-right">Actions</th>
                     </tr>
                 </thead>
 
@@ -154,20 +163,29 @@ const NewsList: React.FC = (props) => {
                                     <span className=" bg-[#1e293b] text-white lg:hidden p-2 w-20 md:w-28 h-full">Actions</span>
                                     <div className="flex justify-end px-5 gap-3">
                                         <DeleteMemberModal data={news} apiDelete={() => deletenews(news.id)} />
+
                                         <Link
                                             href={`/editNews/${news.id}`}
                                             className="text-green-500 hover:text-green-700"
                                         >
                                             <FaPen />
                                         </Link>
-                                        
-                                        {/* <button onClick={openEditNewsModal} className="text-green-500 hover:text-green-700" ><MdOutlineEdit /></button> */}
+
                                     </div>
                                 </td>
                             </tr>
                         ))}
                 </tbody>
+
+
             </table>
+            <Pagination
+                page={params.page}
+                totalPages={newsData?.pagination?.total}
+                onChangePage={handleChangePage}
+                onChangePageSize={handleChangePageSize}
+            />
+
         </div>
     )
 }

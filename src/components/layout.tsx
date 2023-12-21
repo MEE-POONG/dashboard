@@ -1,6 +1,7 @@
 import SideNav from "./sidenav"
 import HeaderPage from './HeaderPage';
 import { Kanit } from 'next/font/google'
+import DashboardFooter from "./DashboardFooter";
 
 const kanit = Kanit({
   weight: '300',
@@ -27,6 +28,7 @@ export default function DashboardLayout({
           {children}
         </div>
       </main>
+      <DashboardFooter/>
     </section>
   )
 }
