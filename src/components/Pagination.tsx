@@ -36,7 +36,7 @@ const PageSelect: React.FC<PageSelectProps> = ({
             paginationItems.push(
                 <button
                     key={`page-${i}`}
-                    className={`mx-1 px-3 py-2 rounded ${i === page ? 'bg-blue-950 text-white' : 'bg-gray-200 text-gray-700'
+                    className={`mx-1 px-1 md:px-3 md:py-2 rounded text-[10px] md:text-sm  ${i === page ? 'bg-blue-950 text-white' : 'bg-gray-200 text-gray-700'
                         }`}
                     onClick={() => onChangePage(i)}
                 >
@@ -47,17 +47,17 @@ const PageSelect: React.FC<PageSelectProps> = ({
     }
 
     return (
-        <div className="flex items-center justify-between mt-10 mb-24">
-            <div className="flex space-x-2 justify-center drop-shadow-lg">
+        <div className="flex flex-wrap items-center justify-center md:justify-between mt-10">
+            <div className="flex  space-x-2 justify-center drop-shadow-lg ">
                 <button
-                    className="px-3 py-2 rounded bg-gray-200 text-gray-700"
+                    className="px-1.5 py-1 md:px-3 md:py-2 rounded bg-gray-200 text-gray-700 text-xs md:text-sm"
                     onClick={() => onChangePage(1)}
                     disabled={page === 1}
                 >
                     <MdSkipPrevious />
                 </button>
                 <button
-                    className="px-3 py-2 rounded bg-gray-200 text-gray-700"
+                    className="px-1.5 py-1 md:px-3 md:py-2 rounded bg-gray-200 text-gray-700 text-xs md:text-sm"
                     onClick={() => onChangePage(page - 1)}
                     disabled={page === 1}
                 >
@@ -65,14 +65,14 @@ const PageSelect: React.FC<PageSelectProps> = ({
                 </button>
                 {paginationItems}
                 <button
-                    className="px-3 py-2 rounded bg-gray-200 text-gray-700"
+                    className="px-1.5 py-1 md:px-3 md:py-2 rounded bg-gray-200 text-gray-700 text-xs md:text-sm"
                     onClick={() => onChangePage(page + 1)}
                     disabled={page === totalPages}
                 >
                     <MdNavigateNext />
                 </button>
                 <button
-                    className="px-3 py-2 rounded bg-gray-200 text-gray-700"
+                    className="px-1.5 py-1 md:px-3 md:py-2 rounded bg-gray-200 text-gray-700 text-xs md:text-sm"
                     onClick={() => onChangePage(totalPages)}
                     disabled={page === totalPages}
                 >
@@ -80,7 +80,7 @@ const PageSelect: React.FC<PageSelectProps> = ({
                 </button>
             </div>
             <select
-                className="px-3 py-2 rounded bg-gray-200 text-gray-700"
+                className="px-1.5 py-1 md:px-3 md:py-2 rounded bg-gray-200 text-gray-700 text-xs md:text-sm mt-5 md:mt-0"
                 aria-label="Default select example"
                 onChange={(e) => onChangePageSize(Number(e.target.value))}
             >

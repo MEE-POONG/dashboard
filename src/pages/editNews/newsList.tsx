@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { MdOutlineEdit, MdDelete } from "react-icons/md";
-import EditNewsModal from "./[id]";
 import useAxios from "axios-hooks";
 import { News } from "@prisma/client";
 import Link from "next/link";
 import DeleteMemberModal from "@/components/Modal/DeleteAlertModal";
-import { FaPen } from "react-icons/fa";
 import Pagination from "@/components/Pagination";
+import { GrEdit } from "react-icons/gr";
+import { FaSearch } from "react-icons/fa";
 
 interface Params {
     page: number;
@@ -15,7 +14,7 @@ interface Params {
     totalPages: number;
 }
 
-const NewsList: React.FC = (props) => {
+const NewsList: React.FC = () => {
 
     const [params, setParams] = useState<Params>({
         page: 1,
@@ -97,14 +96,14 @@ const NewsList: React.FC = (props) => {
     }, [newsData, params.searchKey]);
 
 
-    const [isEditNewsModalOpen, setEditNewsModalOpen] = useState(false);
-    const openEditNewsModal = () => {
-        setEditNewsModalOpen(true);
-    };
+    // const [isEditNewsModalOpen, setEditNewsModalOpen] = useState(false);
+    // const openEditNewsModal = () => {
+    //     setEditNewsModalOpen(true);
+    // };
 
-    const closeEditNewsModal = () => {
-        setEditNewsModalOpen(false);
-    };
+    // const closeEditNewsModal = () => {
+    //     setEditNewsModalOpen(false);
+    // };
 
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -116,14 +115,32 @@ const NewsList: React.FC = (props) => {
     };
 
     return (
-        <div className="overflow-hidden rounded-lg  m-2">
-            <table className="border-collapse w-full">
-                <thead className="bg-[#1e293b] text-white  ">
+        <div className="rounded overflow-hidden mt-5 ">
+
+            <div className="w-full lg:w-1/4 mb-2 text-xs lg:text-sm">
+                <div className="relative">
+                    <span className="absolute inset-y-0 left-0 flex items-center pl-2">
+                        <FaSearch />
+                    </span>
+                    <input
+                        type="text"
+                        onChange={e => handleChangesearchKey(e.target.value)}
+                        placeholder="ค้นหาข่าว"
+                        aria-label="news"
+                        className="pl-8 pr-4 py-2 w-full rounded-full focus:outline-none focus:border-blue-300 border-gray-300 text-xs lg:text-sm"
+                    />
+                </div>
+            </div>
+
+            <table className="border-collapse w-full px-2">
+                <thead className="bg-[#1e293b] text-white ">
                     <tr className="">
-                        <th className="p-3 uppercase font-semibold text-sm lg:text-xl hidden lg:table-cell text-left ">หัวข้อ</th>
-                        <th className="p-3 uppercase font-semibold text-sm lg:text-xl hidden lg:table-cell text-left">รูปภาพ</th>
-                        <th className="p-3 uppercase font-semibold text-sm lg:text-xl hidden lg:table-cell text-left">รายละเอียด</th>
-                        <th className="p-3 uppercase font-semibold text-sm lg:text-xl hidden lg:table-cell text-right">Actions</th>
+                        {/* <th className="p-3 uppercase font-semibold text-base hidden lg:table-cell text-left ">NO.</th> */}
+                        <th className="p-3 uppercase font-semibold text-base hidden lg:table-cell text-left ">หัวข้อ</th>
+                        <th className="p-3 uppercase font-semibold text-base hidden lg:table-cell text-left">รูปภาพ</th>
+                        <th className="p-3 uppercase font-semibold text-base hidden lg:table-cell text-left">รายละเอียด</th>
+                        {/* <th className="p-3 uppercase font-semibold text-base hidden lg:table-cell text-left">ผู้เขียน/ผู้ลงข่าว</th> */}
+                        <th className="p-3 uppercase font-semibold text-base hidden lg:table-cell text-right">Actions</th>
                     </tr>
                 </thead>
 
@@ -135,11 +152,16 @@ const NewsList: React.FC = (props) => {
                         .map((news, index) => (
                             <tr key={news.id}
                                 className="bg-gray-50 hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap 
-                        lg:flex-no-wrap mb-10 lg:mb-0 shadow-xl rounded-lg text-xs md:text-sm xl:text-base"
+                                                lg:flex-no-wrap mb-3 lg:mb-0 shadow-xl rounded-lg text-xs md:text-sm xl:text-base"
                             >
+                                {/* <td className="flex items-center lg:table-cell lg:w-auto border-b">
+                                    <span className=" bg-[#1e293b] text-white lg:hidden p-2 w-20 md:w-28 h-full">หัวข้อ </span>
+                                    <p className="px-3 py-1 md:p-3 w-full lg:w-80 line-clamp-2 md:truncate ">{index + 1}</p>
+                                </td> */}
+
                                 <td className="flex items-center lg:table-cell w-full lg:w-auto border-b">
                                     <span className=" bg-[#1e293b] text-white lg:hidden p-2 w-20 md:w-28 h-full">หัวข้อ </span>
-                                    <p className="px-3 py-1 md:p-3 w-full line-clamp-2 md:w-64 md:truncate ">{news.title}</p>
+                                    <p className="px-3 py-1 md:p-3 w-full lg:w-80 line-clamp-1 lg:truncate ">{news.title}</p>
                                 </td>
 
                                 <td className="flex items-center lg:table-cell w-full lg:w-auto border-b ">
@@ -154,10 +176,15 @@ const NewsList: React.FC = (props) => {
 
                                 <td className="flex items-center lg:table-cell lg:w-auto border-b ">
                                     <span className="bg-[#1e293b] text-white lg:hidden p-2 w-20 md:w-28 h-full">รายละเอียด</span>
-                                    <div className="px-3 py-1 line-clamp-1 ">
+                                    <div className="px-3 py-1 line-clamp-2 ">
                                         {news.detail}
                                     </div>
                                 </td>
+
+                                {/* <td className="flex items-center lg:table-cell w-full lg:w-auto border-b">
+                                    <span className=" bg-[#1e293b] text-white lg:hidden p-2 w-20 md:w-28 h-full">ผู้เขียน/ผู้ลงข่าว</span>
+                                    <p className="px-3 py-1 md:p-3 w-full lg:w-80 line-clamp-2 md:truncate ">{news.author}</p>
+                                </td> */}
 
                                 <td className="flex items-center lg:table-cell w-full lg:w-auto border-b">
                                     <span className=" bg-[#1e293b] text-white lg:hidden p-2 w-20 md:w-28 h-full">Actions</span>
@@ -168,7 +195,7 @@ const NewsList: React.FC = (props) => {
                                             href={`/editNews/${news.id}`}
                                             className="text-green-500 hover:text-green-700"
                                         >
-                                            <FaPen />
+                                            <GrEdit />
                                         </Link>
 
                                     </div>
@@ -177,8 +204,8 @@ const NewsList: React.FC = (props) => {
                         ))}
                 </tbody>
 
-
             </table>
+
             <Pagination
                 page={params.page}
                 totalPages={newsData?.pagination?.total}
@@ -187,6 +214,7 @@ const NewsList: React.FC = (props) => {
             />
 
         </div>
+
     )
 }
 export default NewsList;

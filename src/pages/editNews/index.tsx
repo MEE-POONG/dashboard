@@ -1,7 +1,7 @@
 import DashboardLayout from "@/components/layout";
 import NewsList from "./newsList";
 import { useState } from "react";
-import AddNewsModal from "./AddNews";
+import AddNewsModal from './AddNews';
 
 
 const EditNews: React.FC = () => {
