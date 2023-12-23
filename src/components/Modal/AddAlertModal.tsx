@@ -59,11 +59,12 @@ const AddModalAlert: React.FC<AddModalAlertProps> = ({ checkAlertShow, setCheckA
                         <div className="">
                             <div className='flex justify-between mb-4 gap-5'>
                                 <h2 className="text-xl font-bold ">{heading}</h2>
-                                <button onClick={handleClose} 
-                                className={`bg-black text-white px-1.5 rounded
-                                ${checkAlertShow === 'warning' ? 'block' : 'hidden'
-                                    }
-                                `}><MdClose /></button>
+                                <button onClick={handleClose}
+                                    className={`bg-black text-white px-1.5 rounded
+                                ${checkAlertShow === 'warning' || checkAlertShow === 'danger' ? 'block' : 'hidden'
+                                        }
+                                `}><MdClose />
+                                </button>
                             </div>
                             {boding &&
                                 <div className="text-white">

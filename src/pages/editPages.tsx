@@ -2,6 +2,7 @@
 import AboutPage from "@/components/PageEdit/AboutPage";
 import ContactPage from "@/components/PageEdit/ContactPage";
 import DashboardLayout from "@/components/layout";
+import Link from "next/link";
 
 
 const EditPage: React.FC = () => {
@@ -12,8 +13,10 @@ const EditPage: React.FC = () => {
                     <h2 className="font-semibold text-2xl">จัดการหน้าเว็บ</h2>
                 </div>
 
-                <AboutPage/>
-                <ContactPage/>
+                <Link href=''>
+                    <AboutPage />
+                </Link>
+                <ContactPage />
             </div>
         </DashboardLayout>
     )

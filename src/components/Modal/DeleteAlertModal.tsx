@@ -1,8 +1,7 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { useState } from 'react';
-import { FaSpinner, FaTrashAlt } from 'react-icons/fa';
-import handler from '../../pages/api/hello';
+import { FaSpinner } from 'react-icons/fa';
+import { MdDelete } from 'react-icons/md';
 
 interface DeleteModalProps {
     data: any;
@@ -65,7 +64,7 @@ const DeleteMemberModal: React.FC<DeleteModalProps> = ({ data, apiDelete }) => {
     return (
         <>
             <button className="text-red-400 hover:text-red-700" onClick={handleShow}>
-                <FaTrashAlt />
+                <MdDelete />
             </button>
             {show && (
                 <div

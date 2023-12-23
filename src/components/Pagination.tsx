@@ -47,8 +47,8 @@ const PageSelect: React.FC<PageSelectProps> = ({
     }
 
     return (
-        <div className="flex flex-wrap items-center justify-center md:justify-between mt-10">
-            <div className="flex  space-x-2 justify-center drop-shadow-lg ">
+        <div className="flex flex-wrap gap-5 items-center justify-center md:justify-between lg:mt-10 mb-24">
+            <div className="flex flex-wrap space-x-2 justify-center drop-shadow-lg">
                 <button
                     className="px-1.5 py-1 md:px-3 md:py-2 rounded bg-gray-200 text-gray-700 text-xs md:text-sm"
                     onClick={() => onChangePage(1)}
@@ -80,7 +80,7 @@ const PageSelect: React.FC<PageSelectProps> = ({
                 </button>
             </div>
             <select
-                className="px-1.5 py-1 md:px-3 md:py-2 rounded bg-gray-200 text-gray-700 text-xs md:text-sm mt-5 md:mt-0"
+                className="px-1.5 py-1 md:px-3 md:py-2 rounded bg-gray-200 text-gray-700 text-xs md:text-sm md:mt-0 "
                 aria-label="Default select example"
                 onChange={(e) => onChangePageSize(Number(e.target.value))}
             >

@@ -4,8 +4,8 @@ import { News } from "@prisma/client";
 import Link from "next/link";
 import DeleteMemberModal from "@/components/Modal/DeleteAlertModal";
 import Pagination from "@/components/Pagination";
-import { GrEdit } from "react-icons/gr";
 import { FaSearch } from "react-icons/fa";
+import { MdOutlineEdit } from "react-icons/md";
 
 interface Params {
     page: number;
@@ -14,7 +14,9 @@ interface Params {
     totalPages: number;
 }
 
-const NewsList: React.FC = () => {
+
+
+const NewsList: React.FC = (props) => {
 
     const [params, setParams] = useState<Params>({
         page: 1,
@@ -94,16 +96,6 @@ const NewsList: React.FC = () => {
             setFilterednewssData(filteredData);
         }
     }, [newsData, params.searchKey]);
-
-
-    // const [isEditNewsModalOpen, setEditNewsModalOpen] = useState(false);
-    // const openEditNewsModal = () => {
-    //     setEditNewsModalOpen(true);
-    // };
-
-    // const closeEditNewsModal = () => {
-    //     setEditNewsModalOpen(false);
-    // };
 
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -195,7 +187,7 @@ const NewsList: React.FC = () => {
                                             href={`/editNews/${news.id}`}
                                             className="text-green-500 hover:text-green-700"
                                         >
-                                            <GrEdit />
+                                            <MdOutlineEdit />
                                         </Link>
 
                                     </div>
