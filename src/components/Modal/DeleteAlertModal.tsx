@@ -68,7 +68,7 @@ const DeleteMemberModal: React.FC<DeleteModalProps> = ({ data, apiDelete }) => {
             </button>
             {show && (
                 <div
-                    className="fixed top-0 left-0 w-full h-screen flex items-center justify-center bg-gray-800 bg-opacity-50"
+                    className="fixed top-0 left-0 w-full h-screen flex items-center justify-center bg-gray-800 bg-opacity-50 z-10"
                     role="dialog"
                     aria-modal="true"
                     aria-labelledby="modal-headline"

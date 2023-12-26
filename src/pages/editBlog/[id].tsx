@@ -23,7 +23,7 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({ isEditModalOpen, onClose 
     const { id } = router.query;
     const [
         { loading: updateBlogLoading, error: updateBlogError },
-        executeNewsPut,
+        executeBlogPut,
     ] = useAxios({}, { manual: true });
     const [title, settitle] = useState<string>("");
     const [subtitle, setsubtitle] = useState<string>("");
@@ -117,8 +117,8 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({ isEditModalOpen, onClose 
 
 
                 // Execute the update
-                const response = await executeNewsPut({
-                    url: "/api/news/" + id,
+                const response = await executeBlogPut({
+                    url: "/api/blog/" + id,
                     method: "PUT",
                     data
                 });
@@ -192,6 +192,7 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({ isEditModalOpen, onClose 
                                     placeholder="date"
                                 />
                             </div>
+
                             <div>
                                 <label className="block text-sm font-medium">ผู้เขียน/ผู้ลงข่าว</label>
                                 <input
@@ -204,6 +205,8 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({ isEditModalOpen, onClose 
                                 />
                             </div>
                         </div>
+
+
                         <label className="block text-sm font-medium">รายละเอียดข่าว</label>
                         <textarea
                             className={`mt-1 p-2 border w-full rounded-md text-sm lg:text-base  ${inputForm && detail === '' ? 'border-red-500' : 'border-gray-300'
@@ -214,6 +217,7 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({ isEditModalOpen, onClose 
                             style={{ width: '100%', height: '200px' }}
                         />
 
+
                         <div className='flex justify-center gap-5 mt-5'>
                             <button
                                 onClick={handleSubmit}
@@ -221,7 +225,7 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({ isEditModalOpen, onClose 
                             >
                                 Save
                             </button>
-                            <Link href='/editNews' className='bg-gray-950 text-white hover:bg-gray-300 hover:text-black px-3 py-1 rounded'>
+                            <Link href='/editBlog' className='bg-gray-950 text-white hover:bg-gray-300 hover:text-black px-3 py-1 rounded'>
                                 Back
                             </Link>
                         </div>
@@ -234,4 +238,6 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({ isEditModalOpen, onClose 
     )
 }
 export default EditBlogModal;
+
+
 

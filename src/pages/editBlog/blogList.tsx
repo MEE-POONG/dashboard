@@ -161,7 +161,7 @@ const BlogList: React.FC = (props) => {
                                         <DeleteMemberModal data={blog} apiDelete={() => deleteblog(blog.id)} />
 
                                         <Link
-                                            href={`/editNews/${blog.id}`}
+                                            href={`/editBlog/${blog.id}`}
                                             className="text-green-500 hover:text-green-700"
                                         >
                                             <MdOutlineEdit />

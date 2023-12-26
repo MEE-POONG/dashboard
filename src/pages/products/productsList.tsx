@@ -1,74 +1,203 @@
-import { MdOutlineEdit, MdDelete } from "react-icons/md";
+import DeleteMemberModal from "@/components/Modal/DeleteAlertModal";
+import useAxios from "axios-hooks";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { MdOutlineEdit } from "react-icons/md";
+import Pagination from '@/components/Pagination';
+import { FaSearch } from "react-icons/fa";
+import { Products } from "@prisma/client";
 
-const ProductsList: React.FC = () => {
+
+interface Params {
+    page: number;
+    pageSize: number;
+    searchKey: string;
+    totalPages: number;
+}
+
+
+const ProductsList: React.FC = (props) => {
+    const [params, setParams] = useState<Params>({
+        page: 1,
+        pageSize: 10,
+        searchKey: "",
+        totalPages: 1,
+    });
+
+    const [{ data: productsData }, getproducts] = useAxios({
+        url: `/api/products?page=${params.page}&pageSize=${params.pageSize}&searchTerm=${params.searchKey}&include=category`,
+        // url: `/api/products?page=${params.page}&pageSize=${params.pageSize}&searchTerm=${params.searchKey}`,
+        method: "GET",
+    });
+
+    const [
+        { loading: deleteproductLoading, error: deleteproductError },
+        executeproductDelete,
+    ] = useAxios({}, { manual: true });
+
+    const [filteredproductsData, setFilteredproductsData] = useState<
+        Products[]
+    >([]);
+
+    useEffect(() => {
+        setFilteredproductsData(productsData?.products ?? []);
+    }, [productsData]);
+
+    const deleteproduct = (id: string): Promise<any> => {
+        return executeproductDelete({
+            url: "/api/products/" + id,
+            method: "DELETE",
+        }).then(() => {
+            setFilteredproductsData((prevproducts) =>
+                prevproducts.filter((products) => products.id !== id)
+            );
+        });
+    };
+
+    const handleChangePage = (page: number) => {
+        setParams((prevParams) => ({
+            ...prevParams,
+            page: page,
+        }));
+    };
+
+    const handleChangePageSize = (size: number) => {
+        setParams((prevParams) => ({
+            ...prevParams,
+            page: 1,
+            pageSize: size,
+        }));
+    };
+
+    const handleChangesearchKey = (search: string) => {
+        setParams(prevParams => ({
+            ...prevParams,
+            searchKey: search,
+        }));
+    };
+
+    useEffect(() => {
+        if (productsData?.product) {
+            // Filter the product data based on searchKey
+            const filteredData = productsData.product.filter((products: Products | null) => {
+                if (products) {
+                    // Extract properties and convert them to lowercase
+                    const {
+                        productname,
+                        productbrand,
+                        productmodel,
+                        description,
+                        price,
+                        stock,
+                        imgFirst,
+                        
+                    } = products;
+
+                    // Check if any of the properties contain the searchKey
+                    const containsSearchKey =
+                        (productname?.toLowerCase().includes(params.searchKey.toLowerCase()) ?? false) ||
+                        (productbrand?.toLowerCase().includes(params.searchKey.toLowerCase()) ?? false) ||
+                        (productmodel?.toLowerCase().includes(params.searchKey.toLowerCase()) ?? false) ||
+                        (description?.toLowerCase().includes(params.searchKey.toLowerCase()) ?? false) ||
+                        // (productcost?.toLowerCase().includes(params.searchKey.toLowerCase()) ?? false) ||
+                        (price?.toLowerCase().includes(params.searchKey.toLowerCase()) ?? false) ||
+                        (stock?.toLowerCase().includes(params.searchKey.toLowerCase()) ?? false) ||
+                        (imgFirst?.toLowerCase().includes(params.searchKey.toLowerCase()) ?? false);
+
+                    return containsSearchKey;
+                }
+                return false; // If product is null, don't include it in the filtered results
+            });
+
+            setFilteredproductsData(filteredData);
+        }
+    }, [productsData, params.searchKey]);
+
+
     return (
-        <div className="overflow-hidden rounded-lg lg:shadow-xl m-2">
-            <table className="border-collapse w-full">
-                <thead className="bg-[#1e293b] text-white ">
-                    <tr className="">
-                        <th className="p-3 uppercase font-semibold text-sm hidden lg:table-cell text-left ">Product No.</th>
-                        <th className="p-3 uppercase font-semibold text-sm hidden lg:table-cell text-left ">Roduct Name</th>
-                        <th className="p-3 uppercase font-semibold text-sm hidden lg:table-cell text-left">Image</th>
-                        <th className="p-3 uppercase font-semibold text-sm hidden lg:table-cell text-left">Description</th>
-                        <th className="p-3 uppercase font-semibold text-sm hidden lg:table-cell text-left">Type</th>
-                        <th className="p-3 uppercase font-semibold text-sm hidden lg:table-cell text-left">Amount</th>
-                        <th className="p-3 uppercase font-semibold text-sm hidden lg:table-cell text-right">Actions</th>
-                    </tr>
-                </thead>
+        <div className="rounded overflow-hidden mt-5 ">
 
-                <tbody>
-                    <tr
-                        className="bg-gray-50 hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap 
-                        lg:flex-no-wrap mb-10 lg:mb-0 shadow-xl rounded-lg text-xs md:text-sm"
-                    >
-                        <td className="flex items-center lg:table-cell w-full lg:w-auto border-b">
-                            <span className=" bg-[#1e293b] text-white lg:hidden p-2 md:w-28 h-full">Product No. </span>
-                            <p className="px-3 py-1 md:p-3 w-28">PMNR-0001</p>
-                        </td>
+            <div className="w-full lg:w-1/4 mb-2 text-xs lg:text-sm">
+                <div className="relative">
+                    <span className="absolute inset-y-0 left-0 flex items-center pl-2">
+                        <FaSearch />
+                    </span>
+                    <input
+                        type="text"
+                        onChange={e => handleChangesearchKey(e.target.value)}
+                        placeholder="ค้นหา"
+                        aria-label="products"
+                        className="pl-8 pr-4 py-2 w-full rounded-full focus:outline-none focus:border-blue-300 border-gray-300 text-xs lg:text-sm"
+                    />
+                </div>
+            </div>
 
-                        <td className="flex items-center lg:table-cell w-full lg:w-auto border-b">
-                            <span className=" bg-[#1e293b] text-white lg:hidden p-2 md:w-28 h-full">Product Name </span>
-                            <p className="px-3 py-1 md:p-3 w-48">CPU CORE I7-12700KF (Original) No Fan</p>
-                        </td>
+            <div className="relative overflow-x-auto shadow-md sm:rounded-lg mb-4">
+                <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
+                    <thead className="text-xs lg:text-sm text-gray-50 uppercase bg-gray-950 ">
+                        <tr>
+                            <th scope="col" className="py-3 px-4 lg:px-px text-center border-r">No.</th>
+                            <th scope="col" className="px-6 py-3">
+                                Product name
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Category
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Price
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                                Stock
+                            </th>
+                            <th scope="col" className="">
+                                Action
+                            </th>
 
-                        <td className="flex items-center lg:table-cell w-full lg:w-auto border-b">
-                            <span className="bg-[#1e293b] text-white lg:hidden p-2 md:w-28 h-full">Image</span>
-                            <img
-                                className="w-24 lg:w-3/4"
-                                src="https://img.advice.co.th/images_nas/pic_product4/A0139524/A0139524OK_BIG_1.jpg" alt=""
-                            />
-                        </td>
+                        </tr>
+                    </thead>
 
-                        <td className="flex items-center lg:table-cell lg:w-auto border-b ">
-                            <span className="bg-[#1e293b] text-white lg:hidden p-2 md:w-28 h-full">Descriptions</span>
-                            <div className="px-3 py-1 line-clamp-2 ">
-                                KTC เผยยอดรูดบัตรในหมวดรถยนต์ไฟฟ้าเติบโตกว่า 60% คาดสิ้นปีพอร์ตแตะ 100 ล้านบาท รับเทรนด์พลังงานสะอาดที่เข้ามามีบทบาทมากขึ้น
-                                ‘สุวัฒน์ เทพปรีชาสกุล’ ผู้บริหารสูงสุด ฝ่ายการตลาดบัตรเครดิต KTC หรือ บริษัท บัตรกรุงไทย จำกัด (มหาชน) เปิดเผยว่า จากเทรนด์พลังงานทางเลือกที่เข้ามามีบทบาทมากขึ้น KTC ได้ร่วมกับพันธมิตรในการให้บริการสินเชื่อที่เกี่ยวกับยานยนต์ไฟฟ้า (EV) แบบครบวงจร
-                                เริ่มตั้งแต่การออกรถยนต์ โดยร่วมกับค่ายรถยนต์ในการให้บริการผ่อนชำระเงินจอง-เงินดาวน์ แท่นชาร์จ โดยให้บริการผ่อนชำระตั้งแต่การติดตั้งแท่นชาร์จ ไปจนถึงการผ่อนชำระค่าชาร์จไฟฟ้า นอกจากนี้ ยังให้บริการผ่อนชำระโซลาร์รูฟท็อป อุปกรณ์เฉพาะ ไปจนถึงประกันภัยรถ EV อีกด้วย
-                            </div>
-                        </td>
+                    <tbody>
+                        {filteredproductsData.map((products, index) => (
 
-                        <td className="flex items-center lg:table-cell w-full lg:w-auto border-b">
-                            <span className=" bg-[#1e293b] text-white lg:hidden p-2 md:w-28 h-full">Type</span>
-                            <span className="ml-3 rounded-full bg-amber-200 py-1 px-3 text-xs text-amber-800 font-semibold shadow-md">CPU</span>
-                        </td>
+                            <tr key={products.id} className="bg-white border-b ">
+                                <td className="text-center border-r">{index + 1}</td>
+                                <th className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                    {products.productname}
+                                </th>
+                                <td className="px-6 py-4">
+                                    
+                                </td>
+                                <td className="px-6 py-4">
+                                    {products.price}
+                                </td>
+                                <td className="px-6 py-4">
+                                    {products.stock}
+                                </td>
 
-                        <td className="flex items-center lg:table-cell w-full lg:w-auto border-b">
-                            <span className=" bg-[#1e293b] text-white lg:hidden p-2 md:w-28 h-full">Amount</span>
-                            <p className="text-center ml-3 lg:ml-0">1000</p>
-                        </td>
+                                <td className="px-6 py-4">
+                                    <DeleteMemberModal data={products} apiDelete={() => deleteproduct(products.id)} />
 
-                        <td className="flex items-center lg:table-cell w-full lg:w-auto border-b">
-                            <span className=" bg-[#1e293b] text-white lg:hidden p-2 md:w-28 h-full">Actions</span>
-                            <div className="flex justify-end px-5 gap-1 text-lg">
-                                <a href="#" className="text-red-400 hover:text-red-700"> <MdDelete /></a>
-                                <a href="#" className="text-green-500 hover:text-green-700" ><MdOutlineEdit /></a>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
+                                    <Link
+                                        href={`/products/${products.id}`}
+                                        className="text-green-500 hover:text-green-700"
+                                    >
+                                        <MdOutlineEdit />
+                                    </Link>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
 
-            </table>
+
+                </table>
+            </div>
+
+            <Pagination
+                page={params.page}
+                totalPages={productsData?.pagination?.total}
+                onChangePage={handleChangePage}
+                onChangePageSize={handleChangePageSize}
+            />
 
         </div>
     )

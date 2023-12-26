@@ -134,7 +134,7 @@ const AddBlogModal: React.FC<AddBlogModalProps> = ({ isAddModalOpen, onClose }) 
 
                 <div className="my-10">
                     <div className='md:flex justify-between gap-5'>
-                        <div className="mb-3">
+                        <div className="mb-3 w-full">
                             <label className="block text-sm font-seminbold text-gray-950">หัวข้อ/ชื่อเรื่อง</label>
                             <input
                                 type="text"
@@ -144,7 +144,7 @@ const AddBlogModal: React.FC<AddBlogModalProps> = ({ isAddModalOpen, onClose }) 
                                 placeholder="หัวข้อ/ชื่อเรื่อง"
                             />
                         </div>
-                        <div className="mb-3">
+                        <div className="mb-3 w-full">
                             <label className="block text-sm font-seminbold text-gray-950">หัวข้อข่าวย่อย</label>
                             <input
                                 type="text"
@@ -156,7 +156,7 @@ const AddBlogModal: React.FC<AddBlogModalProps> = ({ isAddModalOpen, onClose }) 
                         </div>
                     </div>
 
-                    <div className='md:flex justify-between gap-5'>
+                    <div className='md:flex justify-start gap-5'>
                         <div className="mb-3">
                             <label className="block text-sm font-seminbold text-gray-950">วันที่</label>
                             <input
