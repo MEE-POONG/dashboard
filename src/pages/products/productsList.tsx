@@ -25,7 +25,7 @@ const ProductsList: React.FC = (props) => {
     });
 
     const [{ data: productsData }, getproducts] = useAxios({
-        url: `/api/products?page=${params.page}&pageSize=${params.pageSize}&searchTerm=${params.searchKey}&include=category`,
+        url: `/api/products?page=${params.page}&pageSize=${params.pageSize}&searchTerm=${params.searchKey}&include=categories`,
         // url: `/api/products?page=${params.page}&pageSize=${params.pageSize}&searchTerm=${params.searchKey}`,
         method: "GET",
     });
@@ -165,7 +165,7 @@ const ProductsList: React.FC = (props) => {
                                     {products.productname}
                                 </th>
                                 <td className="px-6 py-4">
-                                    
+                                
                                 </td>
                                 <td className="px-6 py-4">
                                     {products.price}

@@ -15,15 +15,15 @@ model UserName {
   username String?
 }
 
-model Category {
-  id            String     @id @default(auto()) @map("_id") @db.ObjectId
-  categoryname  String?
-  categorybrand String?
-  Products      Products[]
+model Categories {
+  id      String     @id @default(auto()) @map("_id") @db.ObjectId
+  name    String?
+  detail  String?
+  product Products[]
 }
 
 model Products {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  id           String  @id @default(auto()) @map("_id") @db.ObjectId
   productname  String?
   productbrand String?
   productmodel String?
@@ -36,10 +36,9 @@ model Products {
   imgThird     String?
   imgFourth    String?
   imgFifth     String?
-  category     Category @relation(fields: [categoryId], references: [id])
-  categoryId   String
-  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at")
-  
+
+  Categories   Categories? @relation(fields: [categoriesId], references: [id])
+  categoriesId String?     @db.ObjectId
 }
 
 model News {
@@ -92,4 +91,11 @@ model Appointment {
   createdAt  DateTime? @default(now())
   updatedAt  DateTime? @updatedAt
   deleted_at DateTime? @map("deleted_at")
+}
+
+model AboutPage {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  title String?
+  logo String?
+  
 }
