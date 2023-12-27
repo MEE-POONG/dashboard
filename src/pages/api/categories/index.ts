@@ -13,6 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 const pageSize: number = Number(req.query.pageSize) || 10;
 
                 const categories = await prisma.categories.findMany({
+                    
                     skip: (page - 1) * pageSize,
                     take: pageSize,
                 });

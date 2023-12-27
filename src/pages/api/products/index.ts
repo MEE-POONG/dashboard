@@ -17,9 +17,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     take: pageSize,
                 });
 
-                const totalproducts = await prisma.products.count();
-                const totalPage: number = Math.ceil(totalproducts / pageSize);
-                res.status(200).json({ products });
+                const totalProducts = await prisma.products.count();
+                const totalPage: number = Math.ceil(totalProducts / pageSize);
+                res.status(200).json({ products, totalPage });
             } catch (error) {
                 res.status(500).json({ error: "An error occurred while fetching the products" });
             }
@@ -27,13 +27,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         case 'POST':
             try {
-                const newproducts = await prisma.products.create({
+                const newProduct = await prisma.products.create({
                     data: req.body,
                 });
 
-                res.status(201).json(newproducts);
+                res.status(201).json(newProduct);
             } catch (error) {
-                res.status(500).json({ error: "An error occurred while creating the products" });
+                res.status(500).json({ error: "An error occurred while creating the product" });
             }
             break;
 

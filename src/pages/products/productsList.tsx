@@ -25,8 +25,8 @@ const ProductsList: React.FC = (props) => {
     });
 
     const [{ data: productsData }, getproducts] = useAxios({
-        url: `/api/products?page=${params.page}&pageSize=${params.pageSize}&searchTerm=${params.searchKey}&include=categories`,
-        // url: `/api/products?page=${params.page}&pageSize=${params.pageSize}&searchTerm=${params.searchKey}`,
+        // url: `/api/products?page=${params.page}&pageSize=${params.pageSize}&searchTerm=${params.searchKey}&include=categories`,
+        url: `/api/products?page=${params.page}&pageSize=${params.pageSize}&searchTerm=${params.searchKey}`,
         method: "GET",
     });
 
@@ -90,7 +90,7 @@ const ProductsList: React.FC = (props) => {
                         price,
                         stock,
                         imgFirst,
-                        
+
                     } = products;
 
                     // Check if any of the properties contain the searchKey
@@ -161,20 +161,20 @@ const ProductsList: React.FC = (props) => {
 
                             <tr key={products.id} className="bg-white border-b ">
                                 <td className="text-center border-r">{index + 1}</td>
-                                <th className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                <th className="px-6 py-3 font-medium text-gray-900 whitespace-nowrap">
                                     {products.productname}
                                 </th>
-                                <td className="px-6 py-4">
-                                
+                                <td className="px-6 py-3">
+                                    {products.categoriesId}
                                 </td>
-                                <td className="px-6 py-4">
+                                <td className="px-6 py-3">
                                     {products.price}
                                 </td>
-                                <td className="px-6 py-4">
+                                <td className="px-6 py-3">
                                     {products.stock}
                                 </td>
 
-                                <td className="px-6 py-4">
+                                <td className="px-6 py-3 flex">
                                     <DeleteMemberModal data={products} apiDelete={() => deleteproduct(products.id)} />
 
                                     <Link
