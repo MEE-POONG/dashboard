@@ -94,8 +94,17 @@ model Appointment {
 }
 
 model AboutPage {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  title String?
-  logo String?
-  
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  title       String?
+  logo        String?
+  description String?
+  banner      String?
+  subtitleOne String?
+  subtitleTwo String?
+  Address     String?
+  email       String?
+  phoneOne    String?
+  phoneTwo    String?
+  FBname      String?
+  line        String?
 }

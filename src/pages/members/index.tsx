@@ -1,5 +1,5 @@
 import DashboardLayout from "@/components/layout"
-import MembersList from "./MembersList";
+import MembersList from "./AllMembersList";
 import MemberTabbar from "@/components/EditMemmbers/MemberTabbar";
 
 const Members: React.FC = () => {

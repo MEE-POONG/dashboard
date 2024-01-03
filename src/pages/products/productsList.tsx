@@ -166,7 +166,7 @@ const ProductsList: React.FC = (props) => {
                                     {products.productname}
                                 </th>
                                 <td className="px-6 py-3">
-                                    {products.categoriesId}
+                                    <span className="ml-3 rounded-full bg-yellow-100 py-1 px-3 text-xs text-yellow-900 font-semibold">{products.categoriesId}</span>
                                 </td>
                                 <td className="px-6 py-3">
                                     {products.price}
