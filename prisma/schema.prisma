@@ -77,25 +77,63 @@ model ReportProduct {
   subtitle String?
 }
 
+model AboutPage {
+  id    String  @id @default(auto()) @map("_id") @db.ObjectId
+  title String?
+  logo  String?
+}
+
+//
 model Appointment {
-  id         String    @id @default(auto()) @map("_id") @db.ObjectId
-  fname      String?
-  lname      String?
-  email      String?
-  tel        String?
-  request    String?
-  message    String?
-  date       String?
-  time       String?
-  status     String?   @default("ยังไม่ซ่อม") // กำหนดค่าเริ่มต้นเป็น "true"
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  fname   String?
+  lname   String?
+  time    String?
+  request String?
+  message String?
+  email   String?
+  tel     String?
+
+  status     String?   @default("Wait")
+  userId     String?   @db.ObjectId
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+  deleted_at DateTime? @map("deleted_at")
+
+  repairmanId String?    @db.ObjectId
+  Repairman   Repairman? @relation(fields: [repairmanId], references: [id])
+  User        User?      @relation(fields: [userId], references: [id])
+  
+}
+
+model Repairman {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  fname    String?
+  lname    String?
+  email    String?
+  tel      String?
+  img      String?
+  password String?
+
+  Appointment Appointment[]
+
   createdAt  DateTime? @default(now())
   updatedAt  DateTime? @updatedAt
   deleted_at DateTime? @map("deleted_at")
 }
 
-model AboutPage {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  title String?
-  logo String?
-  
+model User {
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  fname           String?
+  lname           String?
+  birthday        String?
+  email           String?
+  password        String?
+  comfirmPassword String?
+  tel             String?
+  secretKey       String?
+  facebook        String?
+  google          String?
+
+  Appointment Appointment[]
 }

@@ -13,7 +13,7 @@ import { User } from "@prisma/client";
 import Link from "next/link";
 
 
-const MembersList: React.FC = () => {
+const RepairmanList: React.FC = () => {
     const [{ data: userData }, getUserData] = useAxios({
         url: `/api/user`,
         method: "GET",
@@ -200,4 +200,4 @@ const MembersList: React.FC = () => {
         </div>
     )
 }
-export default MembersList;
+export default RepairmanList;
