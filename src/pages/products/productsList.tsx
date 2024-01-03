@@ -85,6 +85,7 @@ const ProductsList: React.FC = (props) => {
                     const {
                         productname,
                         productbrand,
+                        productcost,
                         productmodel,
                         description,
                         price,
@@ -99,7 +100,7 @@ const ProductsList: React.FC = (props) => {
                         (productbrand?.toLowerCase().includes(params.searchKey.toLowerCase()) ?? false) ||
                         (productmodel?.toLowerCase().includes(params.searchKey.toLowerCase()) ?? false) ||
                         (description?.toLowerCase().includes(params.searchKey.toLowerCase()) ?? false) ||
-                        // (productcost?.toLowerCase().includes(params.searchKey.toLowerCase()) ?? false) ||
+                        (productcost?.toLowerCase().includes(params.searchKey.toLowerCase()) ?? false) ||
                         (price?.toLowerCase().includes(params.searchKey.toLowerCase()) ?? false) ||
                         (stock?.toLowerCase().includes(params.searchKey.toLowerCase()) ?? false) ||
                         (imgFirst?.toLowerCase().includes(params.searchKey.toLowerCase()) ?? false);

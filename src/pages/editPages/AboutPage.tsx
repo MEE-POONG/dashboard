@@ -1,17 +1,18 @@
+import DashboardLayout from "@/components/layout";
 import React from "react";
 import { MdAutoFixHigh } from "react-icons/md";
 
-const AboutPage: React.FC = () => {
+const AboutPage: React.FC = (props) => {
     return (
-        <div className="m-5 p-5 shadow-lg rounded-md bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white">
+        <DashboardLayout>
             <div className="flex items-center justify-between">
                 About Page
-                <button><MdAutoFixHigh /></button>
+                <button></button>
             </div>
             <div className="">
 
             </div>
-        </div>
+        </DashboardLayout>
     )
 }
 export default AboutPage;
