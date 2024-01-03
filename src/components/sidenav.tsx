@@ -32,7 +32,7 @@ const SideNav: React.FC<SidenavProps> = ({ openSidebar }) => {
     { href: '/appointment', text: 'Appointments', icon: <IoIosListBox /> },
     { href: '/order', text: 'Oders', icon: <TbClipboardList /> },
     { href: '/products', text: 'Products', icon: <FaProductHunt /> },
-    { href: '/editPages', text: 'Edit Pages', icon: <MdAutoFixHigh /> },
+    { href: '/editPages', text: 'About Pages', icon: <MdAutoFixHigh /> },
     { href: '/editNews', text: 'Edit News', icon: <MdNewspaper /> },
     { href: '/editBlog', text: 'Edit Blog', icon: <MdEditSquare /> },
   ];
@@ -88,7 +88,7 @@ const SideNav: React.FC<SidenavProps> = ({ openSidebar }) => {
   return (
         <>
             <div className="fixed w-full z-30 flex bg-white p-2 items-center justify-center h-16 px-10">
-                <div className="logo ml-14 text-black font-bold transform ease-in-out duration-500 flex-none h-full flex items-center justify-center">
+                <div className="logo ml-8 md:ml-14 text-black font-bold transform ease-in-out duration-500 flex-none h-full flex items-center justify-center">
                     MNR - Dashboard              
                 </div>
                 {/* <!-- SPACER --> */}
@@ -102,7 +102,7 @@ const SideNav: React.FC<SidenavProps> = ({ openSidebar }) => {
                             </div>
                         </div>
 
-                        <div className="hidden md:block text-sm md:text-md text-black dark:text-white">John Doe</div>
+                        <div className="hidden md:block text-sm md:text-base text-black dark:text-white">John Doe</div>
                     </div>
 
                 </div>
@@ -125,20 +125,20 @@ const SideNav: React.FC<SidenavProps> = ({ openSidebar }) => {
                             </div>
                         </div >
                     </div>
-                    <div className="flex items-center space-x-3 group bg-gradient-to-r dark:from-cyan-500 dark:to-blue-500 from-indigo-500 via-purple-500 to-purple-500  pl-10 pr-1 py-1 rounded-full text-white  ">
-                        <div className="transform ease-in-out duration-300 mr-12 font-bold">
+                    <div className="flex items-center space-x-3 group bg-gradient-to-r dark:from-cyan-500 dark:to-blue-500 from-indigo-500 via-purple-500 to-purple-500  pl-10 pr-1 py-1 rounded-full text-white">
+                        <div className="transform ease-in-out duration-300 mr-11 md:mr-12 font-bold text-sm md:text-base">
                            MNR - Dashboard                       
                         </div>
                     </div>
                 </div>
-                <div onClick={openNav} className="-right-6 transition transform ease-in-out duration-500 flex border-4 border-white dark:border-[#0F172A] bg-[#1E293B] dark:hover:bg-blue-500 hover:bg-purple-500 absolute top-2 p-3 rounded-full text-white hover:rotate-45">
+                <div onClick={openNav} className="-right-7 md:-right-6 transition transform ease-in-out duration-500 flex border-4 border-white dark:border-[#0F172A] bg-[#1E293B] dark:hover:bg-blue-500 hover:bg-purple-500 absolute top-2 p-3 rounded-full text-white hover:rotate-45">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-4 h-4">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
                     </svg>
                 </div>
 
                 {/* <!-- MAX SIDEBAR--> */}
-                <div className="max hidden text-white mt-20 flex-col space-y-2 w-full h-[calc(100vh)]">
+                <div className="max hidden text-white mt-20 flex-col space-y-2 w-full h-[calc(100vh)] text-sm md:text-base">
                     {navigationItems.map((item, index) => (
                         <div
                             key={index}
