@@ -83,7 +83,7 @@ model AboutPage {
   logo  String?
 }
 
-//
+//*////
 model Appointment {
   id      String  @id @default(auto()) @map("_id") @db.ObjectId
   fname   String?
