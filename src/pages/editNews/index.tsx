@@ -15,7 +15,7 @@ const EditNews: React.FC = () => {
     setAddModalOpen(false);
   };
   return (
-    <DashboardLayout>
+    <>
       <div>
         <div className="flex justify-between mx-2">
           <h2 className="font-semibold text-xl md:text-2xl">จัดการข่าว</h2>
@@ -32,7 +32,7 @@ const EditNews: React.FC = () => {
 
       </div>
 
-    </DashboardLayout>
+    </>
   )
 }
 export default EditNews;

@@ -2,6 +2,8 @@ import SideNav from "./sidenav"
 import HeaderPage from './HeaderPage';
 import { Kanit } from 'next/font/google'
 import DashboardFooter from "./DashboardFooter";
+import React, { useEffect, useState } from "react";
+import Cookies from 'js-cookie';
 
 const kanit = Kanit({
   weight: '300',
@@ -18,9 +20,13 @@ export default function DashboardLayout({
   loggedInUser: any;
 }) {
 
+  
   const openSidebar = () => {
     // Implement openNav functionality
   };
+
+
+  
   return (
     <section className={kanit.className}>
       <SideNav openSidebar={openSidebar} />

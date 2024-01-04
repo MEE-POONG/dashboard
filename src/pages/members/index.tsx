@@ -1,5 +1,4 @@
-import DashboardLayout from "@/components/layout"
-import MembersList from "./AllMembersList";
+
 import MemberTabbar from "@/components/EditMemmbers/MemberTabbar";
 import React, { useState, useEffect } from "react";
 import Cookies from 'js-cookie';
@@ -33,7 +32,7 @@ const Members: React.FC = () => {
     }, []);
 
     return (
-        <DashboardLayout  loggedInUser={loggedInUser}>
+        <  >
             <div className="flex">
                 <h2 className="font-semibold md:text-2xl ml-5">ข้อมูลสมาชิก</h2>
                 <button></button>
@@ -41,7 +40,7 @@ const Members: React.FC = () => {
             <div className="mt-5">
                 <MemberTabbar memberstabs={memberstabs} />
             </div>
-        </DashboardLayout>
+        </>
     )
 }
 export default Members;

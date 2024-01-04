@@ -1,8 +1,7 @@
 import DashboardLayout from "@/components/layout";
 import { About } from "@prisma/client";
 import useAxios from "axios-hooks";
-import Link from "next/link";
-import { useRouter } from "next/router";
+
 import { useEffect, useState } from "react";
 
 
@@ -29,7 +28,7 @@ const EditAboutPage: React.FC = (props) => {
     };
 
     return (
-        <DashboardLayout>
+   <>
             <div>
                 <div className="flex justify-between m-2">
                     <h2 className="font-semibold lg:text-2xl">จัดการหน้าเว็บ</h2>
@@ -53,7 +52,7 @@ const EditAboutPage: React.FC = (props) => {
                 ))}
 
             </div>
-        </DashboardLayout>
+    </>
     )
 }
 export default EditAboutPage;

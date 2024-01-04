@@ -1,4 +1,3 @@
-import DashboardLayout from '@/components/layout'
 import React, { useEffect, useState } from "react";
 import Cookies from 'js-cookie';
 
@@ -17,8 +16,8 @@ export default function Home() {
     fetchData();
   }, []);
   return (
-    <DashboardLayout loggedInUser={loggedInUser}>
 
+<>
       <div className="flex flex-wrap my-5 -mx-2">
         <div className="w-full lg:w-1/3 p-2">
           <div className="flex items-center flex-row w-full bg-gradient-to-r dark:from-cyan-500 dark:to-blue-500 from-indigo-500 via-purple-500 to-pink-500 rounded-md p-3">
@@ -147,6 +146,6 @@ export default function Home() {
 
       </div>
 
-    </DashboardLayout>
+      </>
   )
 }
