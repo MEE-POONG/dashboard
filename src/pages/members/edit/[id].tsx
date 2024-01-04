@@ -1,28 +1,32 @@
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import Head from 'next/head';
-import { Button, Card, Col, Dropdown, FloatingLabel, Form, Image, Row } from "react-bootstrap";
-// import BankSelect from "@/components/Input/Bankselect";
-import useAxios from "axios-hooks";
-import Link from "next/link";
-import DashboardLayout from "@/components/layout";
+import React, { useState, ChangeEvent, useEffect } from 'react';
+import ReactDOM from 'react-dom';
+import { FaSpinner, FaEdit } from 'react-icons/fa';
+// import handler from '../../pages/api/hello';
+
+import useAxios from 'axios-hooks';
+import { MdClose } from 'react-icons/md';
+import { useRouter } from 'next/router';
+import DashboardLayout from '@/components/layout';
+import EditModalAlert from '@/components/Modal/EditAlertModal';
+import Link from 'next/link';
 import Cookies from 'js-cookie';
-import EditModal from "./EditModal";
-import { Modal } from 'react-bootstrap';
 
 
+interface EditNewsModalProps {
+    isEditModalOpen: boolean;
+    onClose: () => void;
+}
 
-const BlogAdd: React.FC = () => {
+
+const EditNewsModal: React.FC<EditNewsModalProps> = ({ isEditModalOpen, onClose }) => {
+    // if (!isEditModalOpen) return null;
+
     const router = useRouter();
     const { id } = router.query;
     const [
-        { loading: updateBlogLoading, error: updateBlogError },
-        executeBlogPut,
+        { loading: updateNewsLoading, error: updateNewsError },
+        executeNewsPut,
     ] = useAxios({}, { manual: true });
-    const [showAlert, setShowAlert] = useState<boolean>(false);
-
-    const handleShowAlert = () => setShowAlert(true);
-    const handleCloseAlert = () => setShowAlert(false);
     const [fname, setfname] = useState<string>("");
     const [lname, setlname] = useState<string>("");
     const [tel, settel] = useState<string>("");
@@ -32,8 +36,6 @@ const BlogAdd: React.FC = () => {
     const [inputForm, setInputForm] = useState<boolean>(false);
     const [checkBody, setCheckBody] = useState<string>("");
 
-
-
     const handleInputChange = (setter: any) => (event: any) => {
         const newValue = event.target.value;
         if (!isNaN(newValue) && !newValue.includes('.')) {
@@ -41,9 +43,7 @@ const BlogAdd: React.FC = () => {
         }
     };
 
-
-
-    const [{ data: BlogData }, getBlog] = useAxios({
+    const [{ data: RepairmanData }, getNews] = useAxios({
         url: `/api/repairman/${id}`,
         method: "GET",
     });
@@ -52,30 +52,23 @@ const BlogAdd: React.FC = () => {
         window.location.reload();
     };
 
-
     useEffect(() => {
-        if (BlogData) {
+        if (RepairmanData) {
             const {
-
                 fname,
                 lname,
                 tel,
                 email,
                 img: imageId, // Use the uploaded image ID
-                // ... (ตาม field อื่น ๆ)
-            } = BlogData;
-
-
+            } = RepairmanData;
             setfname(fname);
             setlname(lname);
             settel(tel);
             setemail(email);
             setimg(img);
 
-
-            // ... (กำหนดค่า state อื่น ๆ)
         }
-    }, [BlogData]);
+    }, [RepairmanData]);
 
 
     const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,11 +89,11 @@ const BlogAdd: React.FC = () => {
         event.preventDefault();
         event.stopPropagation();
         let missingFields = [];
-
         if (!fname) missingFields.push("fname");
         if (!lname) missingFields.push("lname");
         if (!tel) missingFields.push("tel");
         if (!email) missingFields.push("email");
+
 
         if (missingFields.length > 0) {
             setAlertForm("warning");
@@ -115,19 +108,20 @@ const BlogAdd: React.FC = () => {
                     fname,
                     lname,
                     email,
-                    img,
+
+                    // newImg,
+                    /*img,*/
                 };
 
 
                 // Execute the update
-                const response = await executeBlogPut({
+                const response = await executeNewsPut({
                     url: "/api/repairman/" + id,
                     method: "PUT",
                     data
                 });
                 if (response && response.status === 200) {
                     setAlertForm("success");
-                    handleShowAlert();
                     setTimeout(() => {
                         // reloadPage();
                     }, 5000);
@@ -141,28 +135,6 @@ const BlogAdd: React.FC = () => {
         }
     };
 
-    const [userData, setUserData] = useState<any>({}); // กำหนดประเภทของข้อมูลบทความข่าว
-    const [isLoading, setIsLoading] = useState(true);
-
-    useEffect(() => {
-        if (id) {
-            fetch(`/api/repairman/${id}`)
-                .then((response) => response.json())
-                .then((data) => {
-                    setUserData(data); // กำหนดข้อมูลบทความข่าวที่ดึงมา
-                    //console.log(data);
-                    setIsLoading(false); // ตั้งค่า isLoading เป็น false เมื่อโหลดเสร็จสมบูรณ์
-
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                    setIsLoading(false); // ตั้งค่า isLoading เป็น false เมื่อโหลดเสร็จสมบูรณ์
-
-                });
-        }
-    }, [id]);
-
-    //
     const [loggedInUser, setLoggedInUser] = useState<any>(null);
     useEffect(() => {
         const fetchData = async () => {
@@ -177,116 +149,84 @@ const BlogAdd: React.FC = () => {
     }, []);
     return (
         <DashboardLayout loggedInUser={loggedInUser}>
-            <Head>
-                <title>Phanomwan Backend</title>
-                <meta
-                    name="description"
-                    content="T ACTIVE"
-                />
-                <link rel="icon" href="/favicon.ico" />
-            </Head>
-            <div className='Blog-page'>
 
-                <Card>
-                    <EditModal checkAlertShow={alertForm} setCheckAlertShow={setAlertForm} checkBody={checkBody} />
-                    <Card.Header className="d-flex space-between">
-                        <h4 className="mb-0 py-1">
-                            แก้ไขข้อมูล
-                        </h4>
-                    </Card.Header>
-                    <Card.Body>
-                        <Row>
-                            <Col md={4}>
-                                <FloatingLabel controlId="BlogTitle" label="ชื่อ" className="mb-3">
-                                    <Form.Control
-                                        isValid={inputForm && fname !== ""}
-                                        isInvalid={inputForm && fname === ""}
-                                        type="text"
-                                        value={fname}
-                                        onChange={e => setfname(e.target.value)}
-                                        placeholder="ชื่อ"
-                                    />
-                                </FloatingLabel>
-                            </Col>
-                            <Col md={4}>
-                                <FloatingLabel controlId="BlogTitle" label="นามสกุล" className="mb-3">
-                                    <Form.Control
-                                        isValid={inputForm && lname !== ""}
-                                        isInvalid={inputForm && lname === ""}
-                                        type="text"
-                                        value={lname}
-                                        onChange={e => setlname(e.target.value)}
-                                        placeholder="นามสกุล"
-                                    />
-                                </FloatingLabel>
-                            </Col>
-                            <Col md={4}>
-                                <FloatingLabel controlId="BlogTitle" label="เบอร์ติดต่อ" className="mb-3">
-                                    <Form.Control
-                                        isValid={inputForm && tel !== ""}
-                                        isInvalid={inputForm && tel === ""}
-                                        type="text"
-                                        value={tel}
-                                        onChange={e => settel(e.target.value)}
-                                        placeholder="เบอร์โทรศัพท์"
-                                    />
-                                </FloatingLabel>
-                            </Col>
-                            <Col md={4}>
-                                <FloatingLabel controlId="date" label="email" className="mb-3">
-                                    <Form.Control
-                                        isValid={inputForm && email !== ""}
-                                        isInvalid={inputForm && email === ""}
-                                        type="text"
-                                        value={email}
-                                        onChange={e => setemail(e.target.value)}
-                                        placeholder="อีเมล"
-                                    />
-                                </FloatingLabel>
-                            </Col>
+            <div className="">
+                <EditModalAlert checkAlertShow={alertForm} setCheckAlertShow={setAlertForm} checkBody={checkBody} />
+                <div className="bg-white p-3 md:p-6 rounded shadow-md ">
+                    <div className='flex items-center justify-between'>
+                        <h1 className='text-xl font-bold'>Edit News</h1>
+                        {/* <button className=" bg-blue-950 text-white p-1 rounded" onClick={onClose}>
+                            <MdClose />
+                        </button> */}
+                    </div>
 
 
+                    <div>
+                        <div className="md:grid grid-cols-2 gap-4 my-5">
+                            <div>
+                                <label className="block text-sm font-medium">ชื่อ</label>
+                                <input
+                                    className={`mt-1 p-2 border w-full rounded-md text-sm lg:text-base  ${inputForm && fname === '' ? 'border-red-500' : 'border-gray-300'
+                                        }`}
+                                    type="text"
+                                    value={fname}
+                                    onChange={(e) => setfname(e.target.value)}
+                                    placeholder="ชื่อ"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium">นามสกุล</label>
+                                <input
+                                    className={`mt-1 p-2 border w-full rounded-md text-sm lg:text-base  ${inputForm && lname === '' ? 'border-red-500' : 'border-gray-300'
+                                        }`}
+                                    type="text"
+                                    value={lname}
+                                    onChange={(e) => setlname(e.target.value)}
+                                    placeholder="นามสกุล"
+                                />
+                            </div>
+                            <div>
+                            <label className="block text-sm font-medium">เบอร์โทรศัพท์</label>
+                                <input
+                                    className={`mt-1 p-2 border w-full rounded-md text-sm lg:text-base  ${inputForm && tel === '' ? 'border-red-500' : 'border-gray-300'
+                                        }`}
+                                    type="text"
+                                    value={tel}
+                                    onChange={(e) => settel(e.target.value)}
+                                    placeholder="เบอร์โทรศัพท์"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium">อีเมล</label>
+                                <input
+                                    className={`mt-1 p-2 border w-full rounded-md text-sm lg:text-base  ${inputForm && email === '' ? 'border-red-500' : 'border-gray-300'
+                                        }`}
+                                    type="text"
+                                    value={email}
+                                    onChange={(e) => setemail(e.target.value)}
+                                    placeholder="อีเมล"
+                                />
+                            </div>
+                        </div>
+                        
+                        <div className='flex justify-center gap-5 mt-5'>
+                            <button
+                                onClick={handleSubmit}
+                                className='bg-teal-500 text-white hover:bg-teal-300 hover:text-black px-3 py-1 rounded'
+                            >
+                                Save
+                            </button>
+                            <Link href='/members' className='bg-gray-950 text-white hover:bg-gray-300 hover:text-black px-3 py-1 rounded'>
+                                Back
+                            </Link>
+                        </div>
 
-                        </Row>
-                    </Card.Body>
-                    <Card.Footer className="text-end">
-                        <Button variant="success mx-2" onClick={handleSubmit}>
-                            ยืนยัน
-                        </Button>
-                        {/* <Button variant="primary mx-2" onClick={reloadPage}>
-              ล้าง
-            </Button> */}
-                        <Link href="/members" className="btn btn-danger mx-2">
-                            ย้อนกลับ
-                        </Link>
-                    </Card.Footer>
-
-                </Card>
-                <Modal show={showAlert} onHide={handleCloseAlert}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>แก้ไขข้อมูลเรียบร้อยแล้ว</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>ข้อมูลของคุณถูกแก้ไขเรียบร้อยแล้ว</Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="success" onClick={handleCloseAlert}>
-                            ปิด
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
+                    </div>
+                </div>
             </div>
-        </DashboardLayout >
-    );
+
+        </DashboardLayout>
+    )
 }
-export default BlogAdd;
-
-// function setAlertForm(arg0: string) {
-//     throw new Error("Function not implemented.");
-// }
-// function setInputForm(arg0: boolean) {
-//     throw new Error("Function not implemented.");
-// }
-
-// function setCheckBody(arg0: string) {
-//     throw new Error("Function not implemented.");
-// }
+export default EditNewsModal;
 
