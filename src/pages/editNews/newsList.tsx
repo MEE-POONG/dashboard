@@ -53,7 +53,7 @@ const NewsList: React.FC = (props) => {
             );
         });
     };
-
+ 
     const handleChangePage = (page: number) => {
         setParams((prevParams) => ({
             ...prevParams,
