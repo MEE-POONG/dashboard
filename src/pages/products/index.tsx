@@ -1,10 +1,10 @@
-import DashboardLayout from "@/components/layout";
+
 import ProductsList from "./productsList";
 import { IoMdAdd, IoMdBuild } from "react-icons/io";
 
 const Products: React.FC = () => {
     return (
-        <DashboardLayout>
+        
             <div>
                 <div className="flex justify-between mx-2 ">
                     <h2 className="font-semibold text-2xl">จัดการสินค้า</h2>
@@ -26,7 +26,7 @@ const Products: React.FC = () => {
                 <ProductsList />
 
             </div>
-        </DashboardLayout>
+       
     )
 }
 export default Products;

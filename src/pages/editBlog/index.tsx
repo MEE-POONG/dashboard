@@ -1,4 +1,3 @@
-import DashboardLayout from "@/components/layout";
 import BlogList from "./blogList";
 import AddBlogModal from "./addBlog";
 import { useState } from "react";
@@ -16,7 +15,7 @@ const EditBlog: React.FC = () => {
         setAddModalOpen(false);
     };
     return (
-        <DashboardLayout>
+        <>
             <div>
                 <div className="flex justify-between mx-2">
                     <h2 className="font-semibold text-2xl">จัดการข่าว</h2>
@@ -31,7 +30,7 @@ const EditBlog: React.FC = () => {
 
                 <AddBlogModal isAddModalOpen={isAddModalOpen} onClose={closeAddModal} />
             </div>
-        </DashboardLayout>
+        </>
     )
 }
 export default EditBlog;
