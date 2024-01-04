@@ -12,28 +12,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 const page: number = Number(req.query.page) || 1;
                 const pageSize: number = Number(req.query.pageSize) || 10;
 
-                const user = await prisma.user.findMany({
+                const userName = await prisma.userName.findMany({
                     // skip: (page - 1) * pageSize,
                     // take: pageSize,
                 });
 
-                const totaluser = await prisma.user.count();
+                const totaluser = await prisma.userName.count();
                 const totalPage: number = Math.ceil(totaluser / pageSize);
-                res.status(200).json({ user });
+                res.status(200).json({ userName });
             } catch (error) {
-                res.status(500).json({ error: "An error occurred while fetching the user" });
+                res.status(500).json({ error: "An error occurred while fetching the userName" });
             }
             break;
 
         case 'POST':
             try {
-                const newuser = await prisma.user.create({
+                const newuser = await prisma.userName.create({
                     data: req.body,
                 });
 
                 res.status(201).json(newuser);
             } catch (error) {
-                res.status(500).json({ error: "An error occurred while creating the user" });
+                res.status(500).json({ error: "An error occurred while creating the userName" });
             }
             break;
 

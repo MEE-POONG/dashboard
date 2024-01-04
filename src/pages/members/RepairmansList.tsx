@@ -1,19 +1,15 @@
 import { MdOutlineEdit, MdDelete } from "react-icons/md";
 import React, { useEffect, useState } from "react";
 import { Accordion, Button, Card, Col } from "react-bootstrap";
-// import ModalRepair from "./ModalRepair";
 import Cookies from 'js-cookie';
-
 import useAxios from "axios-hooks";
-import axios from "axios";
-import { BsWrenchAdjustableCircleFill } from "react-icons/bs";
 import { useRouter } from 'next/router';
 import { Repairman } from "@prisma/client";
 import { User } from "@prisma/client";
-import Link from "next/link";
 
 
-const RepairmanList: React.FC = () => {
+
+const MembersList: React.FC = () => {
     const [{ data: userData }, getUserData] = useAxios({
         url: `/api/user`,
         method: "GET",
@@ -145,18 +141,18 @@ const RepairmanList: React.FC = () => {
         getRepairmanData();
         getUserData();
     }, []);
-    
+
     return (
         <div className="w-full rounded-md overflow-hidden">
             <table className="border-collapse w-full">
                 <thead className="bg-purple-500 text-white">
                     <tr>
-                        <th className="p-3 font-bold text-bass hidden lg:table-cell text-left">No.</th>
-                        <th className="p-3 font-bold text-bass hidden lg:table-cell text-left">Name</th>
-                        <th className="p-3 font-bold text-bass hidden lg:table-cell text-left">Mail</th>
-                        <th className="p-3 font-bold text-bass hidden lg:table-cell text-left">Phone</th>
+                        <th className="p-3 font-bold text-bass hidden lg:table-cell text-left">ลำดับ</th>
+                        <th className="p-3 font-bold text-bass hidden lg:table-cell text-left">ชื่อ - นามสกุล</th>
+                        <th className="p-3 font-bold text-bass hidden lg:table-cell text-left">อีเมล</th>
+                        <th className="p-3 font-bold text-bass hidden lg:table-cell text-left">เบอร์โทรศัพท์</th>
                         {/* <th className="p-3 font-bold text-bass hidden lg:table-cell text-center">Role</th> */}
-                        <th className="p-3 font-bold text-bass hidden lg:table-cell text-right px-6">Action</th>
+                        <th className="p-3 font-bold text-bass hidden lg:table-cell text-right px-6">จัดการ</th>
 
                     </tr>
                 </thead>
@@ -188,9 +184,9 @@ const RepairmanList: React.FC = () => {
                                     <span className=" bg-purple-500 p-2 w-20 text-right table-cell lg:hidden font-bold text-white">Actions :</span>
                                     <div className="flex justify-end gap-2 md:px-5">
                                         <Button className="text-red-400 hover:text-red-900" onClick={() => deleteappointment(repairman.id)}>
-                                        <MdDelete />
+                                            <MdDelete />
                                         </Button>
-                                        <a href={`/members/edit/${repairman.id}`} className="text-green-500 hover:text-green-700" ><MdOutlineEdit /></a>
+                                        <a href={`/members/edit/repairman/${repairman.id}`} className="text-green-500 hover:text-green-700" ><MdOutlineEdit /></a>
                                     </div>
                                 </td>
                             </tr>
@@ -200,4 +196,4 @@ const RepairmanList: React.FC = () => {
         </div>
     )
 }
-export default RepairmanList;
+export default MembersList;

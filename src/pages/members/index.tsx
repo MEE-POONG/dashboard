@@ -10,12 +10,12 @@ import RepairmanList from "./RepairmansList";
 const Members: React.FC = () => {
 
     const memberstabs = [
-        {
-            label: 'All Members',
-            content: <div><MembersList /></div>
-        },
+        // {
+        //     label: 'All Members',
+        //     content: <div><MembersList /></div>
+        // },
         { label: 'Admin', content: <div><AdminList/></div> },
-        { label: 'Customer', content: <div><CustomersList/></div> },
+        { label: 'Customers', content: <div><CustomersList/></div> },
         { label: 'Repairman', content: <div> <RepairmanList/> </div> },
         // Add more tabs as needed
     ];
