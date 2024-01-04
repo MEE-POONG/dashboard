@@ -12,28 +12,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 const page: number = Number(req.query.page) || 1;
                 const pageSize: number = Number(req.query.pageSize) || 10;
 
-                const aboutPage = await prisma.aboutPage.findMany({
+                const about = await prisma.about.findMany({
                     skip: (page - 1) * pageSize,
                     take: pageSize,
                 });
 
-                const totalaboutPage = await prisma.aboutPage.count();
-                const totalPage: number = Math.ceil(totalaboutPage / pageSize);
-                res.status(200).json({ aboutPage });
+                const totalabout = await prisma.about.count();
+                const totalPage: number = Math.ceil(totalabout / pageSize);
+                res.status(200).json({ about });
             } catch (error) {
-                res.status(500).json({ error: "An error occurred while fetching the aboutPage" });
+                res.status(500).json({ error: "An error occurred while fetching the about" });
             }
             break;
 
         case 'POST':
             try {
-                const newaboutPage = await prisma.aboutPage.create({
+                const newabout = await prisma.about.create({
                     data: req.body,
                 });
 
-                res.status(201).json(newaboutPage);
+                res.status(201).json(newabout);
             } catch (error) {
-                res.status(500).json({ error: "An error occurred while creating the aboutPage" });
+                res.status(500).json({ error: "An error occurred while creating the about" });
             }
             break;
 

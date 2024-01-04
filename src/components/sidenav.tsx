@@ -32,7 +32,7 @@ const SideNav: React.FC<SidenavProps> = ({ openSidebar }) => {
     { href: '/appointment', text: 'Appointments', icon: <IoIosListBox /> },
     { href: '/order', text: 'Oders', icon: <TbClipboardList /> },
     { href: '/products', text: 'Products', icon: <FaProductHunt /> },
-    { href: '/editPages', text: 'About Pages', icon: <MdAutoFixHigh /> },
+    { href: '/editAbout', text: 'About Pages', icon: <MdAutoFixHigh /> },
     { href: '/editNews', text: 'Edit News', icon: <MdNewspaper /> },
     { href: '/editBlog', text: 'Edit Blog', icon: <MdEditSquare /> },
   ];
@@ -88,7 +88,7 @@ const SideNav: React.FC<SidenavProps> = ({ openSidebar }) => {
   return (
         <>
             <div className="fixed w-full z-30 flex bg-white p-2 items-center justify-center h-16 px-10">
-                <div className="logo ml-8 md:ml-14 text-black font-bold transform ease-in-out duration-500 flex-none h-full flex items-center justify-center">
+                <div className="logo ml-9 md:ml-14 text-black font-bold transform ease-in-out duration-500 flex-none h-full flex items-center justify-center">
                     MNR - Dashboard              
                 </div>
                 {/* <!-- SPACER --> */}
