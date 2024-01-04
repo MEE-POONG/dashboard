@@ -122,6 +122,7 @@ model Repairman {
   deleted_at DateTime? @map("deleted_at")
 }
 
+<<<<<<< Updated upstream
 model User {
   id              String  @id @default(auto()) @map("_id") @db.ObjectId
   fname           String?
@@ -136,4 +137,20 @@ model User {
   google          String?
 
   Appointment Appointment[]
+=======
+model About {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  title       String?
+  logo        String?
+  description String?
+  banner      String?
+  subtitleOne String?
+  subtitleTwo String?
+  Address     String?
+  email       String?
+  phoneOne    String?
+  phoneTwo    String?
+  FBname      String?
+  line        String?
+>>>>>>> Stashed changes
 }
