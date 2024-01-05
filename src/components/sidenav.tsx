@@ -6,22 +6,24 @@ import { MdEditSquare, MdNewspaper, MdAutoFixHigh } from "react-icons/md";
 import { FaUserCog } from "react-icons/fa";
 import { TbClipboardList } from "react-icons/tb";
 import { FaProductHunt } from "react-icons/fa";
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/router';
 
 
 interface SubmenuItem {
-  href: string;
-  text: string;
+    href: string;
+    text: string;
 }
 
 interface MenuItem {
-  href: string;
-  text: string;
-  icon: JSX.Element;
-  submenu?: SubmenuItem[];
+    href: string;
+    text: string;
+    icon: JSX.Element;
+    submenu?: SubmenuItem[];
 }
 
 interface SidenavProps {
-  openSidebar: () => void;
+    openSidebar: () => void;
 }
 
 const SideNav: React.FC<SidenavProps> = ({ openSidebar }) => {
@@ -37,73 +39,124 @@ const SideNav: React.FC<SidenavProps> = ({ openSidebar }) => {
     { href: '/editBlog', text: 'Edit Blog', icon: <MdEditSquare /> },
   ];
 
-  // open Sidebar
-  const [isMaxSidebar, setIsMaxSidebar] = useState(true);
-  const openNav = () => {
-    setIsMaxSidebar((prev) => !prev);
-  };
+    // open Sidebar
+    const [isMaxSidebar, setIsMaxSidebar] = useState(true);
+    const openNav = () => {
+        setIsMaxSidebar((prev) => !prev);
+    };
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const toggleDropdown = () => {
+        setIsDropdownOpen((prev) => !prev);
+    };
 
-  useEffect(() => {
-    const sidebar = document.querySelector("aside");
-    const maxSidebar = document.querySelector(".max");
-    const miniSidebar = document.querySelector(".mini");
-    const maxToolbar = document.querySelector(".max-toolbar");
-    const logo = document.querySelector('.logo');
-    const content = document.querySelector('.content');
+    useEffect(() => {
+        const sidebar = document.querySelector("aside");
+        const maxSidebar = document.querySelector(".max");
+        const miniSidebar = document.querySelector(".mini");
+        const maxToolbar = document.querySelector(".max-toolbar");
+        const logo = document.querySelector('.logo');
+        const content = document.querySelector('.content');
 
-    if (!sidebar || !maxSidebar || !miniSidebar || !maxToolbar || !logo || !content) {
-      // Handle cases where elements are not found
-      return;
-    }
+        if (!sidebar || !maxSidebar || !miniSidebar || !maxToolbar || !logo || !content) {
+            // Handle cases where elements are not found
+            return;
+        }
 
-    if (!isMaxSidebar) {
-      // mini sidebar
-      sidebar.classList.add("-translate-x-48");
-      sidebar.classList.remove("translate-x-none");
-      maxSidebar.classList.add("hidden");
-      maxSidebar.classList.remove("flex");
-      miniSidebar.classList.add("flex");
-      miniSidebar.classList.remove("hidden");
-      maxToolbar.classList.add("translate-x-24", "scale-x-0");
-      maxToolbar.classList.remove("translate-x-0");
-      logo.classList.add('ml-12');
-      content.classList.remove("ml-12", "md:ml-60");
-      content.classList.add("ml-12");
-    } else {
-      // max sidebar
-      sidebar.classList.remove("-translate-x-48");
-      sidebar.classList.add("translate-x-none");
-      maxSidebar.classList.remove("hidden");
-      maxSidebar.classList.add("flex");
-      miniSidebar.classList.remove("flex");
-      miniSidebar.classList.add("hidden");
-      maxToolbar.classList.add("translate-x-0");
-      maxToolbar.classList.remove("translate-x-24", "scale-x-0");
-      logo.classList.remove("ml-12");
-      content.classList.remove("ml-12");
-      content.classList.add("ml-12", "md:ml-60");
-    }
-  }, [isMaxSidebar]);
+        if (!isMaxSidebar) {
+            // mini sidebar
+            sidebar.classList.add("-translate-x-48");
+            sidebar.classList.remove("translate-x-none");
+            maxSidebar.classList.add("hidden");
+            maxSidebar.classList.remove("flex");
+            miniSidebar.classList.add("flex");
+            miniSidebar.classList.remove("hidden");
+            maxToolbar.classList.add("translate-x-24", "scale-x-0");
+            maxToolbar.classList.remove("translate-x-0");
+            logo.classList.add('ml-12');
+            content.classList.remove("ml-12", "md:ml-60");
+            content.classList.add("ml-12");
+        } else {
+            // max sidebar
+            sidebar.classList.remove("-translate-x-48");
+            sidebar.classList.add("translate-x-none");
+            maxSidebar.classList.remove("hidden");
+            maxSidebar.classList.add("flex");
+            miniSidebar.classList.remove("flex");
+            miniSidebar.classList.add("hidden");
+            maxToolbar.classList.add("translate-x-0");
+            maxToolbar.classList.remove("translate-x-24", "scale-x-0");
+            logo.classList.remove("ml-12");
+            content.classList.remove("ml-12");
+            content.classList.add("ml-12", "md:ml-60");
+        }
+    }, [isMaxSidebar]);
 
-  return (
+    const [loggedInUser, setLoggedInUser] = useState<any>(null);
+    useEffect(() => {
+        const fetchData = async () => {
+            const userDataFromCookies = Cookies.get('user');
+            if (userDataFromCookies) {
+                const parsedUser = JSON.parse(userDataFromCookies);
+                setLoggedInUser(parsedUser);
+            }
+        };
+
+        fetchData();
+    }, []);
+    const router = useRouter();
+
+    const handleLogout = () => {
+      // ลบข้อมูลผู้ใช้ใน Cookies
+      Cookies.remove('user');
+  
+      // ทำการ redirect หน้าไปที่หน้า login หรือหน้าที่คุณต้องการ
+      router.push('/login');
+      // รีเฟซหน้าจอ
+      window.location.reload();
+    };
+    return (
         <>
+
             <div className="fixed w-full z-30 flex bg-white p-2 items-center justify-center h-16 px-10">
-                <div className="logo ml-9 md:ml-14 text-black font-bold transform ease-in-out duration-500 flex-none h-full flex items-center justify-center">
-                    MNR - Dashboard              
+                <div className="logo ml-8 md:ml-14 text-black font-bold transform ease-in-out duration-500 flex-none h-full flex items-center justify-center">
+                    MNR - Dashboard
                 </div>
                 {/* <!-- SPACER --> */}
                 <div className="grow h-full flex items-center justify-center"></div>
+
                 <div className="flex-none h-full text-center flex items-center justify-center">
 
-                    <div className="flex space-x-3 items-center px-3">
-                        <div className="flex-none flex justify-center">
-                            <div className="w-8 h-8 flex ">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShta_GXR2xdnsxSzj_GTcJHcNykjVKrCBrZ9qouUl0usuJWG2Rpr_PbTDu3sA9auNUH64&usqp=CAU" alt="profile" className="shadow rounded-full object-cover" />
-                            </div>
-                        </div>
+                    {loggedInUser ? (
+                        <Link href={"#"} >
+                            <div className="flex space-x-3 items-center px-3">
+                                <div className="flex-none flex justify-center">
+                                    <div className="w-8 h-8 flex ">
+                                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShta_GXR2xdnsxSzj_GTcJHcNykjVKrCBrZ9qouUl0usuJWG2Rpr_PbTDu3sA9auNUH64&usqp=CAU" alt="profile" className="shadow rounded-full object-cover" />
+                                    </div>
+                                </div>
 
-                        <div className="hidden md:block text-sm md:text-base text-black dark:text-white">John Doe</div>
-                    </div>
+                                <div className="hidden md:block text-sm md:text-base text-black dark:text-white">{loggedInUser.fname} {loggedInUser.lname} </div>
+
+                                <button className="">
+                                    <div className="flex space-x-3 items-center px-3">                                 
+                                        <a href="./login" className="hidden md:block text-sm md:text-base text-black dark:text-white" onClick={handleLogout}>ออกจากระบบ</a>
+                                    </div>
+                                </button>
+                            </div>
+                        </Link >
+                    ) : (
+                        <button className="">
+
+                            <div className="flex space-x-3 items-center px-3">
+                                <div className="flex-none flex justify-center">
+                                    <div className="w-8 h-8 flex ">
+                                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShta_GXR2xdnsxSzj_GTcJHcNykjVKrCBrZ9qouUl0usuJWG2Rpr_PbTDu3sA9auNUH64&usqp=CAU" alt="profile" className="shadow rounded-full object-cover" />
+                                    </div>
+                                </div>
+                                <a href="./login" className="hidden md:block text-sm md:text-base text-black dark:text-white">เข้าสู่ระบบ</a>
+                            </div>
+                        </button>
+                    )}
 
                 </div>
             </div>
@@ -127,7 +180,7 @@ const SideNav: React.FC<SidenavProps> = ({ openSidebar }) => {
                     </div>
                     <div className="flex items-center space-x-3 group bg-gradient-to-r dark:from-cyan-500 dark:to-blue-500 from-indigo-500 via-purple-500 to-purple-500  pl-10 pr-1 py-1 rounded-full text-white">
                         <div className="transform ease-in-out duration-300 mr-11 md:mr-12 font-bold text-sm md:text-base">
-                           MNR - Dashboard                       
+                            MNR - Dashboard
                         </div>
                     </div>
                 </div>

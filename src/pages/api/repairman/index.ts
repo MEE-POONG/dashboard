@@ -13,12 +13,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 const pageSize: number = Number(req.query.pageSize) || 10;
 
                 const repairman = await prisma.repairman.findMany({
-                    // skip: (page - 1) * pageSize,
-                    // take: pageSize,
+                    skip: (page - 1) * pageSize,
+                    take: pageSize,
                 });
 
-                const totaluser = await prisma.repairman.count();
-                const totalPage: number = Math.ceil(totaluser / pageSize);
+                const totalrepairman = await prisma.repairman.count();
+                const totalPage: number = Math.ceil(totalrepairman / pageSize);
                 res.status(200).json({ repairman });
             } catch (error) {
                 res.status(500).json({ error: "An error occurred while fetching the repairman" });
@@ -27,11 +27,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         case 'POST':
             try {
-                const newuser = await prisma.repairman.create({
+                const newrepairman = await prisma.repairman.create({
                     data: req.body,
                 });
 
-                res.status(201).json(newuser);
+                res.status(201).json(newrepairman);
             } catch (error) {
                 res.status(500).json({ error: "An error occurred while creating the repairman" });
             }

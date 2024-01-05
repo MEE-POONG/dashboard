@@ -5,6 +5,8 @@ import Cookies from 'js-cookie';
 import AdminList from "./AdminsList";
 import CustomersList from "./CustomersList";
 import RepairmanList from "./RepairmansList";
+import { useRouter } from 'next/router';
+
 
 const Members: React.FC = () => {
 
@@ -13,29 +15,17 @@ const Members: React.FC = () => {
         //     label: 'All Members',
         //     content: <div><MembersList /></div>
         // },
-        { label: 'Admin', content: <div><AdminList/></div> },
-        { label: 'Customers', content: <div><CustomersList/></div> },
-        { label: 'Repairman', content: <div> <RepairmanList/> </div> },
+        { label: 'แอดมิน', content: <div><AdminList /></div> },
+        { label: 'ลูกค้า', content: <div><CustomersList /></div> },
+        { label: 'ช่างซ่อม', content: <div> <RepairmanList /> </div> },
         // Add more tabs as needed
     ];
-    const [loggedInUser, setLoggedInUser] = useState<any>(null);
-    useEffect(() => {
-        const fetchData = async () => {
-            const userDataFromCookies = Cookies.get('user');
-            if (userDataFromCookies) {
-                const parsedUser = JSON.parse(userDataFromCookies);
-                setLoggedInUser(parsedUser);
-            }
-        };
-
-        fetchData();
-    }, []);
-
+   
     return (
         <  >
             <div className="flex">
                 <h2 className="font-semibold md:text-2xl ml-5">ข้อมูลสมาชิก</h2>
-                <button></button>
+            
             </div>
             <div className="mt-5">
                 <MemberTabbar memberstabs={memberstabs} />

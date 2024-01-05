@@ -5,26 +5,47 @@ import DeleteMemberModal from "@/components/Modal/DeleteAlertModal";
 import useAxios from "axios-hooks";
 import { useRouter } from 'next/router';
 import { UserName } from "@prisma/client";
+import Pagination from "@/components/Pagination";
+import { FaSearch } from "react-icons/fa";
 
 
 
+interface Params {
+    page: number;
+    pageSize: number;
+    searchKey: string;
+    totalPages: number;
+}
 
 const CustomersList: React.FC = () => {
 
 
-    const [{ data: UserNameData }, getUserData] = useAxios({
-        url: `/api/userName`,
+
+    //จำนวนหน้าและการจำกัดการแสดงของหน้า
+    const [params, setParams] = useState<Params>({
+        page: 1,
+        pageSize: 10,
+        searchKey: "",
+        totalPages: 1,
+    });
+
+    const [{ data: userNameData }, getUserData] = useAxios({
+        url: `/api/userName?page=${params.page}&pageSize=${params.pageSize}&searchTerm=${params.searchKey}`,
         method: "GET",
     });
 
-
-    const [filteredappointmentsData, setFilteredappointmentsData] = useState<
-        UserName[]
-    >([]);
     const [
         { loading: deleteuserLoading, error: deleteuserError },
         executeuserDelete,
     ] = useAxios({}, { manual: true });
+
+    const [filteredappointmentsData, setFilteredappointmentsData] = useState<
+        UserName[]
+    >([]);
+
+    useEffect(() => {
+        setFilteredappointmentsData(userNameData?.userName ?? []);
+    }, [userNameData]);
 
     const deleteuser = (id: string): Promise<any> => {
         return executeuserDelete({
@@ -36,6 +57,53 @@ const CustomersList: React.FC = () => {
             );
         });
     };
+
+    const handleChangePage = (page: number) => {
+        setParams((prevParams) => ({
+            ...prevParams,
+            page: page,
+        }));
+    };
+
+    const handleChangePageSize = (size: number) => {
+        setParams((prevParams) => ({
+            ...prevParams,
+            page: 1,
+            pageSize: size,
+        }));
+    };
+
+    const handleChangesearchKey = (search: string) => {
+        setParams(prevParams => ({
+            ...prevParams,
+            searchKey: search,
+        }));
+    };
+
+
+    useEffect(() => {
+        if (userNameData?.userName) {
+            // Filter the registerForm data based on searchKey
+            const filteredData = userNameData.userName.filter((userName: any) =>
+                // Convert both the searchKey and the relevant data to lowercase for case-insensitive search
+                userName.username.toLowerCase().includes(params.searchKey.toLowerCase())
+            );
+
+            setFilteredappointmentsData(filteredData);
+        }
+    }, [userNameData, params.searchKey]);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const totalPages = 5; // Replace with the actual total number of pages.
+
+    const handlePageChange = (page: number) => {
+        // You can implement fetching data for the selected page here
+        setCurrentPage(page);
+    };
+
+
+    //
+
     const router = useRouter();
     const { id } = router.query;
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,21 +113,9 @@ const CustomersList: React.FC = () => {
 
 
     });
-    const [loggedInUser, setLoggedInUser] = useState<any>(null);
-    useEffect(() => {
-        const fetchData = async () => {
-            const userDataFromCookies = Cookies.get('userName');
-            if (userDataFromCookies) {
-                const parsedUser = JSON.parse(userDataFromCookies);
-                setLoggedInUser(parsedUser);
-            }
-        };
 
-        fetchData();
-    }, []);
-    useEffect(() => {
-        setFilteredappointmentsData(UserNameData?.userName ?? []);
-    }, [UserNameData]);
+    //
+
     useEffect(() => {
         if (id) {
             fetch(`/api/userName/${id}`)
@@ -81,6 +137,20 @@ const CustomersList: React.FC = () => {
 
     return (
         <div className="w-full rounded-md overflow-hidden">
+            <div className="w-full lg:w-1/4 mb-2 text-xs lg:text-sm">
+                <div className="relative">
+                    <span className="absolute inset-y-0 left-0 flex items-center pl-2">
+                        <FaSearch />
+                    </span>
+                    <input
+                        type="text"
+                        onChange={e => handleChangesearchKey(e.target.value)}
+                        placeholder="ค้นหาข่าว"
+                        aria-label="news"
+                        className="pl-8 pr-4 py-2 w-full rounded-full focus:outline-none focus:border-blue-300 border-gray-300 text-xs lg:text-sm"
+                    />
+                </div>
+            </div>
             <table className="border-collapse w-full">
                 <thead className="bg-purple-500 text-white">
                     <tr>
@@ -112,7 +182,7 @@ const CustomersList: React.FC = () => {
                                 <td className="md:flex items-center gap-3 w-full lg:w-auto lg:p-2 border-b lg:table-cell hidden">
                                     <span className="bg-purple-500 p-2 w-20 text-right table-cell lg:hidden font-bold text-white">Phone :</span>
                                     <p className="px-3 py-1"></p>
-                                </td> 
+                                </td>
                                 <td className="flex items-center gap-3 w-full lg:w-auto lg:p-2 border-b lg:table-cell text-center">
                                     <span className="bg-purple-500 p-2 w-20 text-right table-cell lg:hidden font-bold text-white">Role :</span>
                                     <p className="px-3 py-1"></p>
@@ -128,6 +198,12 @@ const CustomersList: React.FC = () => {
                         ))}
                 </tbody>
             </table>
+            <Pagination
+                page={params.page}
+                totalPages={userNameData?.pagination?.total}
+                onChangePage={handleChangePage}
+                onChangePageSize={handleChangePageSize}
+            />
         </div>
     )
 }

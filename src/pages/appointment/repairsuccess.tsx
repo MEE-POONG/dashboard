@@ -186,7 +186,7 @@ const AppointList: React.FC = () => {
             if (!appointmentSentToRepairman.includes(appointmentId)) {
                 await axios.put(`/api/appointment/${appointmentId}`, {
                     repairmanId: loggedInUser.id,
-                    status: "อยู่ระหว่างการซ่อม"
+                    status: "จัดส่งแล้ว"
                 });
 
                 // ปรับปรุงสถานะเพื่อระบุว่านัดหมายได้รับการจัดส่งไปยังช่างซ่อม
@@ -220,7 +220,7 @@ const AppointList: React.FC = () => {
 
                 <tbody>
                     {filteredappointmentsData
-                        .filter((appointment) => appointment.status === "กำลังดำเนินการ")
+                        .filter((appointment) => appointment.status === "ซ่อมแล้ว")
                         .sort((a, b) => new Date(a.time || '').getTime() - new Date(b.time || '').getTime())
                         .map((appointment, index) => (
                             <tr
@@ -269,7 +269,7 @@ const AppointList: React.FC = () => {
                                             onClick={() => markAsRepairedss(appointment.id)}
                                             disabled={appointmentSentToRepairman.includes(appointment.id)}
                                         >
-                                            รับซ่อม
+                                            จัดส่ง
                                         </Button>
 
                                         {/* <a href="#" className="text-red-400 hover:text-red-700"> รับคิว </a> */}
