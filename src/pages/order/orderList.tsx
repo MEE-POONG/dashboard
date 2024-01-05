@@ -1,6 +1,6 @@
 import { MdOutlineEdit, MdDelete } from "react-icons/md";
 
-const AppointList: React.FC = () => {
+const OrderList: React.FC = () => {
     return (
         <div className="overflow-hidden rounded-lg md:shadow-xl m-2">
             <table className="border-collapse w-full">
@@ -55,4 +55,4 @@ const AppointList: React.FC = () => {
         </div>
     )
 }
-export default AppointList;
+export default OrderList;

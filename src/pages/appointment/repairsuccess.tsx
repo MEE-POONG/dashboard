@@ -11,7 +11,7 @@ import { Appointment } from "@prisma/client";
 import Link from "next/link";
 import ModalRepair from "@/components/Modal/AppointmentDetaiModall";
 
-const AppointList: React.FC = () => {
+const Repairsuccess: React.FC = () => {
     const [{ data: appointmentData }, getappointment] = useAxios({
         url: `/api/appointment`,
         method: "GET",
@@ -55,8 +55,7 @@ const AppointList: React.FC = () => {
     //เมื่อกด รับซ่อม ส่งค่า repairmanId หรือช่างซ่อมลงฐานข้อมูล และปรับสถานะ
     async function markAsRepaireds(appointmentId: any) {
         try {
-            await axios.put(`/api/appointment/${appointmentId}`, { repairmanId: loggedInUser.id, status: "อยู่ระหว่างการซ่อม" });
-
+            await axios.put(`/api/appointment/${appointmentId}`, { repairmanId: loggedInUser.id, status: "จัดส่ง" });
             window.location.reload();
         } catch (error) {
             console.error('เกิดข้อผิดพลาดในการอัปเดตสถานะ', error);
@@ -108,28 +107,6 @@ const AppointList: React.FC = () => {
                 });
         }
     }, [id]);
-    const [appointmentSentToRepairman, setAppointmentSentToRepairman] = useState<string[]>([]);
-    async function markAsRepairedss(appointmentId: any) {
-        try {
-            // ตรวจสอบว่านัดหมายได้รับการจัดส่งไปยังช่างซ่อมหรือไม่
-            if (!appointmentSentToRepairman.includes(appointmentId)) {
-                await axios.put(`/api/appointment/${appointmentId}`, {
-                    repairmanId: loggedInUser.id,
-                    status: "อยู่ระหว่างการซ่อม"
-                });
-
-                // ปรับปรุงสถานะเพื่อระบุว่านัดหมายได้รับการจัดส่งไปยังช่างซ่อม
-                setAppointmentSentToRepairman((prevSent) => [...prevSent, appointmentId]);
-
-                // รีโหลดหน้าหรือปรับปรุงข้อมูลตามที่เหมาะสม
-                window.location.reload();
-            } else {
-                console.warn('นัดหมายได้รับการจัดส่งไปยังช่างซ่อมแล้ว.');
-            }
-        } catch (error) {
-            console.error('เกิดข้อผิดพลาดในการอัปเดตสถานะ', error);
-        }
-    }
 
     return (
         <div className="overflow-hidden rounded-lg lg:shadow-xl m-2">
@@ -149,7 +126,7 @@ const AppointList: React.FC = () => {
 
                 <tbody>
                     {filteredappointmentsData
-                        .filter((appointment) => appointment.status === "กำลังดำเนินการ")
+                        .filter((appointment) => appointment.status === "ซ่อมแล้ว")
                         .sort((a, b) => new Date(a.time || '').getTime() - new Date(b.time || '').getTime())
                         .map((appointment, index) => (
                             <tr
@@ -193,14 +170,9 @@ const AppointList: React.FC = () => {
                                     <span className=" bg-[#1e293b] text-white lg:hidden p-2 w-20 h-full">Actions</span>
                                     <div className="flex justify-end px-5 gap-3">
                                         {/* ยังกดไม่ได้ ไม่ได้มีการ Login เข้ามา */}
-                                        <Button
-                                            className="text-red-400 hover:text-red-900"
-                                            onClick={() => markAsRepairedss(appointment.id)}
-                                            disabled={appointmentSentToRepairman.includes(appointment.id)}
-                                        >
-                                            รับซ่อม
+                                        <Button className="text-red-400 hover:text-red-900" onClick={() => markAsRepaireds(appointment.id)}>
+                                            จัดส่ง
                                         </Button>
-
                                         {/* <a href="#" className="text-red-400 hover:text-red-700"> รับคิว </a> */}
                                         {/* <a href="#" className="text-green-500 hover:text-green-700" ><MdOutlineEdit /></a> */}
                                     </div>
@@ -217,4 +189,4 @@ const AppointList: React.FC = () => {
         </div>
     )
 }
-export default AppointList;
+export default Repairsuccess;

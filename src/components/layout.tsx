@@ -24,8 +24,6 @@ export default function DashboardLayout({
   const openSidebar = () => {
     // Implement openNav functionality
   };
-
-
   
   return (
     <section className={kanit.className}>

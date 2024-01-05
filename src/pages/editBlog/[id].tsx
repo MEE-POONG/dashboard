@@ -139,7 +139,7 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({ isEditModalOpen, onClose 
 
 
     return (
-        <DashboardLayout>
+        <>
 
             <div className="">
                 <EditModalAlert checkAlertShow={alertForm} setCheckAlertShow={setAlertForm} checkBody={checkBody} />
@@ -234,7 +234,7 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({ isEditModalOpen, onClose 
                 </div>
             </div>
 
-        </DashboardLayout>
+        </>
     )
 }
 export default EditBlogModal;
