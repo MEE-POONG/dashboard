@@ -10,10 +10,27 @@ import { useRouter } from 'next/router';
 import { Appointment } from "@prisma/client";
 import Link from "next/link";
 import ModalRepair from "@/components/Modal/AppointmentDetaiModall";
+import Pagination from "@/components/Pagination";
 
-const Repairing: React.FC = () => {
-    const [{ data: appointmentData }, getappointment] = useAxios({
-        url: `/api/appointment`,
+
+interface Params {
+    page: number;
+    pageSize: number;
+    searchKey: string;
+    totalPages: number;
+}
+
+const AppointList: React.FC = () => {
+    //จำนวนหน้าและการจำกัดการแสดงของหน้า
+    const [params, setParams] = useState<Params>({
+        page: 1,
+        pageSize: 10,
+        searchKey: "",
+        totalPages: 1,
+    });
+
+    const [{ data: appointmentData }, getUserData] = useAxios({
+        url: `/api/appointment?page=${params.page}&pageSize=${params.pageSize}&searchTerm=${params.searchKey}`,
         method: "GET",
     });
 
@@ -26,6 +43,10 @@ const Repairing: React.FC = () => {
         Appointment[]
     >([]);
 
+    useEffect(() => {
+        setFilteredappointmentsData(appointmentData?.appointment ?? []);
+    }, [appointmentData]);
+
     const deleteappointment = (id: string): Promise<any> => {
         return executeappointmentDelete({
             url: "/api/appointment/" + id,
@@ -36,6 +57,58 @@ const Repairing: React.FC = () => {
             );
         });
     };
+
+    const handleChangePage = (page: number) => {
+        setParams((prevParams) => ({
+            ...prevParams,
+            page: page,
+        }));
+    };
+
+    const handleChangePageSize = (size: number) => {
+        setParams((prevParams) => ({
+            ...prevParams,
+            page: 1,
+            pageSize: size,
+        }));
+    };
+
+    const handleChangesearchKey = (search: string) => {
+        setParams(prevParams => ({
+            ...prevParams,
+            searchKey: search,
+        }));
+    };
+
+
+    useEffect(() => {
+        if (appointmentData?.appointment) {
+            // Filter the registerForm data based on searchKey
+            const filteredData = appointmentData.appointment.filter((appointment: any) =>
+                // Convert both the searchKey and the relevant data to lowercase for case-insensitive search
+                appointment.fname.toLowerCase().includes(params.searchKey.toLowerCase()) ||
+                appointment.lname.toLowerCase().includes(params.searchKey.toLowerCase()) ||
+                appointment.email.toLowerCase().includes(params.searchKey.toLowerCase()) ||
+                appointment.tel.toLowerCase().includes(params.searchKey.toLowerCase())
+            );
+
+            setFilteredappointmentsData(filteredData);
+        }
+    }, [appointmentData, params.searchKey]);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const totalPages = 5; // Replace with the actual total number of pages.
+
+    const handlePageChange = (page: number) => {
+        // You can implement fetching data for the selected page here
+        setCurrentPage(page);
+    };
+    //
+
+
+
+
+
     const [loggedInUser, setLoggedInUser] = useState<any>(null);
     useEffect(() => {
         const fetchData = async () => {
@@ -49,13 +122,12 @@ const Repairing: React.FC = () => {
         fetchData();
     }, []);
 
-    useEffect(() => {
-        setFilteredappointmentsData(appointmentData?.appointment ?? []);
-    }, [appointmentData]);
+
     //เมื่อกด รับซ่อม ส่งค่า repairmanId หรือช่างซ่อมลงฐานข้อมูล และปรับสถานะ
     async function markAsRepaireds(appointmentId: any) {
         try {
-            await axios.put(`/api/appointment/${appointmentId}`, { repairmanId: loggedInUser.id, status: "ซ่อมแล้ว" });
+            await axios.put(`/api/appointment/${appointmentId}`, { repairmanId: loggedInUser.id, status: "อยู่ระหว่างการซ่อม" });
+
             window.location.reload();
         } catch (error) {
             console.error('เกิดข้อผิดพลาดในการอัปเดตสถานะ', error);
@@ -107,6 +179,28 @@ const Repairing: React.FC = () => {
                 });
         }
     }, [id]);
+    const [appointmentSentToRepairman, setAppointmentSentToRepairman] = useState<string[]>([]);
+    async function markAsRepairedss(appointmentId: any) {
+        try {
+            // ตรวจสอบว่านัดหมายได้รับการจัดส่งไปยังช่างซ่อมหรือไม่
+            if (!appointmentSentToRepairman.includes(appointmentId)) {
+                await axios.put(`/api/appointment/${appointmentId}`, {
+                    repairmanId: loggedInUser.id,
+                    status: "ซ่อมแล้ว"
+                });
+
+                // ปรับปรุงสถานะเพื่อระบุว่านัดหมายได้รับการจัดส่งไปยังช่างซ่อม
+                setAppointmentSentToRepairman((prevSent) => [...prevSent, appointmentId]);
+
+                // รีโหลดหน้าหรือปรับปรุงข้อมูลตามที่เหมาะสม
+                window.location.reload();
+            } else {
+                console.warn('นัดหมายได้รับการจัดส่งไปยังช่างซ่อมแล้ว.');
+            }
+        } catch (error) {
+            console.error('เกิดข้อผิดพลาดในการอัปเดตสถานะ', error);
+        }
+    }
 
     return (
         <div className="overflow-hidden rounded-lg lg:shadow-xl m-2">
@@ -154,7 +248,7 @@ const Repairing: React.FC = () => {
                                 </td>
                                 <td className="flex items-center lg:table-cell w-full lg:w-auto border-b">
                                     <span className=" bg-[#1e293b] text-white lg:hidden p-2 w-20 h-full">Status</span>
-                                    <span className="ml-3 rounded-full bg-yellow-400 py-1 px-3 text-xs text-zinc-50 font-semibold">{appointment.status}</span>
+                                    <span className="ml-3 rounded-full bg-green-400 py-1 px-3 text-xs text-green-800 font-semibold">{appointment.status}</span>
                                 </td>
 
                                 {/* เมื่อกดคลิกรายละเอียดจะให้เด้งหน้า Modal  */}
@@ -170,9 +264,14 @@ const Repairing: React.FC = () => {
                                     <span className=" bg-[#1e293b] text-white lg:hidden p-2 w-20 h-full">Actions</span>
                                     <div className="flex justify-end px-5 gap-3">
                                         {/* ยังกดไม่ได้ ไม่ได้มีการ Login เข้ามา */}
-                                        <Button className="text-red-400 hover:text-red-900" onClick={() => markAsRepaireds(appointment.id)}>
-                                            ซ่อมเสร็จ
+                                        <Button
+                                            className="text-red-400 hover:text-red-900"
+                                            onClick={() => markAsRepairedss(appointment.id)}
+                                            disabled={appointmentSentToRepairman.includes(appointment.id)}
+                                        >
+                                            ซ่อมแล้ว
                                         </Button>
+
                                         {/* <a href="#" className="text-red-400 hover:text-red-700"> รับคิว </a> */}
                                         {/* <a href="#" className="text-green-500 hover:text-green-700" ><MdOutlineEdit /></a> */}
                                     </div>
@@ -184,9 +283,14 @@ const Repairing: React.FC = () => {
 
             </table>
 
-
+            <Pagination
+                page={params.page}
+                totalPages={appointmentData?.pagination?.total}
+                onChangePage={handleChangePage}
+                onChangePageSize={handleChangePageSize}
+            />
 
         </div>
     )
 }
-export default Repairing;
+export default AppointList;

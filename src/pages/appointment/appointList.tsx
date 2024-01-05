@@ -10,14 +10,31 @@ import { useRouter } from 'next/router';
 import { Appointment } from "@prisma/client";
 import Link from "next/link";
 import ModalRepair from "@/components/Modal/AppointmentDetaiModall";
+import Pagination from "@/components/Pagination";
+
+
+interface Params {
+    page: number;
+    pageSize: number;
+    searchKey: string;
+    totalPages: number;
+}
 
 const AppointList: React.FC = () => {
-    const [{ data: appointmentData }, getappointment] = useAxios({
-        url: `/api/appointment`,
+    //จำนวนหน้าและการจำกัดการแสดงของหน้า
+    const [params, setParams] = useState<Params>({
+        page: 1,
+        pageSize: 10,
+        searchKey: "",
+        totalPages: 1,
+    });
+
+    const [{ data: appointmentData }, getUserData] = useAxios({
+        url: `/api/appointment?page=${params.page}&pageSize=${params.pageSize}&searchTerm=${params.searchKey}`,
         method: "GET",
     });
 
-    const [
+ const [
         { loading: deleteappointmentLoading, error: deleteappointmentError },
         executeappointmentDelete,
     ] = useAxios({}, { manual: true });
@@ -25,6 +42,10 @@ const AppointList: React.FC = () => {
     const [filteredappointmentsData, setFilteredappointmentsData] = useState<
         Appointment[]
     >([]);
+
+    useEffect(() => {
+        setFilteredappointmentsData(appointmentData?.appointment ?? []);
+    }, [appointmentData]);
 
     const deleteappointment = (id: string): Promise<any> => {
         return executeappointmentDelete({
@@ -36,6 +57,58 @@ const AppointList: React.FC = () => {
             );
         });
     };
+
+    const handleChangePage = (page: number) => {
+        setParams((prevParams) => ({
+            ...prevParams,
+            page: page,
+        }));
+    };
+
+    const handleChangePageSize = (size: number) => {
+        setParams((prevParams) => ({
+            ...prevParams,
+            page: 1,
+            pageSize: size,
+        }));
+    };
+
+    const handleChangesearchKey = (search: string) => {
+        setParams(prevParams => ({
+            ...prevParams,
+            searchKey: search,
+        }));
+    };
+
+
+    useEffect(() => {
+        if (appointmentData?.appointment) {
+            // Filter the registerForm data based on searchKey
+            const filteredData = appointmentData.appointment.filter((appointment: any) =>
+                // Convert both the searchKey and the relevant data to lowercase for case-insensitive search
+                appointment.fname.toLowerCase().includes(params.searchKey.toLowerCase()) ||
+                appointment.lname.toLowerCase().includes(params.searchKey.toLowerCase()) ||
+                appointment.email.toLowerCase().includes(params.searchKey.toLowerCase()) ||
+                appointment.tel.toLowerCase().includes(params.searchKey.toLowerCase())
+            );
+
+            setFilteredappointmentsData(filteredData);
+        }
+    }, [appointmentData, params.searchKey]);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const totalPages = 5; // Replace with the actual total number of pages.
+
+    const handlePageChange = (page: number) => {
+        // You can implement fetching data for the selected page here
+        setCurrentPage(page);
+    };
+    //
+
+
+
+
+ 
     const [loggedInUser, setLoggedInUser] = useState<any>(null);
     useEffect(() => {
         const fetchData = async () => {
@@ -49,9 +122,7 @@ const AppointList: React.FC = () => {
         fetchData();
     }, []);
 
-    useEffect(() => {
-        setFilteredappointmentsData(appointmentData?.appointment ?? []);
-    }, [appointmentData]);
+
     //เมื่อกด รับซ่อม ส่งค่า repairmanId หรือช่างซ่อมลงฐานข้อมูล และปรับสถานะ
     async function markAsRepaireds(appointmentId: any) {
         try {
@@ -212,7 +283,12 @@ const AppointList: React.FC = () => {
 
             </table>
 
-
+            <Pagination
+                page={params.page}
+                totalPages={appointmentData?.pagination?.total}
+                onChangePage={handleChangePage}
+                onChangePageSize={handleChangePageSize}
+            />
 
         </div>
     )
