@@ -27,17 +27,17 @@ interface SidenavProps {
 }
 
 const SideNav: React.FC<SidenavProps> = ({ openSidebar }) => {
-    // Menu Sidebar
-    const navigationItems: MenuItem[] = [
-        { href: '/', text: 'Home', icon: <IoMdHome /> },
-        { href: '/members', text: 'Members', icon: <FaUserCog /> },
-        { href: '/appointment', text: 'Appointments', icon: <IoIosListBox /> },
-        { href: '/order', text: 'Oders', icon: <TbClipboardList /> },
-        { href: '/products', text: 'Products', icon: <FaProductHunt /> },
-        { href: '/editPages', text: 'About Pages', icon: <MdAutoFixHigh /> },
-        { href: '/editNews', text: 'Edit News', icon: <MdNewspaper /> },
-        { href: '/editBlog', text: 'Edit Blog', icon: <MdEditSquare /> },
-    ];
+  // Menu Sidebar
+  const navigationItems: MenuItem[] = [
+    { href: '/', text: 'Home', icon: <IoMdHome /> },
+    { href: '/members', text: 'Members', icon: <FaUserCog /> },
+    { href: '/appointment', text: 'Appointments', icon: <IoIosListBox /> },
+    { href: '/order', text: 'Oders', icon: <TbClipboardList /> },
+    { href: '/products', text: 'Products', icon: <FaProductHunt /> },
+    { href: '/editAboutPages', text: 'About Pages', icon: <MdAutoFixHigh /> },
+    { href: '/editNews', text: 'Edit News', icon: <MdNewspaper /> },
+    { href: '/editBlog', text: 'Edit Blog', icon: <MdEditSquare /> },
+  ];
 
     // open Sidebar
     const [isMaxSidebar, setIsMaxSidebar] = useState(true);

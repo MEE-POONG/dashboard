@@ -158,7 +158,7 @@ const NewsList: React.FC = (props) => {
 
                                 <td className="flex items-center lg:table-cell w-full lg:w-auto border-b ">
                                     <span className=" bg-[#1e293b] text-white lg:hidden p-2 w-20 md:w-28 h-full">รูปภาพ</span>
-                                    <div className="w-16 md:w-44 ">
+                                    <div className="w-16 md:w-36">
                                         <img
                                             className="p-2"
                                             src={`https://imagedelivery.net/QZ6TuL-3r02W7wQjQrv5DA/${news.img}/public`} alt=""
