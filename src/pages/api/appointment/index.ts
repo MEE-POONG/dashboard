@@ -11,17 +11,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             try {
                 const page: number = Number(req.query.page) || 1;
                 const pageSize: number = Number(req.query.pageSize) || 1000000;
-
-                const appointment = await prisma.appointment.findMany({
+        
+                const appointments = await prisma.appointment.findMany({
                     skip: (page - 1) * pageSize,
                     take: pageSize,
+                    include: {
+                        Address: true, // รวมข้อมูลจากตาราง Address ด้วย
+                    },
                 });
-
-                const totalappointment = await prisma.appointment.count();
-                const totalPage: number = Math.ceil(totalappointment / pageSize);
-                res.status(200).json({ appointment });
+        
+                const totalAppointments = await prisma.appointment.count();
+                const totalPage: number = Math.ceil(totalAppointments / pageSize);
+                
+                res.status(200).json({ appointments, totalPage });
             } catch (error) {
-                res.status(500).json({ error: "An error occurred while fetching the appointment" });
+                res.status(500).json({ error: "เกิดข้อผิดพลาดขณะดึงข้อมูลการนัดหมาย" });
             }
             break;
 

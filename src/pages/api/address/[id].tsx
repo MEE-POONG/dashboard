@@ -1,4 +1,3 @@
-
 import { PrismaClient } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -12,12 +11,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             try {
                 const id = req.query.id;
 
-                const data = await prisma.appointment.findUnique({
+                const data = await prisma.address.findUnique({
                     where: {
                         id: id as string,
-                    }, include: {
-                        Repairman: true,
-                        Address:true, // Include Repairman data
+                    },
+                    include:{
+                        User : true
                     },
                 });
 
@@ -31,12 +30,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             try {
                 const id = req.query.id;
 
-                const data = await prisma.appointment.update({
+                const data = await prisma.address.update({
                     where: {
                         id: id as string,
-                    },include: {
-                        Repairman: true,
-                        Address:true, // Include Repairman data
+                    },
+                    include:{
+                        User : true
                     },
                     data: req.body,
                 });
@@ -51,12 +50,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             try {
                 const id = req.query.id;
 
-                const data = await prisma.appointment.delete({
+                const data = await prisma.address.delete({
                     where: {
                         id: id as string,
-                    },include: {
-                        Repairman: true,
-                        Address:true, // Include Repairman data
                     },
                 });
 
@@ -70,4 +66,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             res.setHeader('Allow', ['GET', 'PUT', 'DELETE']);
             res.status(405).end(`Method ${method} Not Allowed`);
     }
-} 
+}
