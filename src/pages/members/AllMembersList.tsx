@@ -14,6 +14,28 @@ import Link from "next/link";
 
 
 const MembersList: React.FC = () => {
+    const router = useRouter();
+    const { id } = router.query;
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [time, setTime] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
+
+    const [fname, setFname] = useState("");
+    const [lname, setLname] = useState("");
+    const [tel, setTel] = useState("");
+    const [email, setEmail] = useState("");
+    const [repairmanId, setRepairmanId] = useState("");
+    const [userId, setUserId] = useState("");
+    const [request, setRequest] = useState("");
+    const [UserData, setUserData] = useState({
+        fname: "",
+        lname: "",
+        tel: "",
+        email: "",
+        time: "",
+        userId: ""
+    });
     const [{ data: userData }, getUserData] = useAxios({
         url: `/api/user`,
         method: "GET",
@@ -46,28 +68,7 @@ const MembersList: React.FC = () => {
             });
         }
     };
-    const router = useRouter();
-    const { id } = router.query;
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [time, setTime] = useState("");
-    const [isLoading, setIsLoading] = useState(true);
-
-    const [fname, setFname] = useState("");
-    const [lname, setLname] = useState("");
-    const [tel, setTel] = useState("");
-    const [email, setEmail] = useState("");
-    const [repairmanId, setRepairmanId] = useState("");
-    const [userId, setUserId] = useState("");
-    const [request, setRequest] = useState("");
-    const [UserData, setUserData] = useState({
-        fname: "",
-        lname: "",
-        tel: "",
-        email: "",
-        time: "",
-        userId: ""
-    });
     const [loggedInUser, setLoggedInUser] = useState<any>(null);
     useEffect(() => {
         const fetchData = async () => {
@@ -145,7 +146,7 @@ const MembersList: React.FC = () => {
         getRepairmanData();
         getUserData();
     }, []);
-    
+
     return (
         <div className="w-full rounded-md overflow-hidden">
             <table className="border-collapse w-full">
@@ -188,7 +189,7 @@ const MembersList: React.FC = () => {
                                     <span className=" bg-purple-500 p-2 w-20 text-right table-cell lg:hidden font-bold text-white">Actions :</span>
                                     <div className="flex justify-end gap-2 md:px-5">
                                         <Button className="text-red-400 hover:text-red-900" onClick={() => deleteappointment(repairman.id)}>
-                                        <MdDelete />
+                                            <MdDelete />
                                         </Button>
                                         <a href={`/members/edit/${repairman.id}`} className="text-green-500 hover:text-green-700" ><MdOutlineEdit /></a>
                                     </div>

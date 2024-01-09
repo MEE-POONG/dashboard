@@ -19,7 +19,15 @@ interface Params {
 
 const CustomersList: React.FC = () => {
 
+    const router = useRouter();
+    const { id } = router.query;
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [username, setAdmin] = useState("");
+    const [UserData, setUserData] = useState({
 
+
+    });
 
     //จำนวนหน้าและการจำกัดการแสดงของหน้า
     const [params, setParams] = useState<Params>({
@@ -104,15 +112,7 @@ const CustomersList: React.FC = () => {
 
     //
 
-    const router = useRouter();
-    const { id } = router.query;
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
-    const [username, setAdmin] = useState("");
-    const [UserData, setUserData] = useState({
 
-
-    });
 
     //
 

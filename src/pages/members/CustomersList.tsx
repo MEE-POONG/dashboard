@@ -16,7 +16,28 @@ interface Params {
 }
 
 const CustomersList: React.FC = (props) => {
-
+    const [currentPage, setCurrentPage] = useState(1);
+    const totalPages = 5; // Replace with the actual total number of pages.
+    const router = useRouter();
+    const { id } = router.query;
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [time, setTime] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
+    const [fname, setFname] = useState("");
+    const [lname, setLname] = useState("");
+    const [tel, setTel] = useState("");
+    const [email, setEmail] = useState("");
+    const [repairmanId, setRepairmanId] = useState("");
+    const [userId, setUserId] = useState("");
+    const [request, setRequest] = useState("");
+    const [UserData, setUserData] = useState({
+        fname: "",
+        lname: "",
+        tel: "",
+        email: "",
+        time: "",
+        userId: ""
+    });
     //จำนวนหน้าและการจำกัดการแสดงของหน้า
     const [params, setParams] = useState<Params>({
         page: 1,
@@ -92,34 +113,13 @@ const CustomersList: React.FC = (props) => {
         }
     }, [userData, params.searchKey]);
 
-    const [currentPage, setCurrentPage] = useState(1);
-    const totalPages = 5; // Replace with the actual total number of pages.
 
     const handlePageChange = (page: number) => {
         // You can implement fetching data for the selected page here
         setCurrentPage(page);
     };
     //
-    const router = useRouter();
-    const { id } = router.query;
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [time, setTime] = useState("");
-    const [isLoading, setIsLoading] = useState(true);
-    const [fname, setFname] = useState("");
-    const [lname, setLname] = useState("");
-    const [tel, setTel] = useState("");
-    const [email, setEmail] = useState("");
-    const [repairmanId, setRepairmanId] = useState("");
-    const [userId, setUserId] = useState("");
-    const [request, setRequest] = useState("");
-    const [UserData, setUserData] = useState({
-        fname: "",
-        lname: "",
-        tel: "",
-        email: "",
-        time: "",
-        userId: ""
-    });
+
     const [loggedInUser, setLoggedInUser] = useState<any>(null);
     useEffect(() => {
         const fetchData = async () => {

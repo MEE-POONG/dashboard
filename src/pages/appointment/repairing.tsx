@@ -22,6 +22,28 @@ interface Params {
 
 const AppointList: React.FC = () => {
     //จำนวนหน้าและการจำกัดการแสดงของหน้า
+    const router = useRouter();
+    const { id } = router.query;
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [time, setTime] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
+
+    const [fname, setFname] = useState("");
+    const [lname, setLname] = useState("");
+    const [tel, setTel] = useState("");
+    const [email, setEmail] = useState("");
+    const [repairmanId, setRepairmanId] = useState("");
+    const [userId, setUserId] = useState("");
+    const [request, setRequest] = useState("");
+    const [UserData, setUserData] = useState({
+        fname: "",
+        lname: "",
+        tel: "",
+        email: "",
+        time: "",
+        userId: ""
+    });
     const [params, setParams] = useState<Params>({
         page: 1,
         pageSize: 10,
@@ -134,28 +156,7 @@ const AppointList: React.FC = () => {
         }
     }
 
-    const router = useRouter();
-    const { id } = router.query;
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [time, setTime] = useState("");
-    const [isLoading, setIsLoading] = useState(true);
-
-    const [fname, setFname] = useState("");
-    const [lname, setLname] = useState("");
-    const [tel, setTel] = useState("");
-    const [email, setEmail] = useState("");
-    const [repairmanId, setRepairmanId] = useState("");
-    const [userId, setUserId] = useState("");
-    const [request, setRequest] = useState("");
-    const [UserData, setUserData] = useState({
-        fname: "",
-        lname: "",
-        tel: "",
-        email: "",
-        time: "",
-        userId: ""
-    });
 
     useEffect(() => {
         if (id) {

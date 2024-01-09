@@ -21,6 +21,28 @@ interface Params {
 }
 
 const AppointList: React.FC = () => {
+    const router = useRouter();
+    const { id } = router.query;
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [time, setTime] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
+
+    const [fname, setFname] = useState("");
+    const [lname, setLname] = useState("");
+    const [tel, setTel] = useState("");
+    const [email, setEmail] = useState("");
+    const [repairmanId, setRepairmanId] = useState("");
+    const [userId, setUserId] = useState("");
+    const [request, setRequest] = useState("");
+    const [UserData, setUserData] = useState({
+        fname: "",
+        lname: "",
+        tel: "",
+        email: "",
+        time: "",
+        userId: ""
+    });
     //จำนวนหน้าและการจำกัดการแสดงของหน้า
     const [params, setParams] = useState<Params>({
         page: 1,
@@ -34,7 +56,7 @@ const AppointList: React.FC = () => {
         method: "GET",
     });
 
- const [
+    const [
         { loading: deleteappointmentLoading, error: deleteappointmentError },
         executeappointmentDelete,
     ] = useAxios({}, { manual: true });
@@ -108,7 +130,7 @@ const AppointList: React.FC = () => {
 
 
 
- 
+
     const [loggedInUser, setLoggedInUser] = useState<any>(null);
     useEffect(() => {
         const fetchData = async () => {
@@ -134,28 +156,7 @@ const AppointList: React.FC = () => {
         }
     }
 
-    const router = useRouter();
-    const { id } = router.query;
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [time, setTime] = useState("");
-    const [isLoading, setIsLoading] = useState(true);
-
-    const [fname, setFname] = useState("");
-    const [lname, setLname] = useState("");
-    const [tel, setTel] = useState("");
-    const [email, setEmail] = useState("");
-    const [repairmanId, setRepairmanId] = useState("");
-    const [userId, setUserId] = useState("");
-    const [request, setRequest] = useState("");
-    const [UserData, setUserData] = useState({
-        fname: "",
-        lname: "",
-        tel: "",
-        email: "",
-        time: "",
-        userId: ""
-    });
 
     useEffect(() => {
         if (id) {
