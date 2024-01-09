@@ -77,12 +77,6 @@ model ReportProduct {
   subtitle String?
 }
 
-model AboutPage {
-  id    String  @id @default(auto()) @map("_id") @db.ObjectId
-  title String?
-  logo  String?
-}
-
 //*////
 
 model Address {
@@ -162,9 +156,9 @@ model User {
 model About {
   id          String  @id @default(auto()) @map("_id") @db.ObjectId
   title       String?
-  logo        String?
+  imgLogo     String?
   description String?
-  banner      String?
+  imgbanner   String?
   subtitleOne String?
   subtitleTwo String?
   Address     String?
