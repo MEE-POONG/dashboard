@@ -8,7 +8,7 @@ import { Main } from 'next/document';
 
 const EditAboutPage: React.FC = (props) => {
 
-    const [{ data: aboutData }, getnews] = useAxios({
+    const [{ data: aboutData }, getAbout] = useAxios({
         url: "/api/about",
         method: "GET",
     });
@@ -55,6 +55,7 @@ const EditAboutPage: React.FC = (props) => {
                                 <textarea className="w-full border-0 text-sm lg:text-base" name="" value={about.description} rows={8} />
                             </div>
                         </div>
+
                         <hr className="my-5" />
 
                         <div className="relative mt-5 md:mt-1 p-2 border w-full rounded-md text-sm lg:text-base bg-white mb-5">
