@@ -52,7 +52,7 @@ const EditAboutPage: React.FC = (props) => {
                             </div>
                             <div className="relative mt-5 md:mt-1 p-2 border w-full rounded-md bg-white mb-5">
                                 <span className="absolute -top-2 md:-top-3 font-semibold bg-amber-300 px-2 rounded-full text-sm"> เกี่ยวกับ MNR  </span>
-                                <textarea className="w-full border-0 text-sm lg:text-base" name="" value={about.description} rows={8} />
+                                <textarea className="w-full border-0 text-sm lg:text-base" name="" value={about.description} rows={8} readOnly />
                             </div>
                         </div>
 

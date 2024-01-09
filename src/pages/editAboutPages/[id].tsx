@@ -5,6 +5,21 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 
+interface AboutData {
+    id: number;
+    title: string;
+    subtitleOne: string;
+    subtitleTwo: string;
+    description: string;
+    Address: string;
+    email: string;
+    FBname: string;
+    line: string;
+    phoneOne: string;
+    phoneTwo: string;
+    logo: string; // Image ID
+}
+
 const AboutPage: React.FC = (props) => {
 
     const router = useRouter();
@@ -45,8 +60,6 @@ const AboutPage: React.FC = (props) => {
         window.location.reload();
     };
 
-    const [imagePreview, setImagePreview] = useState<string | null>(null);
-
     useEffect(() => {
         if (aboutData) {
             const {
@@ -76,28 +89,14 @@ const AboutPage: React.FC = (props) => {
         }
     }, [aboutData]);
 
-    // const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    //     const file = event.target.files && event.target.files[0];
-    //     if (file) {
-    //         const reader = new FileReader();
-    //         reader.onloadend = () => {
-    //             const base64String = reader.result as string;
-    //             const splittedString = base64String.split(",")[1]; // ตัดส่วน "data:image/png;base64," ออก
-    //             setLogo(splittedString);
-    //         };
-    //         reader.readAsDataURL(file);
-    //     }
-    // };
-
     const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files && event.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
                 const base64String = reader.result as string;
-                const splittedString = base64String.split(",")[1];
+                const splittedString = base64String.split(",")[1]; // ตัดส่วน "data:image/png;base64," ออก
                 setLogo(splittedString);
-                setImagePreview(base64String);
             };
             reader.readAsDataURL(file);
         }
@@ -121,7 +120,6 @@ const AboutPage: React.FC = (props) => {
                 phoneTwo,
                 FBname,
                 line,
-                logo,
             };
 
             // Execute the update
@@ -173,24 +171,13 @@ const AboutPage: React.FC = (props) => {
                         />
                     </div>
 
-
                     <div className="md:flex justify-between mt-5 gap-5">
                         <div className="text-center">
-                            โลโก้
-                            {imagePreview && (
-                                <img
-                                    className="mt-2 mx-auto max-h-32"
-                                    src={imagePreview ? `data:image/jpeg;base64,${imagePreview}` : aboutData?.img ? `https://imagedelivery.net/QZ6TuL-3r02W7wQjQrv5DA/${logo}/public` : `https://imagedelivery.net/QZ6TuL-3r02W7wQjQrv5DA/4500f404-dbac-40f3-6696-ae768a38e800/500`}
-                                    alt="Uploaded Logo"
-                                />
-                            )}
-                            <input
-                                className="text-xs rounded-full border"
-                                type="file"
-                                accept="image/*"
-                                onChange={handleFileUpload}
+                            <img
+                                className="p-2 w-24 md:w-44 mx-auto"
+                                src={logo} alt=""
                             />
-
+                            โลโก้
                         </div>
                         <div className="relative mt-5 md:mt-1 p-2 border w-full rounded-md bg-white mb-5">
                             <span className="absolute -top-2 md:-top-3 font-semibold bg-amber-300 px-2 rounded-full text-sm"> เกี่ยวกับ MNR  </span>
@@ -223,7 +210,7 @@ const AboutPage: React.FC = (props) => {
                                 }`}
                             type="text"
                             value={email}
-                            onChange={(e) => setAddress(e.target.value)}
+                            onChange={(e) => setEmail(e.target.value)}
                             placeholder="name@example.com"
                         />
                     </div>
@@ -235,7 +222,7 @@ const AboutPage: React.FC = (props) => {
                                     }`}
                                 type="text"
                                 value={phoneOne}
-                                onChange={(e) => setAddress(e.target.value)}
+                                onChange={(e) => setPhoneOne(e.target.value)}
                                 placeholder="name@example.com"
                             />
                         </div>
@@ -246,31 +233,31 @@ const AboutPage: React.FC = (props) => {
                                     }`}
                                 type="text"
                                 value={phoneTwo}
-                                onChange={(e) => setAddress(e.target.value)}
+                                onChange={(e) => setPhoneTwo(e.target.value)}
                                 placeholder="name@example.com"
                             />
                         </div>
                     </div>
                     <div className="mt-5 md:flex gap-5">
                         <div className="relative mt-5 md:mt-1 border w-full rounded-md text-sm lg:text-base bg-white">
-                            <span className="absolute -top-2 md:-top-3 font-semibold bg-amber-300 px-2 rounded-full text-sm"> เบอร์โทร  </span>
+                            <span className="absolute -top-2 md:-top-3 font-semibold bg-amber-300 px-2 rounded-full text-sm"> Facebook  </span>
                             <input
                                 className={`mt-1  border-0 w-full text-sm lg:text-base  ${inputForm && FBname === '' ? 'border-red-500' : 'border-gray-300'
                                     }`}
                                 type="text"
                                 value={FBname}
-                                onChange={(e) => setAddress(e.target.value)}
+                                onChange={(e) => setFBname(e.target.value)}
                                 placeholder="name@example.com"
                             />
                         </div>
                         <div className="relative mt-5 md:mt-1 border w-full rounded-md text-sm lg:text-base bg-white">
-                            <span className="absolute -top-2 md:-top-3 font-semibold bg-amber-300 px-2 rounded-full text-sm"> เบอร์โทร  </span>
+                            <span className="absolute -top-2 md:-top-3 font-semibold bg-amber-300 px-2 rounded-full text-sm"> Line@  </span>
                             <input
                                 className={`mt-1  border-0 w-full text-sm lg:text-base  ${inputForm && line === '' ? 'border-red-500' : 'border-gray-300'
                                     }`}
                                 type="text"
                                 value={line}
-                                onChange={(e) => setAddress(e.target.value)}
+                                onChange={(e) => setLine(e.target.value)}
                                 placeholder="name@example.com"
                             />
                         </div>
