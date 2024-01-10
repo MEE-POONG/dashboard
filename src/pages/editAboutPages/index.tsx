@@ -8,7 +8,7 @@ import { Main } from 'next/document';
 
 const EditAboutPage: React.FC = (props) => {
 
-    const [{ data: aboutData }, getnews] = useAxios({
+    const [{ data: aboutData }, getAbout] = useAxios({
         url: "/api/about",
         method: "GET",
     });
@@ -46,13 +46,13 @@ const EditAboutPage: React.FC = (props) => {
                             <div className="text-center">
                                 <img
                                     className="p-2 w-24 md:w-44 mx-auto"
-                                    src={`https://imagedelivery.net/QZ6TuL-3r02W7wQjQrv5DA/${about.logo}/public`} alt=""
+                                    src={`https://imagedelivery.net/QZ6TuL-3r02W7wQjQrv5DA/${about.imgLogo}/public`} alt=""
                                 />
-                                โลโก้
+                                <span className="font-semibold bg-amber-300 px-2 rounded-full text-sm">โลโก้</span>
                             </div>
                             <div className="relative mt-5 md:mt-1 p-2 border w-full rounded-md bg-white mb-5">
                                 <span className="absolute -top-2 md:-top-3 font-semibold bg-amber-300 px-2 rounded-full text-sm"> เกี่ยวกับ MNR  </span>
-                                <textarea className="w-full border-0 text-sm lg:text-base" name="" value={about.description} rows={8} />
+                                <textarea className="w-full border-0 text-sm lg:text-base" name="" value={about.description} rows={4} readOnly />
                             </div>
                         </div>
                         <hr className="my-5" />
