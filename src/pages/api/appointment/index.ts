@@ -10,32 +10,34 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         case 'GET':
             try {
                 const page: number = Number(req.query.page) || 1;
-                const pageSize: number = Number(req.query.pageSize) || 1000000;
-        
-                const appointments = await prisma.appointment.findMany({
+                const pageSize: number = Number(req.query.pageSize) || 10;
+
+                const appointment = await prisma.appointment.findMany({
                     skip: (page - 1) * pageSize,
                     take: pageSize,
+                    // สามารถเพิ่ม include เพื่อ Join กับตารางอื่น ๆ ตามที่ต้องการ
                     include: {
-                        Address: true, // รวมข้อมูลจากตาราง Address ด้วย
+                        Address: true,
+                        User: true, // รวมข้อมูลจากตาราง User ด้วย (ตัวอย่าง)
+                        Repairman: true,
                     },
                 });
-        
-                const totalAppointments = await prisma.appointment.count();
-                const totalPage: number = Math.ceil(totalAppointments / pageSize);
-                
-                res.status(200).json({ appointments, totalPage });
+
+                const totalblog = await prisma.appointment.count();
+                const totalPage: number = Math.ceil(totalblog / pageSize);
+                res.status(200).json({ appointment });
             } catch (error) {
-                res.status(500).json({ error: "เกิดข้อผิดพลาดขณะดึงข้อมูลการนัดหมาย" });
+                res.status(500).json({ error: "An error occurred while fetching the appointment" });
             }
             break;
 
         case 'POST':
             try {
-                const newappointment = await prisma.appointment.create({
+                const newblog = await prisma.appointment.create({
                     data: req.body,
                 });
 
-                res.status(201).json(newappointment);
+                res.status(201).json(newblog);
             } catch (error) {
                 res.status(500).json({ error: "An error occurred while creating the appointment" });
             }

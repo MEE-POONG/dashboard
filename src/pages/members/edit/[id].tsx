@@ -148,7 +148,7 @@ const EditNewsModal: React.FC<EditNewsModalProps> = ({ isEditModalOpen, onClose 
         fetchData();
     }, []);
     return (
-        <DashboardLayout loggedInUser={loggedInUser}>
+        < >
 
             <div className="">
                 <EditModalAlert checkAlertShow={alertForm} setCheckAlertShow={setAlertForm} checkBody={checkBody} />
@@ -225,7 +225,7 @@ const EditNewsModal: React.FC<EditNewsModalProps> = ({ isEditModalOpen, onClose 
                 </div>
             </div>
 
-        </DashboardLayout>
+        </>
     )
 }
 export default EditNewsModal;

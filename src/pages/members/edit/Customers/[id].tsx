@@ -143,7 +143,7 @@ const EditCustomersModal: React.FC<EditCustomersModalProps> = ({ isEditModalOpen
         fetchData();
     }, []);
     return (
-        <DashboardLayout loggedInUser={loggedInUser}>
+        < >
 
             <div className="">
                 <EditModalAlert checkAlertShow={alertForm} setCheckAlertShow={setAlertForm} checkBody={checkBody} />
@@ -220,7 +220,7 @@ const EditCustomersModal: React.FC<EditCustomersModalProps> = ({ isEditModalOpen
                 </div>
             </div>
 
-        </DashboardLayout>
+        </>
     )
 }
 export default EditCustomersModal;
