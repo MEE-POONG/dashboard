@@ -142,7 +142,7 @@ const EditAdminsModal: React.FC<EditAdminsModalProps> = ({ isEditModalOpen, onCl
         fetchData();
     }, []);
     return (
-        <DashboardLayout loggedInUser={loggedInUser}>
+        < >
 
             <div className="">
                 <EditModalAlert checkAlertShow={alertForm} setCheckAlertShow={setAlertForm} checkBody={checkBody} />
@@ -219,7 +219,7 @@ const EditAdminsModal: React.FC<EditAdminsModalProps> = ({ isEditModalOpen, onCl
                 </div>
             </div>
 
-        </DashboardLayout>
+        </>
     )
 }
 export default EditAdminsModal;

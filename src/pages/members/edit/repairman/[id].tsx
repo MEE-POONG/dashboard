@@ -148,7 +148,7 @@ const EditRepairsModal: React.FC<EditrepairModalProps> = ({ isEditModalOpen, onC
         fetchData();
     }, []);
     return (
-        <DashboardLayout loggedInUser={loggedInUser}>
+        < >
 
             <div className="">
                 <EditModalAlert checkAlertShow={alertForm} setCheckAlertShow={setAlertForm} checkBody={checkBody} />
@@ -225,7 +225,7 @@ const EditRepairsModal: React.FC<EditrepairModalProps> = ({ isEditModalOpen, onC
                 </div>
             </div>
 
-        </DashboardLayout>
+        </>
     )
 }
 export default EditRepairsModal;

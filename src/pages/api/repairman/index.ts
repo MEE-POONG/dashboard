@@ -15,6 +15,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 const repairman = await prisma.repairman.findMany({
                     skip: (page - 1) * pageSize,
                     take: pageSize,
+                    include: {
+                        Appointment: true,
+                        Address: true, // Include Repairman data
+                    },
                 });
 
                 const totalrepairman = await prisma.repairman.count();
