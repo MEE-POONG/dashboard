@@ -3,7 +3,6 @@ import { About } from "@prisma/client";
 import useAxios from "axios-hooks";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Main } from 'next/document';
 
 
 const EditAboutPage: React.FC = (props) => {
