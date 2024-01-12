@@ -15,30 +15,27 @@ model UserName {
   username String?
 }
 
-model Categories {
-  id      String     @id @default(auto()) @map("_id") @db.ObjectId
-  name    String?
-  detail  String?
-  product Products[]
-}
-
 model Products {
-  id           String  @id @default(auto()) @map("_id") @db.ObjectId
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
   productname  String?
   productbrand String?
   productmodel String?
   description  String?
   productcost  String?
   price        String?
-  stock        String? //คงเหลือ
   imgFirst     String?
   imgSecond    String?
   imgThird     String?
   imgFourth    String?
   imgFifth     String?
-
   Categories   Categories? @relation(fields: [categoriesId], references: [id])
   categoriesId String?     @db.ObjectId
+}
+
+model Categories {
+  id      String     @id @default(auto()) @map("_id") @db.ObjectId
+  name    String?
+  product Products[]
 }
 
 model News {

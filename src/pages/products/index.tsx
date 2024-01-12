@@ -1,8 +1,9 @@
 
+import Link from "next/link";
 import ProductsList from "./productsList";
 import { IoMdAdd, IoMdBuild } from "react-icons/io";
 
-const Products: React.FC = () => {
+const Products: React.FC = (props) => {
     return (
         
             <div>
@@ -16,11 +17,13 @@ const Products: React.FC = () => {
                             <span><IoMdAdd /></span>
                             <span className="hidden md:block">ADD</span>
                         </button>
-                        <button
+                        
+                        <Link 
+                        href='/products/categories'
                             className="flex items-center bg-amber-400 hover:bg-amber-700 text-white py-1.5 px-3 text-sm font-semibold rounded-full ml-2"
                         >
                             Type
-                        </button>
+                        </Link>
                     </div>
                 </div>
                 <ProductsList />

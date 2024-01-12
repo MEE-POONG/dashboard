@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { MdOutlineEdit } from "react-icons/md";
 import Pagination from '@/components/Pagination';
 import { FaSearch } from "react-icons/fa";
-import { Products } from "@prisma/client";
+import { Products, Categories } from '@prisma/client';
 
 
 interface Params {
@@ -31,17 +31,43 @@ const ProductsList: React.FC = (props) => {
     });
 
     const [
+        { data: categoriesData },
+        getCategories
+    ] = useAxios({
+        url: "/api/categories", // Assuming this endpoint exists
+        method: "GET",
+    });
+
+    const [
         { loading: deleteproductLoading, error: deleteproductError },
         executeproductDelete,
     ] = useAxios({}, { manual: true });
 
-    const [filteredproductsData, setFilteredproductsData] = useState<
-        Products[]
-    >([]);
+    const [filteredproductsData, setFilteredproductsData] = useState<Products[]>([]);
+    const [categoriesMap, setCategoriesMap] = useState<Record<number, string>>({});
+
+    useEffect(() => {
+        getCategories(); // Fetch category data on component mount
+        getproducts();
+    }, []); // Fetch products and categories on component mount
 
     useEffect(() => {
         setFilteredproductsData(productsData?.products ?? []);
     }, [productsData]);
+
+    useEffect(() => {
+        if (categoriesData?.categories) {
+            // Create a map of category IDs to category names
+            const categoriesMap = categoriesData.categories.reduce(
+                (map, category) => ({
+                    ...map,
+                    [category.id]: category.name,
+                }),
+                {}
+            );
+            setCategoriesMap(categoriesMap);
+        }
+    }, [categoriesData]);
 
     const deleteproduct = (id: string): Promise<any> => {
         return executeproductDelete({
@@ -81,6 +107,8 @@ const ProductsList: React.FC = (props) => {
             // Filter the product data based on searchKey
             const filteredData = productsData.product.filter((products: Products | null) => {
                 if (products) {
+                    const categoriesId = products.categoriesId || 0; // Default to 0 if categoriesId is undefined
+                    const categoryName = categoriesMap[categoriesId] || ""; // Get category name from the map
                     // Extract properties and convert them to lowercase
                     const {
                         productname,
@@ -112,7 +140,7 @@ const ProductsList: React.FC = (props) => {
 
             setFilteredproductsData(filteredData);
         }
-    }, [productsData, params.searchKey]);
+    }, [productsData, params.searchKey, categoriesMap]);
 
 
     return (
@@ -166,13 +194,15 @@ const ProductsList: React.FC = (props) => {
                                     {products.productname}
                                 </th>
                                 <td className="px-6 py-3">
-                                    <span className="ml-3 rounded-full bg-yellow-100 py-1 px-3 text-xs text-yellow-900 font-semibold">{products.categoriesId}</span>
+                                    <span className="ml-3 rounded-full bg-yellow-100 py-1 px-3 text-xs text-yellow-900 font-semibold">
+                                        {categoriesMap[products.categoriesId || 0] || ""}
+                                    </span>
                                 </td>
                                 <td className="px-6 py-3">
                                     {products.price}
                                 </td>
                                 <td className="px-6 py-3">
-                                    {products.stock}
+                                    999
                                 </td>
 
                                 <td className="px-6 py-3 flex">
@@ -183,7 +213,9 @@ const ProductsList: React.FC = (props) => {
                                         className="text-green-500 hover:text-green-700"
                                     >
                                         <MdOutlineEdit />
+
                                     </Link>
+
                                 </td>
                             </tr>
                         ))}
