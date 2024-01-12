@@ -249,9 +249,9 @@ export default function ModalRepair({ appointmentData }: any) {
                                             <div className='grid grid-cols-12 grid-rows-2 space-x-1'>
                                                 <p className='col-span-3 row-span-2 text-right'>วีดีโอ :</p>
                                                 {appointmentData.video ? (
-                                                    <a href={appointmentData.video} target="_blank" className='col-span-9 row-span-2 text-rose-500'>
+                                                    <Link href={appointmentData.video} target="_blank" className='col-span-9 row-span-2 text-rose-500'>
                                                         <strong>ดูวีดีโอ</strong>
-                                                    </a>
+                                                    </Link>
                                                 ) : (
                                                     <p className='col-span-9 row-span-2 text-rose-500'>ไม่มีวีดีโอ</p>
                                                 )}
@@ -267,6 +267,7 @@ export default function ModalRepair({ appointmentData }: any) {
                                             >
                                                 ปิด
                                             </button>
+                                            AppointmentSuccesss
                                             {/* <Button className="text-red-400 hover:text-red-900" onClick={() => markAsRepaireds(appointmentData.id)}>
                                                 รับซ่อม
                                             </Button> */}

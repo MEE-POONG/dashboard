@@ -80,7 +80,7 @@ model ReportProduct {
 //*////
 
 model Address {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
   name        String?
   lname       String?
   phonenumber String?
@@ -91,35 +91,11 @@ model Address {
   district    String?
   subdistrict String?
   note        String?
-
   Appointment Appointment[]
   User        User?         @relation(fields: [userId], references: [id])
   userId      String?       @db.ObjectId
   Repairman   Repairman?    @relation(fields: [repairmanId], references: [id])
   repairmanId String?       @db.ObjectId
-}
-
-model Appointment {
-  id         String    @id @default(auto()) @map("_id") @db.ObjectId
-  fname      String?
-  lname      String?
-  time       String?
-  request    String?
-  message    String?
-  email      String?
-  tel        String?
-  url        String?
-  status     String?   @default("Wait")
-  userId     String?   @db.ObjectId
-  createdAt  DateTime? @default(now())
-  updatedAt  DateTime? @updatedAt
-  deleted_at DateTime? @map("deleted_at")
-
-  repairmanId String?    @db.ObjectId
-  Repairman   Repairman? @relation(fields: [repairmanId], references: [id])
-  User        User?      @relation(fields: [userId], references: [id])
-  Address     Address?   @relation(fields: [addressId], references: [id])
-  addressId   String?    @db.ObjectId
 }
 
 model Repairman {
@@ -131,11 +107,39 @@ model Repairman {
   img      String?
   password String?
 
+  role        String?
   Appointment Appointment[]
   Address     Address[]
   createdAt   DateTime?     @default(now())
   updatedAt   DateTime?     @updatedAt
   deleted_at  DateTime?     @map("deleted_at")
+}
+
+model Appointment {
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  fname   String?
+  lname   String?
+  time    String?
+  date    String?
+  request String?
+  message String?
+  email   String?
+  tel     String?
+  url     String?
+  detail  String? //รายละเอียดหลังการซ่อม
+  receipt String? //ใบเสร็จ
+
+  status     String?   @default("Wait")
+  userId     String?   @db.ObjectId
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+  deleted_at DateTime? @map("deleted_at")
+
+  repairmanId String?    @db.ObjectId
+  Repairman   Repairman? @relation(fields: [repairmanId], references: [id])
+  User        User?      @relation(fields: [userId], references: [id])
+  Address     Address?   @relation(fields: [addressId], references: [id])
+  addressId   String?    @db.ObjectId
 }
 
 model User {

@@ -255,26 +255,22 @@ const AppointList: React.FC = () => {
                                 {/* เมื่อกดคลิกรายละเอียดจะให้เด้งหน้า Modal  */}
                                 <td className="flex items-center lg:table-cell w-full lg:w-auto border-b">
                                     <span className=" bg-[#1e293b] text-white lg:hidden p-2 w-20 h-full">Details</span>
-                                    {/* <a href="#" className="text-indigo-400 hover:text-indigo-900"> รายละเอียด </a> */}
+                                    {/* <Link href="#" className="text-indigo-400 hover:text-indigo-900"> รายละเอียด </Link> */}
                                     <ModalRepair appointmentData={appointment}></ModalRepair>
                                 </td>
 
 
 
                                 <td className="flex items-center lg:table-cell w-full lg:w-auto border-b">
-                                    <span className=" bg-[#1e293b] text-white lg:hidden p-2 w-20 h-full">Actions</span>
+                                    <span className=" bg-[#1e293b] text-white lg:hidden p-2 w-20 md:w-28 h-full">Actions</span>
                                     <div className="flex justify-end px-5 gap-3">
-                                        {/* ยังกดไม่ได้ ไม่ได้มีการ Login เข้ามา */}
-                                        <Button
-                                            className="text-red-400 hover:text-red-900"
-                                            onClick={() => markAsRepairedss(appointment.id)}
-                                            disabled={appointmentSentToRepairman.includes(appointment.id)}
+                                        <Link
+                                            href={`/appointment/add/delivery/${appointment.id}`}
+                                            className="text-green-500 hover:text-green-700"
                                         >
                                             จัดส่ง
-                                        </Button>
+                                        </Link>
 
-                                        {/* <a href="#" className="text-red-400 hover:text-red-700"> รับคิว </a> */}
-                                        {/* <a href="#" className="text-green-500 hover:text-green-700" ><MdOutlineEdit /></a> */}
                                     </div>
                                 </td>
                             </tr>

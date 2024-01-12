@@ -125,9 +125,9 @@ const LoginComponent: React.FC = () => {
                                     </div>
 
                                     <div className="text-sm">
-                                        <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+                                        <Link href="#" className="font-medium text-blue-600 hover:text-blue-500">
                                             ลืมรหัสผ่าน?
-                                        </a>
+                                        </Link>
                                     </div>
                                 </div>
 
@@ -155,24 +155,24 @@ const LoginComponent: React.FC = () => {
 
                                 <div className="mt-6 grid grid-cols-3 gap-3">
                                     <div>
-                                        <a href="#"
+                                        <Link href="#"
                                             className="w-full flex items-center justify-center px-8 py-3 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
                                             <img className="h-5 w-5" src="https://www.svgrepo.com/show/512120/facebook-176.svg"
                                                 alt="" />
-                                        </a>
+                                        </Link>
                                     </div>
                                     <div>
-                                        <a href="#"
+                                        <Link href="#"
                                             className="w-full flex items-center justify-center px-8 py-3 border border-gray-300  rounded-md shadow-sm text-[20px]  text-gray-700 bg-white hover:bg-gray-50">
                                             <FaXTwitter />
-                                        </a>
+                                        </Link>
                                     </div>
                                     <div>
-                                        <a href="#"
+                                        <Link href="#"
                                             className="w-full flex items-center justify-center px-8 py-3 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
                                             <img className="h-5 w-5" src="https://www.svgrepo.com/show/506498/google.svg"
                                                 alt="" />
-                                        </a>
+                                        </Link>
                                     </div>
                                 </div>
                             </div>

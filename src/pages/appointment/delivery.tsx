@@ -147,17 +147,6 @@ const AppointList: React.FC = () => {
 
 
     //เมื่อกด รับซ่อม ส่งค่า repairmanId หรือช่างซ่อมลงฐานข้อมูล และปรับสถานะ
-    async function markAsRepaireds(appointmentId: any) {
-        try {
-            await axios.put(`/api/appointment/${appointmentId}`, { repairmanId: loggedInUser.id, status: "อยู่ระหว่างการซ่อม" });
-
-            window.location.reload();
-        } catch (error) {
-            console.error('เกิดข้อผิดพลาดในการอัปเดตสถานะ', error);
-        }
-    }
-
-
     useEffect(() => {
         if (id) {
             fetch(`/api/repairman/${id}`)
@@ -214,8 +203,6 @@ const AppointList: React.FC = () => {
                         <th className="p-3 uppercase font-medium text-sm hidden lg:table-cell text-left">เบอร์โทร</th>
                         <th className="p-3 uppercase font-medium text-sm hidden lg:table-cell text-left">สถานะ</th>
                         <th className="p-3 uppercase font-medium text-sm hidden lg:table-cell text-left">รายละเอียด</th>
-
-                        <th className="p-3 uppercase font-medium text-sm hidden lg:table-cell text-right">จัดการ</th>
                     </tr>
                 </thead>
 
@@ -255,28 +242,13 @@ const AppointList: React.FC = () => {
                                 {/* เมื่อกดคลิกรายละเอียดจะให้เด้งหน้า Modal  */}
                                 <td className="flex items-center lg:table-cell w-full lg:w-auto border-b">
                                     <span className=" bg-[#1e293b] text-white lg:hidden p-2 w-20 h-full">Details</span>
-                                    {/* <a href="#" className="text-indigo-400 hover:text-indigo-900"> รายละเอียด </a> */}
+                                    {/* <Link href="#" className="text-indigo-400 hover:text-indigo-900"> รายละเอียด </Link> */}
                                     <ModalRepair appointmentData={appointment}></ModalRepair>
                                 </td>
 
 
 
-                                <td className="flex items-center lg:table-cell w-full lg:w-auto border-b">
-                                    <span className=" bg-[#1e293b] text-white lg:hidden p-2 w-20 h-full">Actions</span>
-                                    <div className="flex justify-end px-5 gap-3">
-                                        {/* ยังกดไม่ได้ ไม่ได้มีการ Login เข้ามา */}
-                                        <Button
-                                            className="text-red-400 hover:text-red-900"
-                                            onClick={() => markAsRepairedss(appointment.id)}
-                                            disabled={appointmentSentToRepairman.includes(appointment.id)}
-                                        >
-                                            #
-                                        </Button>
-
-                                        {/* <a href="#" className="text-red-400 hover:text-red-700"> รับคิว </a> */}
-                                        {/* <a href="#" className="text-green-500 hover:text-green-700" ><MdOutlineEdit /></a> */}
-                                    </div>
-                                </td>
+                                
                             </tr>
                         ))}
 

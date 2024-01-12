@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React, { useState } from "react";
 
 const DashboardFooter: React.FC = () => {
@@ -8,9 +9,9 @@ const DashboardFooter: React.FC = () => {
                 <div className="text-xs lg:text-sm text-center bg-gray-300 py-5 w-full ">
                     Copyright © in 2023
                     by 
-                    <a href="https://www.meepoong.com/" className="hover:text-yellow-400">
+                    <Link href="https://www.meepoong.com/" className="hover:text-yellow-400">
                         Me Prompt Technology Company Limited.
-                    </a>
+                    </Link>
                 </div>
             </footer>
         </div>

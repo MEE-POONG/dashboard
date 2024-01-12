@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { User } from "@prisma/client";
 import Pagination from "@/components/Pagination";
 import { FaSearch } from "react-icons/fa";
+import Link from "next/link";
 
 interface Params {
     page: number;
@@ -215,7 +216,7 @@ const CustomersList: React.FC = (props) => {
                                     <span className=" bg-purple-500 p-2 w-20 text-right table-cell lg:hidden font-bold text-white">Actions :</span>
                                     <div className="flex justify-end gap-2 md:px-5">
                                         <DeleteMemberModal data={user} apiDelete={() => deleteuser(user.id)} />
-                                        <a href={`/members/edit/Customers/${user.id}`} className="text-green-500 hover:text-green-700" ><MdOutlineEdit /></a>
+                                        <Link href={`/members/edit/Customers/${user.id}`} className="text-green-500 hover:text-green-700" ><MdOutlineEdit /></Link>
                                     </div>
                                 </td>
                             </tr>

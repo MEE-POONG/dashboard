@@ -191,7 +191,7 @@ const MembersList: React.FC = () => {
                                         <Button className="text-red-400 hover:text-red-900" onClick={() => deleteappointment(repairman.id)}>
                                             <MdDelete />
                                         </Button>
-                                        <a href={`/members/edit/${repairman.id}`} className="text-green-500 hover:text-green-700" ><MdOutlineEdit /></a>
+                                        <Link href={`/members/edit/${repairman.id}`} className="text-green-500 hover:text-green-700" ><MdOutlineEdit /></Link>
                                     </div>
                                 </td>
                             </tr>
