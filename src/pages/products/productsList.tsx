@@ -195,7 +195,7 @@ const ProductsList: React.FC = (props) => {
                                 </th>
                                 <td className="px-6 py-3">
                                     <span className="ml-3 rounded-full bg-yellow-100 py-1 px-3 text-xs text-yellow-900 font-semibold">
-                                    {categoriesMap[products.categoriesId || 0] || ""}
+                                        {categoriesMap[products.categoriesId || 0] || ""}
                                     </span>
                                 </td>
                                 <td className="px-6 py-3">
@@ -213,7 +213,9 @@ const ProductsList: React.FC = (props) => {
                                         className="text-green-500 hover:text-green-700"
                                     >
                                         <MdOutlineEdit />
+                                        
                                     </Link>
+                                    
                                 </td>
                             </tr>
                         ))}
