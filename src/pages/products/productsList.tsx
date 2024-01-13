@@ -202,7 +202,7 @@ const ProductsList: React.FC = (props) => {
                                     {products.price}
                                 </td>
                                 <td className="px-6 py-3">
-                                    999
+                                   999
                                 </td>
 
                                 <td className="px-6 py-3 flex">
@@ -213,9 +213,9 @@ const ProductsList: React.FC = (props) => {
                                         className="text-green-500 hover:text-green-700"
                                     >
                                         <MdOutlineEdit />
-
+                                        
                                     </Link>
-
+                                    
                                 </td>
                             </tr>
                         ))}
