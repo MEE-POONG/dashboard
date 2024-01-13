@@ -103,7 +103,6 @@ model Repairman {
   tel      String?
   img      String?
   password String?
-
   role        String?
   Appointment Appointment[]
   Address     Address[]

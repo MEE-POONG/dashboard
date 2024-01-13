@@ -35,12 +35,11 @@ const LoginComponent: React.FC = () => {
 
                 // Save user data to cookies
                 Cookies.set('user', JSON.stringify(match));
-
+                // Save user role to cookies
+                Cookies.set('userRole', match.role);
+        
                 // Redirect to home page with user ID
                 router.push('/');
-
-                // Reload the page
-            
 
             } else {
                 setLoginSuccess(false);

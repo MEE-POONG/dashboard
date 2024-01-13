@@ -1,24 +1,26 @@
-import React, { useState, ChangeEvent, useEffect } from 'react';
-import ReactDOM from 'react-dom';
-import { FaSpinner, FaEdit } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { Fragment, useRef } from 'react'
+import { Dialog, Transition } from '@headlessui/react'
 import useAxios from 'axios-hooks';
-import { MdClose } from 'react-icons/md';
 import { useRouter } from 'next/router';
-import DashboardLayout from '@/components/layout';
 import EditModalAlert from '@/components/Modal/EditAlertModal';
 import Link from 'next/link';
 import { Appointment } from '@prisma/client';
 
 
-interface EditAppointmentModalProps {
+interface AddressAppointmentModalProps {
     isEditModalOpen: boolean;
     onClose: () => void;
+    appointmentDatas: any;  // คุณสามารถปรับปรุงชนิดของ appointmentDatas ตามต้องการ
+
 }
 
 
-const EditAppointmentModal: React.FC<EditAppointmentModalProps> = ({ isEditModalOpen, onClose }) => {
+const AddressAppointmentModal: React.FC<AddressAppointmentModalProps> = ({ appointmentDatas, isEditModalOpen, onClose }: any) => {
     // if (!isEditModalOpen) return null;
 
+    const [open, setOpen] = useState(false)
+    const cancelButtonRef = useRef(null)
 
     const router = useRouter();
     const { id } = router.query;
@@ -31,7 +33,6 @@ const EditAppointmentModal: React.FC<EditAppointmentModalProps> = ({ isEditModal
     const [request, setrequest] = useState<string>("");
     const [tel, settel] = useState<string>("");
     const [message, setmessage] = useState<string>("");
-
     const [detail, setdetail] = useState<string>("");
     const [date, setdate] = useState<string>("");
     const [url, seturl] = useState<string>("");
@@ -40,6 +41,8 @@ const EditAppointmentModal: React.FC<EditAppointmentModalProps> = ({ isEditModal
     const [alertForm, setAlertForm] = useState<string>("not");
     const [inputForm, setInputForm] = useState<boolean>(false);
     const [checkBody, setCheckBody] = useState<string>("");
+    const [printData, setPrintData] = useState<string>("");
+
 
     const handleInputChange = (setter: any) => (event: any) => {
         const newValue = event.target.value;
@@ -48,61 +51,23 @@ const EditAppointmentModal: React.FC<EditAppointmentModalProps> = ({ isEditModal
         }
     };
 
-    const [{ data: appointmentData }, getBlog] = useAxios({
-        url: `/api/appointment/${id}`,
-        method: "GET",
-    });
 
-    const reloadPage = () => {
-        window.location.reload();
-    };
-
-    useEffect(() => {
-        if (appointmentData) {
-            const {
-                detail,
-                fname,
-                lname,
-                tel,
-                request,
-                message,
-                url,
-                receipt: imageId, // Use the uploaded image ID
-            } = appointmentData;
-            setdetail(detail);
-            setfname(fname);
-            setlname(lname);
-            settel(tel);
-            setrequest(request);
-            setmessage(message);
-            seturl(url);
-            setimg(receipt);
-            setimg1(img1);
-        }
-    }, [appointmentData]);
-
-    useEffect(() => {
-        console.log(appointmentData)
-    }, [appointmentData]);
-    const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files && event.target.files[0];
-        if (file) {
-            setimg(file); // Store the File object
-        }
-    };
-    const isValidUrl = (url: string) => {
-        try {
-            new URL(url);
-            return true;
-        } catch (error) {
-            return false;
-        }
-    };
     const [filteredappointmentsData, setFilteredappointmentsData] = useState<
         Appointment[]
     >([]);
 
 
+    const handlePrint = () => {
+        setPrintData(`ชื่อ: ${appointmentDatas?.fname} ${appointmentDatas?.lname}\n` +
+            `เบอร์โทรศัพท์: ${appointmentDatas?.tel}\n` +
+            `รายละเอียดการซ่อม : ${appointmentDatas?.detail}\n` +
+            `ที่อยู่ : ${appointmentDatas?.Address?.addressline}\n` + `ตำบล : ${appointmentDatas?.Address?.subdistrict}\n` + `อำเภอ : ${appointmentDatas?.Address?.district}\n` +
+            `จังหวัด : ${appointmentDatas?.Address?.province}\n` + `รหัสไปรษณีย์ : ${appointmentDatas?.Address?.zipcode}\n`
+
+        );
+        window.print();
+
+    };
     const handleSubmit = async (event: React.MouseEvent<HTMLElement>) => {
         event.preventDefault();
         event.stopPropagation();
@@ -159,110 +124,141 @@ const EditAppointmentModal: React.FC<EditAppointmentModalProps> = ({ isEditModal
                 setAlertForm("danger");
             }
         }
+        setPrintData("");
+
     };
-    useEffect(() => {
-        setFilteredappointmentsData(appointmentData?.appointment ?? []);
-    }, [appointmentData]);
+
     return (
         <>
+            <button onClick={() => setOpen(true)}>
+                รายละเอียด
+            </button>
+            {open ? (
+                <Transition.Root show={open} as={Fragment}>
+                    <Dialog as="div" className="relative z-10" initialFocus={cancelButtonRef} onClose={setOpen}>
+                        <Transition.Child
+                            as={Fragment}
+                            enter="ease-out duration-300"
+                            enterFrom="opacity-0"
+                            enterTo="opacity-100"
+                            leave="ease-in duration-200"
+                            leaveFrom="opacity-100"
+                            leaveTo="opacity-0"
+                        >
+                            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+                        </Transition.Child>
 
-            <div className="">
-                <EditModalAlert checkAlertShow={alertForm} setCheckAlertShow={setAlertForm} checkBody={checkBody} />
-                <div className="bg-white p-3 md:p-6 rounded shadow-md ">
-                    <div className='flex items-center justify-between'>
-                        <h1 className='text-xl font-bold'>ที่อยู่จัดส่ง</h1>
-                        {/* <button className=" bg-blue-950 text-white p-1 rounded" onClick={onClose}>
+                        <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+                            <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                                <Transition.Child
+                                    as={Fragment}
+                                    enter="ease-out duration-300"
+                                    enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                                    enterTo="opacity-100 translate-y-0 sm:scale-100"
+                                    leave="ease-in duration-200"
+                                    leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+                                    leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                                >
+                                    <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                                        <div className="">
+                                            <EditModalAlert checkAlertShow={alertForm} setCheckAlertShow={setAlertForm} checkBody={checkBody} />
+                                            <div className="bg-white p-3 md:p-6 rounded shadow-md ">
+                                                <div className='flex items-center justify-between'>
+                                                    <h1 className='text-xl font-bold'>ที่อยู่จัดส่ง</h1>
+                                                    {/* <button className=" bg-blue-950 text-white p-1 rounded" onClick={onClose}>
                             <MdClose />
                         </button> */}
-                    </div>
+                                                </div>
 
 
-                    <div>
-                        <div className="md:grid grid-cols-2 gap-4 my-5">
-                            <div>
-                                <label className="block text-sm font-medium">ชื่อ :{appointmentData?.fname} </label>
+                                                <div>
+                                                    <div className="md:grid grid-cols-2 gap-4 my-5">
+                                                        <div>
+                                                            <label className="block text-sm font-medium">ชื่อ : {appointmentDatas?.fname} {appointmentDatas?.lname}</label>
+                                                        </div>
+                                                    </div>
+                                                    <div className="md:grid grid-cols-2 gap-4 my-5">
+                                                        <div>
+                                                            <label className="block text-sm font-medium">เบอร์โทรศัพท์ : {appointmentDatas?.tel}</label>
+                                                        </div>
+                                                    </div>
+                                                    <div className="md:grid grid-cols-2 gap-4 my-5">
+                                                        <div>
+                                                            <span className="block text-sm font-medium mt-1">รายละเอียดการซ่อม : {appointmentDatas?.detail}</span>
+                                                        </div>
+                                                    </div>
 
-                            </div>
-                        </div>
-                        <div className="md:grid grid-cols-2 gap-Y4 my-5">
-                            <div>
-                                <label className="block text-sm font-medium">นามสกุล :{appointmentData?.lname}  </label>
+                                                    <div className="md:grid grid-cols-2 gap-4 my-5">
+                                                        <div>
+                                                            <label className="block text-sm font-medium">ที่อยู่ : {appointmentDatas?.Address?.addressline}</label>
+                                                        </div>
+                                                    </div>
 
-                            </div>
-                        </div>
-                        <div className="md:grid grid-cols-2 gap-4 my-5">
-                            <div>
-                                <label className="block text-sm font-medium">เบอร์โทรศัพท์ :{appointmentData?.tel}  </label>
-                            </div>
-                        </div>
-                        <div className="md:grid grid-cols-2 gap-4 my-5">
-                            <div>
-                                <label className="block text-sm font-medium">วันที่จอง :{appointmentData?.time}  </label>
-                            </div>
-                        </div>
-                        <div className="md:grid grid-cols-2 gap-4 my-5">
-                            <div>
-                                <label className="block text-sm font-medium">request :{appointmentData?.request}  </label>
-                            </div>
-                        </div>
-                        <div className="md:grid grid-cols-2 gap-4 my-5">
-                            <div>
-                                <label className="block text-sm font-medium">ข้อความ :{appointmentData?.message}  </label>
-                            </div>
-                        </div>
-                        <div className="md:grid grid-cols-2 gap-4 my-5">
-                            <div>
-                                <label className="block text-sm font-medium">รายละเอียดการซ่อม :{appointmentData?.detail}  </label>
-                            </div>
-                        </div>
-                        <div className="md:grid grid-cols-2 gap-4 my-5">
-                            <div>
-                                <label className="block text-sm font-medium">ที่อยู่ :{appointmentData?.Address?.addressline}  </label>
-                            </div>
-                        </div>
-                        <div className="md:grid grid-cols-2 gap-4 my-5">
-                            <div>
-                                <label className="block text-sm font-medium">ตำบล :{appointmentData?.Address?.subdistrict}  </label>
-                            </div>
-                        </div>
+                                                    <div className="md:grid grid-cols-2 gap-4 my-5">
+                                                        <div>
+                                                            <label className="block text-sm font-medium">ตำบล : {appointmentDatas?.Address?.subdistrict}</label>
+                                                        </div>
+                                                    </div>
 
-                        <div className="md:grid grid-cols-2 gap-4 my-5">
-                            <div>
-                                <label className="block text-sm font-medium">อำเภอ :{appointmentData?.Address?.district}  </label>
+                                                    <div className="md:grid grid-cols-2 gap-4 my-5">
+                                                        <div>
+                                                            <label className="block text-sm font-medium">อำเภอ : {appointmentDatas?.Address?.district}</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="md:grid grid-cols-2 gap-4 my-5">
+                                                        <div>
+                                                            <label className="block text-sm font-medium">จังหวัด : {appointmentDatas?.Address?.province}</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="md:grid grid-cols-3 gap-4 my-5">
+                                                        <div>
+                                                            <label className="block text-sm font-medium">รหัสไปรษณีย์ : {appointmentDatas?.Address?.zipcode}</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className='flex justify-center mt-5'>
+                                                        <button
+                                                            onClick={handleSubmit}
+                                                            className='bg-teal-500 text-white hover:bg-teal-300 hover:text-black px-4 py-2 rounded mr-3'
+                                                        >
+                                                            ยืนยันการจัดส่ง
+                                                        </button>
+                                                        <button
+                                                            onClick={handlePrint}
+                                                            className='bg-teal-500 text-white hover:bg-teal-300 hover:text-black px-4 py-2 rounded mr-3'
+                                                        >
+                                                            พิมพ์
+                                                        </button>
+                                                        <button
+                                                            onClick={() => setOpen(false)}
+                                                            className='bg-gray-950 text-white hover:bg-gray-300 hover:text-black px-4 py-2 rounded'
+                                                        >
+                                                            ปิด
+                                                        </button>
+                                                    </div>
+                                                    {printData && (
+                                                        <div className="mt-5">
+                                                            <h2 className="text-xl font-bold mb-2">ข้อมูลที่พิมพ์</h2>
+                                                            <pre>{printData}</pre>
+                                                        </div>
+
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </Dialog.Panel>
+                                </Transition.Child>
                             </div>
                         </div>
-
-                        <div className="md:grid grid-cols-2 gap-4 my-5">
-                            <div>
-                                <label className="block text-sm font-medium">จังหวัด :{appointmentData?.Address?.province}</label>                            </div>
-                        </div>
-
-                        <div className="md:grid grid-cols-2 gap-4 my-5">
-                            <div>
-                                <label className="block text-sm font-medium">รหัสไปรษณีย์ :{appointmentData?.Address?.zipcode}  </label>
-                            </div>
-                        </div>
-
-                        <div className='flex justify-center gap-5 mt-5'>
-                            <button
-                                onClick={handleSubmit}
-                                className='bg-teal-500 text-white hover:bg-teal-300 hover:text-black px-3 py-1 rounded'
-                            >
-                                ยืนยันการจัดส่ง
-                            </button>
-                            <Link href='/appointment' className='bg-gray-950 text-white hover:bg-gray-300 hover:text-black px-3 py-1 rounded'>
-                                กลับ
-                            </Link>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
+                    </Dialog>
+                </Transition.Root>
+            ) : null}
         </>
     )
 }
-export default EditAppointmentModal;
+export default AddressAppointmentModal;
 
 
 

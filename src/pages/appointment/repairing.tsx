@@ -230,7 +230,7 @@ const AppointList: React.FC = () => {
 
                 <tbody>
                     {filteredappointmentsData
-                        .filter((appointment) => appointment.status === "อยู่ระหว่างการซ่อม")
+                        .filter((appointment) => appointment.status === "อยู่ระหว่างการซ่อม" && appointment.repairmanId === loggedInUser.id)
                         .sort((a, b) => new Date(a.time || '').getTime() - new Date(b.time || '').getTime())
                         .map((appointment, index) => (
                             <tr
@@ -277,7 +277,7 @@ const AppointList: React.FC = () => {
                                             href={`/appointment/add/success/${appointment.id}`}
                                             className="text-green-500 hover:text-green-700"
                                         >
-                                           ซ่อมแล้ว
+                                            ซ่อมแล้ว
                                         </Link>
 
                                     </div>

@@ -208,9 +208,9 @@ const AppointList: React.FC = () => {
 
                 <tbody>
                     {filteredappointmentsData
-                        .filter((appointment) => appointment.status === "จัดส่งแล้ว")
-                        .sort((a, b) => new Date(a.time || '').getTime() - new Date(b.time || '').getTime())
-                        .map((appointment, index) => (
+               .filter((appointment) => appointment.status === "จัดส่งแล้ว" && appointment.repairmanId === loggedInUser.id)
+               .sort((a, b) => new Date(a.time || '').getTime() - new Date(b.time || '').getTime())
+               .map((appointment, index) => (
                             <tr
                                 className="bg-gray-50 hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap 
                         lg:flex-no-wrap mb-10 lg:mb-0 shadow-xl rounded-lg text-xs md:text-base"
