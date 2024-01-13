@@ -6,13 +6,13 @@ import { GoPlus } from "react-icons/go";
 
 
 const EditNews: React.FC = () => {
-  const [isAddModalOpen, setAddModalOpen] = useState(false);
+  const [isAddNewsModalOpen, setAddNewsModalOpen] = useState(false);
   const openAddModal = () => {
-    setAddModalOpen(true);
+    setAddNewsModalOpen(true);
   };
 
   const closeAddModal = () => {
-    setAddModalOpen(false);
+    setAddNewsModalOpen(false);
   };
   return (
     <>
@@ -28,7 +28,7 @@ const EditNews: React.FC = () => {
         </div>
         <NewsList />
         
-        <AddNewsModal isAddModalOpen={isAddModalOpen} onClose={closeAddModal}  />
+        <AddNewsModal isAddModalOpen={isAddNewsModalOpen} onClose={closeAddModal}  />
 
       </div>
 
