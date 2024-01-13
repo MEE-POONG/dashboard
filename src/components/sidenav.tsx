@@ -9,6 +9,7 @@ import { FaProductHunt } from "react-icons/fa";
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
 import AddressRepairman from "@/pages/members/AddressRepairman";
+import LoginModal from "@/pages/appointment/test2";
 
 
 interface SubmenuItem {
@@ -180,17 +181,16 @@ const SideNav: React.FC<SidenavProps> = ({ openSidebar }) => {
                             </div>
                         </Link >
                     ) : (
-                        <button className="">
-
-                            <div className="flex space-x-3 items-center px-3">
-                                <div className="flex-none flex justify-center">
-                                    <div className="w-8 h-8 flex ">
-                                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShta_GXR2xdnsxSzj_GTcJHcNykjVKrCBrZ9qouUl0usuJWG2Rpr_PbTDu3sA9auNUH64&usqp=CAU" alt="profile" className="shadow rounded-full object-cover" />
-                                    </div>
+                        <div className="flex space-x-3 items-center px-3">
+                            <button className="" onClick={openAddModal}>
+                                <div className="flex space-x-3 items-center px-3">
+                                    เข้าสู่ระบบ
                                 </div>
-                                <Link href="./login" className="hidden md:block text-sm md:text-base text-black dark:text-white">เข้าสู่ระบบ</Link>
-                            </div>
-                        </button>
+                                <LoginModal isAddModalOpen={isAddModalOpen} onClose={closeAddModal} />
+
+                            </button>
+
+                        </div>
                     )}
 
                 </div>
