@@ -223,12 +223,18 @@ const CustomersList: React.FC = (props) => {
                         ))}
                 </tbody>
             </table>
-            <Pagination
-                page={params.page}
-                totalPages={userData?.pagination?.total}
-                onChangePage={handleChangePage}
-                onChangePageSize={handleChangePageSize}
-            />
+        
+            <div className="w-full rounded-md overflow-hidden">
+                {/* ... (โค้ดอื่นๆ) */}
+                <p>ลูกค้าทั้งหมด : {filteredappointmentsData.length} คน</p>
+                <Pagination
+                    page={params.page}
+                    totalPages={userData?.pagination?.total}
+                    onChangePage={handleChangePage}
+                    onChangePageSize={handleChangePageSize}
+                />
+            </div>
+          
         </div>
     )
 }
