@@ -5,11 +5,10 @@ import Cookies from 'js-cookie';
 import useAxios from "axios-hooks";
 import { useRouter } from 'next/router';
 import { Repairman } from "@prisma/client";
-import { User } from "@prisma/client";
 import { GoPlus } from "react-icons/go";
 import AddRepairman from "./AddRepairman";
-import { FaSearch } from "react-icons/fa";
 import Pagination from "@/components/Pagination";
+import Link from "next/link";
 interface Params {
     page: number;
     pageSize: number;
@@ -114,15 +113,11 @@ const RepairmanList: React.FC = () => {
         }
     }, [repairmanData, params.searchKey]);
 
-
-
     const handlePageChange = (page: number) => {
         // You can implement fetching data for the selected page here
         setCurrentPage(page);
     };
     //
-
-
 
     const [loggedInUser, setLoggedInUser] = useState<any>(null);
     useEffect(() => {
@@ -142,39 +137,6 @@ const RepairmanList: React.FC = () => {
     useEffect(() => {
         if (id) {
             fetch(`/api/repairman/${id}`)
-                .then((response) => response.json())
-                .then((data) => {
-                    setUserData(data);
-                    setFname(data.fname);
-                    setLname(data.lname);
-                    setTel(data.tel);
-                    setEmail(data.email);
-                    setRequest(data.request);
-                    setUserId(data.id); // นำ userId มาจากข้อมูลผู้ใช้
-                    setTime(data.time);
-                    setRepairmanId(data.id);
-                    setIsLoading(false);
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                    setIsLoading(false);
-                });
-        }
-    }, [id]);
-    //
-    const [
-        { loading: deleteappointmentLoadings, error: deleteappointmentErrors },
-        executeappointmentDeletes,
-    ] = useAxios({}, { manual: true });
-
-    const [filteredappointmentsDatas, setFilteredappointmentsDatas] = useState<
-        User[]
-    >([]);
-
-
-    useEffect(() => {
-        if (id) {
-            fetch(`/api/user/${id}`)
                 .then((response) => response.json())
                 .then((data) => {
                     setUserData(data);
@@ -217,6 +179,8 @@ const RepairmanList: React.FC = () => {
                             <th className="p-3 font-bold text-bass hidden lg:table-cell text-left">ชื่อ - นามสกุล</th>
                             <th className="p-3 font-bold text-bass hidden lg:table-cell text-left">อีเมล</th>
                             <th className="p-3 font-bold text-bass hidden lg:table-cell text-left">เบอร์โทรศัพท์</th>
+                            <th className="p-3 font-bold text-bass hidden lg:table-cell text-left">จังหวัด</th>
+                            <th className="p-3 font-bold text-bass hidden lg:table-cell text-left">อำเภอ</th>
                             {/* <th className="p-3 font-bold text-bass hidden lg:table-cell text-center">Role</th> */}
                             <th className="p-3 font-bold text-bass hidden lg:table-cell text-right px-6">จัดการ</th>
 
@@ -242,17 +206,23 @@ const RepairmanList: React.FC = () => {
                                         <span className="bg-purple-500 p-2 w-20 text-right table-cell lg:hidden font-bold text-white">Phone :</span>
                                         <p className="px-3 py-1">{repairman.tel}</p>
                                     </td>
-                                    {/* <td className="flex items-center gap-3 w-full lg:w-auto lg:p-2 border-b lg:table-cell text-center">
-                                    <span className="bg-purple-500 p-2 w-20 text-right table-cell lg:hidden font-bold text-white">Role :</span>
-                                    <p className="px-3 py-1">{repairman.status}</p>
-                                </td> */}
+
+                                    {/* ... (ข้อมูลเดิม) */}
+                                    <td className="flex items-center gap-3 w-full lg:w-auto lg:p-2 border-b lg:table-cell">
+                                        <span className="bg-purple-500 p-2 w-20 text-right table-cell lg:hidden font-bold text-white">จังหวัด :</span>
+                                        <p className="px-3 py-1">{repairman.Address?.province}</p>
+                                    </td>
+                                    <td className="flex items-center gap-3 w-full lg:w-auto lg:p-2 border-b lg:table-cell">
+                                        <span className="bg-purple-500 p-2 w-20 text-right table-cell lg:hidden font-bold text-white">อำเภอ :</span>
+                                        <p className="px-3 py-1">{repairman.Address?.district}</p>
+                                    </td>
                                     <td className="flex items-center gap-3 w-full lg:w-auto lg:p-2 border-b lg:table-cell">
                                         <span className=" bg-purple-500 p-2 w-20 text-right table-cell lg:hidden font-bold text-white">Actions :</span>
                                         <div className="flex justify-end gap-2 md:px-5">
                                             <Button className="text-red-400 hover:text-red-900" onClick={() => deleteuser(repairman.id)}>
                                                 <MdDelete />
                                             </Button>
-                                            <a href={`/members/edit/repairman/${repairman.id}`} className="text-green-500 hover:text-green-700" ><MdOutlineEdit /></a>
+                                            <Link href={`/members/edit/repairman/${repairman.id}`} className="text-green-500 hover:text-green-700" ><MdOutlineEdit /></Link>
                                         </div>
                                     </td>
                                 </tr>

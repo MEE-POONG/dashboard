@@ -2,28 +2,38 @@
 import AddModalAlert from '@/components/Modal/AddAlertModal';
 import axios from 'axios';
 import useAxios from 'axios-hooks';
-import React, { useState, ChangeEvent, useEffect } from 'react';
+
 import { MdClose } from "react-icons/md";
 import { useRouter } from 'next/router';
+import React, { useState, useEffect } from 'react';
 
-interface AddRepairmanModalProps {
+interface AppointmentSuccessProps {
     isAddModalOpen: boolean;
     onClose: () => void;
-    checkAlertShow: string;
-    setCheckAlertShow: React.Dispatch<React.SetStateAction<string>>;
-    checkBody: string;
-}
-const AppointmentSuccess: React.FC<AddRepairmanModalProps> = ({ isAddModalOpen, onClose }) => {
+    appointmentId: string; // เพิ่ม prop นี้
+  }
+  const AppointmentSuccess: React.FC<AppointmentSuccessProps> = ({ isAddModalOpen, onClose, appointmentId }) => {
     if (!isAddModalOpen) return null;
     const router = useRouter();
     const { id } = router.query;
+    const [data, setData] = useState<any>(null);
     const [{ error: errorMessage, loading: BlogLoading }, executeBlog] = useAxios({ url: '/api/appointment', method: 'POST' }, { manual: true });
-    const [fname, setFname] = useState<string>("");
-    const [img, setimg] = useState<string>("");
+    const [detail, setdetail] = useState<string>("");
+    const [date, setdate] = useState<string>("");
+    const [url, seturl] = useState<string>("");
+    const [receipt, setimg] = useState<File | null>(null);
     const [alertForm, setAlertForm] = useState<string>("not");
     const [inputForm, setInputForm] = useState<boolean>(false);
     const [checkBody, setCheckBody] = useState<string>("");
+    const [
+        { loading: updateBlogLoading, error: updateBlogError },
+        executeBlogPut,
+    ] = useAxios({}, { manual: true });
 
+    const [{ data: AppointmentData }, getNews] = useAxios({
+        url: `/api/appointment/${id}`,
+        method: "GET",
+    });
 
     const handleInputChange = (setter: any) => (event: any) => {
         const newValue = event.target.value;
@@ -31,28 +41,15 @@ const AppointmentSuccess: React.FC<AddRepairmanModalProps> = ({ isAddModalOpen, 
             setter(newValue);
         }
     };
+
+    // ฟังก์ชั่นการเคลียข้อมูลที่กรอก
     const reloadPage = () => {
         clear();
     };
-    const [{ data: AppointmentData }, getNews] = useAxios({
-        url: `/api/appointment/${id}`,
-        method: "GET",
-    });
-
-    useEffect(() => {
-        if (AppointmentData) {
-            const {
-                fname,
-                img: imageId, // Use the uploaded image ID
-            } = AppointmentData;
-            setFname(fname);
-            setimg(img);
-
-        }
-    }, [AppointmentData]);
-
     const clear = () => {
-        setFname("");
+        setdetail("");
+        seturl("");
+        setimg(null);
         setAlertForm("not");
         setInputForm(false);
         setCheckBody("");
@@ -61,27 +58,31 @@ const AppointmentSuccess: React.FC<AddRepairmanModalProps> = ({ isAddModalOpen, 
     const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files && event.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const base64String = reader.result as string;
-                const splittedString = base64String.split(",")[1]; // ตัดส่วน "data:image/png;base64," ออก
-                setimg(splittedString);
-            };
-            reader.readAsDataURL(file);
+            setimg(file);
         }
     };
-    const [
-        { loading: updateNewsLoading, error: updateNewsError },
-        executeNewsPut,
-    ] = useAxios({}, { manual: true });
+
+    useEffect(() => {
+        if (AppointmentData) {
+            const {
+                detail,
+                date,
+                receipt,
+            } = AppointmentData;
+       
+            setdetail(detail);
+            setdate(date);
+            setimg(receipt);
+      
+        }
+    }, [AppointmentData]);
 
     const handleSubmit = async (event: React.MouseEvent<HTMLElement>) => {
         event.preventDefault();
         event.stopPropagation();
         let missingFields = [];
-        if (!fname) missingFields.push("ลิ้งค์วีดีโอ");
-
-   
+        if (!detail) missingFields.push("รายละเอียดการซ่อม");
+        if (!url) missingFields.push("วีดีโอ");
         if (missingFields.length > 0) {
             setAlertForm("warning");
             setInputForm(true);
@@ -91,14 +92,15 @@ const AppointmentSuccess: React.FC<AddRepairmanModalProps> = ({ isAddModalOpen, 
                 setAlertForm("primary");
 
                 const data = {
-              
-                    fname,
-                    img
+                
+                    detail,
+                    url,
+                 
+                    // newImg,
+                    /*img,*/
                 };
-
-
                 // Execute the update
-                const response = await executeNewsPut({
+                const response = await executeBlogPut({
                     url: "/api/appointment/" + id,
                     method: "PUT",
                     data
@@ -118,7 +120,13 @@ const AppointmentSuccess: React.FC<AddRepairmanModalProps> = ({ isAddModalOpen, 
         }
     };
 
-
+    // useEffect(() => {
+    //     // ตรวจสอบว่า appointmentId มีค่าหรือไม่ก่อนที่จะทำงาน
+    //     if (appointmentId) {
+    //         // ทำงานที่ต้องการเมื่อมี appointmentId
+    //         fetchData(appointmentId);
+    //     }
+    // }, [appointmentId]);
 
     return (
         <div className="fixed top-0 left-0 w-full h-screen flex items-center justify-center bg-black bg-opacity-25 p-2">
@@ -133,24 +141,36 @@ const AppointmentSuccess: React.FC<AddRepairmanModalProps> = ({ isAddModalOpen, 
 
                 <div>
                     <div className="d-flex space-between my-10">
+
                         <div className="mb-3">
-                            <label className="block text-sm font-semibold text-gray-950">วีดีโอ</label>
+                            <label className="block text-sm font-semibold text-gray-950">รายละเอียด</label>
                             <input
                                 type="text"
-                                value={fname}
-                                onChange={(e) => setFname(e.target.value)}
-                                className={`mt-1 p-2 border text-sm w-full ${inputForm && fname === "" ? 'border-red-500' : 'border-gray-300'} rounded-md`}
-                                placeholder="ชื่อ"
+                                value={url}
+                                onChange={(e) => seturl(e.target.value)}
+                                className={`mt-1 p-2 border text-sm w-full ${inputForm && url === "" ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+                                placeholder="วีดีโอ"
                             />
                         </div>
-                        
-                       
-                        {/* <div className="mb-3">
-                            <label className="block text-sm font-semibold text-gray-950">รูปภาพ</label>
-                            {img && (
+
+
+                        <div className="mb-3">
+                            <label className="block text-sm font-seminbold text-gray-950">รายละเอียด</label>
+                            <textarea
+                                value={detail}
+                                onChange={(e) => setdetail(e.target.value)}
+                                className={`mt-1 p-2 border text-sm w-full h-64 ${inputForm && detail === "" ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+                                placeholder="รายละเอียด"
+                            />
+                        </div>
+
+
+                        <div className="mb-3">
+                            <label className="block text-sm font-seminbold text-gray-950">รูปภาพปก</label>
+                            {receipt && (
                                 <div className="mt-2 w-24">
                                     <img
-                                        src={URL.createObjectURL(img)}
+                                        src={URL.createObjectURL(receipt)}
                                         alt="Selected Image"
                                         className="max-w-full h-auto"
                                     />
@@ -159,10 +179,10 @@ const AppointmentSuccess: React.FC<AddRepairmanModalProps> = ({ isAddModalOpen, 
                             <input
                                 type="file"
                                 onChange={handleFileUpload}
-                                className={`mt-1 border text-sm w-full ${inputForm && img === null ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+                                className={`mt-1 border text-sm w-full ${inputForm && receipt === null ? 'border-red-500' : 'border-gray-300'} rounded-md`}
                                 placeholder="รูปภาพ"
                             />
-                        </div> */}
+                        </div>
                     </div>
                 </div>
                 <div className="text-end">

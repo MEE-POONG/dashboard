@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { MdOutlineEdit, MdDelete } from "react-icons/md";
 
 const OrderList: React.FC = () => {
@@ -42,8 +43,8 @@ const OrderList: React.FC = () => {
                         <td className="flex items-center md:table-cell w-full md:w-auto border-b">
                             <span className=" bg-[#1e293b] text-white md:hidden p-2 w-20 h-full">Actions</span>
                             <div className="flex justify-end px-5 gap-3">
-                                <a href="#" className="text-red-400 hover:text-red-700"> <MdDelete /></a>
-                                <a href="#" className="text-green-500 hover:text-green-700" ><MdOutlineEdit /></a>
+                                <Link href="#" className="text-red-400 hover:text-red-700"> <MdDelete /></Link>
+                                <Link href="#" className="text-green-500 hover:text-green-700" ><MdOutlineEdit /></Link>
                             </div>
                         </td>
                     </tr>

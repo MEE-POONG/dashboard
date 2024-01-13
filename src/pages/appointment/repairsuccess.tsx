@@ -11,6 +11,9 @@ import { Appointment } from "@prisma/client";
 import Link from "next/link";
 import ModalRepair from "@/components/Modal/AppointmentDetaiModall";
 import Pagination from "@/components/Pagination";
+import ModalDelivery from "@/components/Modal/AppointmentDelivery";
+import EditAppointmentModal from "./add/success/[id]";
+import AddressAppointmentModal from './add/delivery/[id]';
 
 
 interface Params {
@@ -23,7 +26,7 @@ interface Params {
 const AppointList: React.FC = () => {
     const router = useRouter();
     const { id } = router.query;
-
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [time, setTime] = useState("");
     const [isLoading, setIsLoading] = useState(true);
@@ -221,9 +224,9 @@ const AppointList: React.FC = () => {
 
                 <tbody>
                     {filteredappointmentsData
-                        .filter((appointment) => appointment.status === "ซ่อมแล้ว")
-                        .sort((a, b) => new Date(a.time || '').getTime() - new Date(b.time || '').getTime())
-                        .map((appointment, index) => (
+                       .filter((appointment) => appointment.status === "ซ่อมแล้ว" && appointment.repairmanId === loggedInUser.id)
+                       .sort((a, b) => new Date(a.time || '').getTime() - new Date(b.time || '').getTime())
+                       .map((appointment, index) => (
                             <tr
                                 className="bg-gray-50 hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap 
                         lg:flex-no-wrap mb-10 lg:mb-0 shadow-xl rounded-lg text-xs md:text-base"
@@ -255,27 +258,12 @@ const AppointList: React.FC = () => {
                                 {/* เมื่อกดคลิกรายละเอียดจะให้เด้งหน้า Modal  */}
                                 <td className="flex items-center lg:table-cell w-full lg:w-auto border-b">
                                     <span className=" bg-[#1e293b] text-white lg:hidden p-2 w-20 h-full">Details</span>
-                                    {/* <a href="#" className="text-indigo-400 hover:text-indigo-900"> รายละเอียด </a> */}
+                                    {/* <Link href="#" className="text-indigo-400 hover:text-indigo-900"> รายละเอียด </Link> */}
                                     <ModalRepair appointmentData={appointment}></ModalRepair>
                                 </td>
-
-
-
                                 <td className="flex items-center lg:table-cell w-full lg:w-auto border-b">
-                                    <span className=" bg-[#1e293b] text-white lg:hidden p-2 w-20 h-full">Actions</span>
-                                    <div className="flex justify-end px-5 gap-3">
-                                        {/* ยังกดไม่ได้ ไม่ได้มีการ Login เข้ามา */}
-                                        <Button
-                                            className="text-red-400 hover:text-red-900"
-                                            onClick={() => markAsRepairedss(appointment.id)}
-                                            disabled={appointmentSentToRepairman.includes(appointment.id)}
-                                        >
-                                            จัดส่ง
-                                        </Button>
-
-                                        {/* <a href="#" className="text-red-400 hover:text-red-700"> รับคิว </a> */}
-                                        {/* <a href="#" className="text-green-500 hover:text-green-700" ><MdOutlineEdit /></a> */}
-                                    </div>
+                                    <span className="bg-[#1e293b] text-white lg:hidden p-2 w-20 h-full">Details</span>
+                                    <AddressAppointmentModal appointmentDatas={appointment}></AddressAppointmentModal>
                                 </td>
                             </tr>
                         ))}

@@ -11,18 +11,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             try {
                 const page: number = Number(req.query.page) || 1;
                 const pageSize: number = Number(req.query.pageSize) || 10;
-
+        
                 const repairman = await prisma.repairman.findMany({
                     skip: (page - 1) * pageSize,
                     take: pageSize,
                     include: {
-                        Appointment: true,
-                        Address: true, // Include Repairman data
+                        Address: true,
                     },
                 });
-
+        
                 const totalrepairman = await prisma.repairman.count();
                 const totalPage: number = Math.ceil(totalrepairman / pageSize);
+        
                 res.status(200).json({ repairman });
             } catch (error) {
                 res.status(500).json({ error: "An error occurred while fetching the repairman" });
