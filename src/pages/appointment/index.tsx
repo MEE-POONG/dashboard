@@ -6,24 +6,24 @@ import Repairing from "./repairing";
 import Repairsuccess from "./repairsuccess";
 import Delivery from "./delivery";
 
-const EditAppointment:React.FC =() =>{
-    
+const EditAppointment: React.FC = () => {
+
     const appointmentstabs = [
         // {
         //     label: 'All Members',
         //     content: <div><MembersList /></div>
-        // },
+        // }, ถ้าเป็นแอดมินจะเห็นแค่รายการจองเฉยๆ
         { label: 'รายการจอง', content: <div><OrderList /></div> },
         { label: 'อยู่ระหว่างการซ่อม', content: <div><Repairing /></div> },
         { label: 'ซ่อมเสร็จเรียบร้อยแล้ว', content: <div> <Repairsuccess /> </div> },
-         { label: 'จัดส่งเรียบร้อยแล้ว', content: <div> <Delivery /> </div> },
+        { label: 'จัดส่งเรียบร้อยแล้ว', content: <div> <Delivery /> </div> },
         // Add more tabs as needed
     ];
-    return(
+    return (
         <>
-             <div className="flex">
-                <h2 className="font-semibold md:text-2xl ml-5">ข้อมูลสมาชิก</h2>
-            
+            <div className="flex">
+                <h2 className="font-semibold md:text-2xl ml-5">รายการจอง</h2>
+
             </div>
             <div className="mt-5">
                 <AppointmentTabbar appointmentstabs={appointmentstabs} />

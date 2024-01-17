@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 
 export default function Home() {
   const [userCount, setUserCount] = useState(0);
+  const [appointmentCount, setAppointmentCount] = useState(0);
 
   useEffect(() => {
     // ดึงข้อมูลจาก API route ที่คุณได้สร้าง
@@ -15,6 +16,16 @@ export default function Home() {
       .catch(error => console.error('Error fetching user data:', error));
   }, []);
 
+  useEffect(() => {
+    // ดึงข้อมูลจาก API route ที่คุณได้สร้าง
+    fetch('/api/appointment') // ตั้งค่า path ให้ตรงกับ API route ของคุณ
+      .then(response => response.json())
+      .then(data => {
+        // อัพเดท state ด้วยข้อมูลที่ได้จาก API
+        setAppointmentCount(data.appointment.length);
+      })
+      .catch(error => console.error('Error fetching user data:', error));
+  }, []);
   return (
 
     <>
@@ -110,7 +121,7 @@ export default function Home() {
                 การจอง
               </div>
               <div className="">
-                500
+              {appointmentCount}
               </div>
             </div>
             <Link href='/appointment'>

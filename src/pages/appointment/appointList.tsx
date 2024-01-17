@@ -13,35 +13,32 @@ interface Params {
     searchKey: string;
     totalPages: number;
 }
-
 const AppointList: React.FC = () => {
-    //จำนวนหน้าและการจำกัดการแสดงของหน้า
     const [params, setParams] = useState<Params>({
         page: 1,
         pageSize: 10,
         searchKey: "",
         totalPages: 1,
     });
+
     const router = useRouter();
     const { id } = router.query;
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [subdistrict, setsubdistrict] = useState();
     const [appointmentSentToRepairman, setAppointmentSentToRepairman] = useState<string[]>([]);
+    const [loggedInUser, setLoggedInUser] = useState<any>(null);
 
     const [{ data: appointmentData }, getUserData] = useAxios({
         url: `/api/appointment?page=${params.page}&pageSize=${params.pageSize}&searchTerm=${params.searchKey}`,
         method: "GET",
     });
 
-    const [filteredappointmentsData, setFilteredappointmentsData] = useState<
-        Appointment[]
-    >([]);
+    const [filteredappointmentsData, setFilteredappointmentsData] = useState<Appointment[]>([]);
 
     useEffect(() => {
         setFilteredappointmentsData(appointmentData?.appointment ?? []);
     }, [appointmentData]);
-
 
     const handleChangePage = (page: number) => {
         setParams((prevParams) => ({
@@ -65,33 +62,18 @@ const AppointList: React.FC = () => {
         }));
     };
 
-
     useEffect(() => {
         if (appointmentData?.appointment) {
-            // Filter the registerForm data based on searchKey
             const filteredData = appointmentData.appointment.filter((appointment: any) =>
-                // Convert both the searchKey and the relevant data to lowercase for case-insensitive search
                 appointment.fname.toLowerCase().includes(params.searchKey.toLowerCase()) ||
                 appointment.lname.toLowerCase().includes(params.searchKey.toLowerCase()) ||
                 appointment.email.toLowerCase().includes(params.searchKey.toLowerCase()) ||
                 appointment.tel.toLowerCase().includes(params.searchKey.toLowerCase())
-
             );
-
             setFilteredappointmentsData(filteredData);
         }
     }, [appointmentData, params.searchKey]);
 
-    useEffect(() => {
-        console.log(subdistrict);
-    }, [subdistrict]);
-    useEffect(() => {
-        console.log(appointmentData);
-    }, [appointmentData]);
-
-    //
-
-    const [loggedInUser, setLoggedInUser] = useState<any>(null);
     useEffect(() => {
         const fetchData = async () => {
             const userDataFromCookies = Cookies.get('user');
@@ -100,25 +82,17 @@ const AppointList: React.FC = () => {
                 setLoggedInUser(parsedUser);
             }
         };
-
         fetchData();
     }, []);
 
-    //เมื่อกด รับซ่อม ส่งค่า repairmanId หรือช่างซ่อมลงฐานข้อมูล และปรับสถานะ
-
-    async function markAsRepairedss(appointmentId: any) {
+    async function markAsRepaired(appointmentId: any) {
         try {
-            // ตรวจสอบว่านัดหมายได้รับการจัดส่งไปยังช่างซ่อมหรือไม่
             if (!appointmentSentToRepairman.includes(appointmentId)) {
                 await axios.put(`/api/appointment/${appointmentId}`, {
                     repairmanId: loggedInUser.id,
                     status: "อยู่ระหว่างการซ่อม"
                 });
-
-                // ปรับปรุงสถานะเพื่อระบุว่านัดหมายได้รับการจัดส่งไปยังช่างซ่อม
                 setAppointmentSentToRepairman((prevSent) => [...prevSent, appointmentId]);
-
-                // รีโหลดหน้าหรือปรับปรุงข้อมูลตามที่เหมาะสม
                 window.location.reload();
             } else {
                 console.warn('นัดหมายได้รับการจัดส่งไปยังช่างซ่อมแล้ว.');
@@ -127,6 +101,7 @@ const AppointList: React.FC = () => {
             console.error('เกิดข้อผิดพลาดในการอัปเดตสถานะ', error);
         }
     }
+
     return (
         <div className="overflow-hidden rounded-lg lg:shadow-xl m-2">
             <div>
@@ -148,7 +123,14 @@ const AppointList: React.FC = () => {
 
                 <tbody>
                     {filteredappointmentsData
-                        .filter((appointment) => appointment.status === "กำลังดำเนินการ")
+                        .filter((appointment) => {
+                            if (loggedInUser.role === "Admin") {
+                                return true; // แสดงทั้งหมดสำหรับ Admin
+                            } else if (loggedInUser.role === "Repairman") {
+                                return appointment.status === "กำลังดำเนินการ"; // แสดงเฉพาะที่กำลังดำเนินการสำหรับ Repairman
+                            }
+                            return false;
+                        })
                         .sort((a, b) => new Date(a.time || '').getTime() - new Date(b.time || '').getTime())
                         .map((appointment, index) => (
                             <tr
@@ -183,10 +165,15 @@ const AppointList: React.FC = () => {
                                 </td>
 
                                 <td className="flex items-center lg:table-cell w-full lg:w-auto border-b">
-                                    <span className=" bg-[#1e293b] text-white lg:hidden p-2 w-20 h-full">Status</span>
-                                    <span className="ml-3 rounded-full bg-green-400 py-1 px-3 text-xs text-green-800 font-semibold">{appointment.status}</span>
+                                    <span className="bg-[#1e293b] text-white lg:hidden p-2 w-20 h-full">Status</span>
+                                    <span className={`ml-3 rounded-full py-1 px-3 text-xs text-black font-semibold
+                                     ${appointment.status === "กำลังดำเนินการ" ? 'bg-green-400' : ''}
+                                     ${appointment.status === "อยู่ระหว่างการซ่อม" ? 'bg-yellow-400' : ''}
+                                     ${appointment.status === "ซ่อมแล้ว" ? 'bg-red-400' : ''}
+                                     ${appointment.status === "จัดส่งแล้ว" ? ' bg-sky-400' : ''}`}>
+                                        {appointment.status}
+                                    </span>
                                 </td>
-
                                 {/* เมื่อกดคลิกรายละเอียดจะให้เด้งหน้า Modal  */}
                                 <td className="flex items-center lg:table-cell w-full lg:w-auto border-b">
                                     <span className=" bg-[#1e293b] text-white lg:hidden p-2 w-20 h-full">Details</span>

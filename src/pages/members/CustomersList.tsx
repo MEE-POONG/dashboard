@@ -223,7 +223,8 @@ const CustomersList: React.FC = (props) => {
                         ))}
                 </tbody>
             </table>
-        
+
+
             <div className="w-full rounded-md overflow-hidden">
                 {/* ... (โค้ดอื่นๆ) */}
                 <p>ลูกค้าทั้งหมด : {filteredappointmentsData.length} คน</p>
@@ -234,7 +235,7 @@ const CustomersList: React.FC = (props) => {
                     onChangePageSize={handleChangePageSize}
                 />
             </div>
-          
+
         </div>
     )
 }
