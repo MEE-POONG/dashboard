@@ -57,7 +57,7 @@ const SideNav: React.FC<SidenavProps> = ({ openSidebar }) => {
         Cookies.remove('user');
 
         // ทำการ redirect หน้าไปที่หน้า login หรือหน้าที่คุณต้องการ
-        router.push('/login');
+        router.push('/');
         // รีเฟซหน้าจอ
         window.location.reload();
     };

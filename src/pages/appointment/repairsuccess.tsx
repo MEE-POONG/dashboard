@@ -23,7 +23,7 @@ interface Params {
     totalPages: number;
 }
 
-const AppointList: React.FC = () => {
+const Repairsuccess: React.FC = () => {
     const router = useRouter();
     const { id } = router.query;
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -224,16 +224,16 @@ const AppointList: React.FC = () => {
 
                 <tbody>
                     {filteredappointmentsData
-                       .filter((appointment) => appointment.status === "ซ่อมแล้ว" && appointment.repairmanId === loggedInUser.id)
-                       .sort((a, b) => new Date(a.time || '').getTime() - new Date(b.time || '').getTime())
-                       .map((appointment, index) => (
+                        .filter((appointment) => appointment.status === "ซ่อมแล้ว" && appointment.repairmanId === loggedInUser.id)
+                        .sort((a, b) => new Date(a.time || '').getTime() - new Date(b.time || '').getTime())
+                        .map((appointment, index) => (
                             <tr
                                 className="bg-gray-50 hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap 
                         lg:flex-no-wrap mb-10 lg:mb-0 shadow-xl rounded-lg text-xs md:text-base"
                             >
                                 <td className="flex items-center lg:table-cell w-full lg:w-auto border-b">
                                     <span className=" bg-[#1e293b] text-white lg:hidden p-2 w-20 h-full">Order No.</span>
-                                    <p className="px-3 py-1 md:p-3"> 00{index + 1}</p>
+                                    <p className="px-3 py-1 md:p-3"> {index + 1}</p>
                                 </td>
 
                                 <td className="flex items-center lg:table-cell w-full lg:w-auto border-b">
@@ -282,4 +282,4 @@ const AppointList: React.FC = () => {
         </div>
     )
 }
-export default AppointList;
+export default Repairsuccess;

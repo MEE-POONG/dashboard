@@ -131,7 +131,7 @@ const AddressAppointmentModal: React.FC<AddressAppointmentModalProps> = ({ appoi
     return (
         <>
             <button onClick={() => setOpen(true)}>
-                รายละเอียด
+                จัดส่ง
             </button>
             {open ? (
                 <Transition.Root show={open} as={Fragment}>

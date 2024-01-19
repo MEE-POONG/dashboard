@@ -96,13 +96,13 @@ model Address {
 }
 
 model Repairman {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  fname    String?
-  lname    String?
-  email    String?
-  tel      String?
-  img      String?
-  password String?
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  fname       String?
+  lname       String?
+  email       String?
+  tel         String?
+  img         String?
+  password    String?
   role        String?
   Appointment Appointment[]
   Address     Address[]

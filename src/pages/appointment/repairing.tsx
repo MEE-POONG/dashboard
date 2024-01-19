@@ -22,7 +22,7 @@ interface Params {
     totalPages: number;
 }
 
-const AppointList: React.FC = () => {
+const Repairing: React.FC = () => {
     //จำนวนหน้าและการจำกัดการแสดงของหน้า
     const router = useRouter();
     const { id } = router.query;
@@ -239,7 +239,7 @@ const AppointList: React.FC = () => {
                             >
                                 <td className="flex items-center lg:table-cell w-full lg:w-auto border-b">
                                     <span className=" bg-[#1e293b] text-white lg:hidden p-2 w-20 h-full">Order No.</span>
-                                    <p className="px-3 py-1 md:p-3"> 00{index + 1}</p>
+                                    <p className="px-3 py-1 md:p-3"> {index + 1}</p>
                                 </td>
 
                                 <td className="flex items-center lg:table-cell w-full lg:w-auto border-b">
@@ -300,4 +300,4 @@ const AppointList: React.FC = () => {
 
     )
 }
-export default AppointList;
+export default Repairing;
