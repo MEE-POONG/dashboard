@@ -1,6 +1,9 @@
 import { Categories } from "@prisma/client";
 import useAxios from "axios-hooks";
 import { useEffect, useState } from "react";
+import { IoMdAdd } from "react-icons/io";
+import AddCategoryModal from "./addCategory";
+import EditCategoryModal from "./[id]";
 
 
 interface Params {
@@ -11,7 +14,25 @@ interface Params {
 }
 
 
-const CategoryEdit: React.FC = () => {
+const CategoryEdit: React.FC = (props) => {
+
+    const [isAddCategoryModalOpen, setAddCategoryModalOpen] = useState(false);
+    const openAddCategoryModalOpen = () => {
+        setAddCategoryModalOpen(true);
+    };
+
+    const closeAddCategoryModalOpen = () => {
+        setAddCategoryModalOpen(false);
+    };
+
+    const [isEditCategoryModalOpen, setEditCategoryModalOpen] = useState(false);
+
+    const closeEditCategoryModalOpen = () => {
+        setAddCategoryModalOpen(false);
+    };
+
+
+
     const [params, setParams] = useState<Params>({
         page: 1,
         pageSize: 10,
@@ -31,35 +52,52 @@ const CategoryEdit: React.FC = () => {
     const [
         { data: productsData },
         getProducts
-      ] = useAxios({
+    ] = useAxios({
         url: `/api/products?page=${params.page}&pageSize=${params.pageSize}&searchTerm=${params.searchKey}`,
         method: "GET",
-      });
+    });
 
 
     const [filteredcategoryData, setFilteredcategoryData] = useState<Categories[]>([]);
-    
+
 
     useEffect(() => {
         getCategories();
         getProducts();
-      }, [params]);
+    }, [params]);
 
     useEffect(() => {
         setFilteredcategoryData(categoriesData?.categories ?? []);
     }, [categoriesData]);
 
 
-    
+    const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+
+    const openEditCategoryModalOpen = (categoryId: number) => {
+        setSelectedCategoryId(categoryId);
+        setEditCategoryModalOpen(true);
+    };
+
+
 
 
     return (
 
 
         <div>
-            <div className="flex justify-between mx-2 ">
+            <div className="flex justify-between mx-2 mb-3">
                 <h2 className="font-semibold text-2xl">รายการประเภทสินค้า</h2>
+                <div className="flex">
+                    <button onClick={openAddCategoryModalOpen}
+                        className="flex items-center bg-green-500 hover:bg-green-800 text-white py-1.5 px-3 text-sm font-semibold rounded-full "
+                    >
+                        <span><IoMdAdd /></span>
+                        <span className="hidden md:block">เพิ่ม</span>
+                    </button>
+                </div>
             </div>
+
+
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg mb-4">
                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
                     <thead className="text-xs lg:text-sm text-gray-50 uppercase bg-gray-950 ">
@@ -92,7 +130,7 @@ const CategoryEdit: React.FC = () => {
                                 </td>
 
                                 <td className="px-6 py-3 flex">
-
+                                    <button onClick={() => openEditCategoryModalOpen(categories.id)}>edit</button>
                                 </td>
                             </tr>
                         ))}
@@ -100,6 +138,8 @@ const CategoryEdit: React.FC = () => {
 
                 </table>
             </div>
+            <AddCategoryModal isAddCategoryModalOpen={isAddCategoryModalOpen} onClose={closeAddCategoryModalOpen} />
+            <EditCategoryModal isEditCategoryModalOpen={isEditCategoryModalOpen} onClose={closeEditCategoryModalOpen} />
         </div>
 
     )
