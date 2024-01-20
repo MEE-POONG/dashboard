@@ -46,7 +46,7 @@ const LoginModal: React.FC<LoginModal> = ({ isAddModalOpen, onClose }) => {
                 // Save user data to cookies
                 Cookies.set('user', JSON.stringify(match));
                 // Save user role to cookies
-                Cookies.set('userRole', match.role);
+                // Cookies.set('userRole', match.role);
 
                 // Redirect to home page with user ID
                 router.push('/');

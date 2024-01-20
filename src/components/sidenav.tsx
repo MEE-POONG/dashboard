@@ -1,3 +1,4 @@
+
 import { time } from "console";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -9,7 +10,7 @@ import { FaProductHunt } from "react-icons/fa";
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
 import AddressRepairman from "@/pages/members/AddressRepairman";
-import LoginModal from "@/pages/appointment/test2";
+import LoginModal from "@/pages/login";
 
 
 interface SubmenuItem {
@@ -57,13 +58,11 @@ const SideNav: React.FC<SidenavProps> = ({ openSidebar }) => {
         Cookies.remove('user');
 
         // ทำการ redirect หน้าไปที่หน้า login หรือหน้าที่คุณต้องการ
-        router.push('/');
+        router.push('/login');
         // รีเฟซหน้าจอ
         window.location.reload();
     };
-
     const [isAddModalOpen, setAddModalOpen] = useState(false);
-
     const openAddModal = () => {
         setAddModalOpen(true);
     };
@@ -85,18 +84,7 @@ const SideNav: React.FC<SidenavProps> = ({ openSidebar }) => {
 
         fetchData();
     }, []);
-    const isAdmin = loggedInUser && loggedInUser.role === 'Admin';
-    const isRepairman = loggedInUser && loggedInUser.role === 'Repairman';
-    const filteredNavigationItems: MenuItem[] = navigationItems.filter((item) => {
-        if (isAdmin) {
-            return true; // แสดงทุกรายการสำหรับ Admin
-        } else if (isRepairman) {
-            // แสดงเฉพาะ Home และ Appointment สำหรับช่างซ่อม
-            return item.href === '/' || item.href === '/appointment';
-        } else {
-            return false; // ถ้าไม่ได้เข้าสู่ระบบหรือไม่ใช่ Admin หรือช่างซ่อม จะไม่แสดงเลย
-        }
-    });
+
     useEffect(() => {
         const sidebar = document.querySelector("aside");
         const maxSidebar = document.querySelector(".max");
@@ -169,7 +157,7 @@ const SideNav: React.FC<SidenavProps> = ({ openSidebar }) => {
                                 <div className="hidden md:block text-sm md:text-base text-black dark:text-white" onClick={openAddModal}>{loggedInUser.fname} {loggedInUser.lname} </div>
                                 {/* Display other user information as needed */}
                                 <div>
-                                    <h1>Welcome, {loggedInUser.role}!</h1>
+                                    <h1>Welcome, {loggedInUser.Address.district}!</h1>
 
                                 </div>
                                 {/*  */}
@@ -227,7 +215,7 @@ const SideNav: React.FC<SidenavProps> = ({ openSidebar }) => {
 
                 {/* <!-- MAX SIDEBAR--> */}
                 <div className="max hidden text-white mt-20 flex-col space-y-2 w-full h-[calc(100vh)] text-sm md:text-base">
-                    {filteredNavigationItems.map((item, index) => (
+                    {navigationItems.map((item, index) => (
                         <div
                             key={index}
                             className="hover:ml-4 w-full text-white hover:text-purple-500 dark:hover:text-blue-500 bg-[#1E293B] p-2 pl-8 rounded-full transform ease-in-out duration-300 flex flex-row items-center space-x-3">
@@ -242,12 +230,13 @@ const SideNav: React.FC<SidenavProps> = ({ openSidebar }) => {
 
                 {/* <!-- MINI SIDEBAR--> */}
                 <div className="mini mt-20 flex flex-col space-y-2 w-full h-[calc(100vh)]">
-                    {filteredNavigationItems.map((item, index) => (
+                    {navigationItems.map((item, index) => (
                         <div key={index} className="hover:ml-4 justify-end pr-5 text-white hover:text-purple-500 dark:hover:text-blue-500 w-full bg-[#1E293B] p-3 rounded-full transform ease-in-out duration-300 flex">
                             <Link href={item.href}>{item.icon}</Link>
                         </div>
                     ))}
                 </div>
+
             </aside>
         </>
     )
