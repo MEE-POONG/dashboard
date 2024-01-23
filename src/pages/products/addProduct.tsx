@@ -4,12 +4,24 @@ import { MdClose } from "react-icons/md";
 interface AddProductModalProps {
     isAddModalOpen: boolean;
     onClose: () => void;
+    checkBody: string;
 }
 
 const AddProductModal: React.FC<AddProductModalProps> = ({ isAddModalOpen, onClose }) => {
     if (!isAddModalOpen) return null;
 
-    const [alertForm, setAlertForm] = useState<string>("not");
+    const [productname, setProductName] = useState<string>('');
+    const [productbrand, setProductBrand] = useState<string>('');
+    const [productmodel, srtProductModel] = useState<string>('');
+    const [description, setDescription] = useState<string>('');
+    const [productcost, setProductCost] = useState<string>('');
+    const [price, setPrice] = useState<string>('');
+    const [imgFirst, setImgFrist] = useState<string>('');
+    const [imgSecond, setImgSecond] = useState<string>('');
+    const [imgThird, setImgThird] = useState<string>('');
+    const [imgFourth, setImgFourth] = useState<string>('');
+    const [categoriesId, setCategoriesId] = useState('');
+
     const [inputForm, setInputForm] = useState<boolean>(false);
     const [checkBody, setCheckBody] = useState<string>("");
 

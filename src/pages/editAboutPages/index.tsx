@@ -44,7 +44,7 @@ const EditAboutPage: React.FC = (props) => {
                         <div className="md:flex justify-between mt-5 gap-5">
                             <div className="text-center">
                                 <img
-                                    className="p-2 w-24 md:w-44 mx-auto"
+                                    className="p-2 w-24 md:w-44 mx-auto drop-shadow-lg"
                                     src={`https://imagedelivery.net/QZ6TuL-3r02W7wQjQrv5DA/${about.imgLogo}/public`} alt=""
                                 />
                                 <span className="font-semibold bg-amber-300 px-2 rounded-full text-sm">โลโก้</span>

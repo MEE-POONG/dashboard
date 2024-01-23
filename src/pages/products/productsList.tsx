@@ -59,9 +59,9 @@ const ProductsList: React.FC = (props) => {
         if (categoriesData?.categories) {
             // Create a map of category IDs to category names
             const categoriesMap = categoriesData.categories.reduce(
-                (map, category) => ({
+                (map, categories) => ({
                     ...map,
-                    [category.id]: category.name,
+                    [categories.id]: categories.name,
                 }),
                 {}
             );

@@ -1,9 +1,10 @@
 import { Categories } from "@prisma/client";
 import useAxios from "axios-hooks";
 import { useEffect, useState } from "react";
-import { IoMdAdd } from "react-icons/io";
+import { IoIosArrowRoundBack, IoMdAdd } from "react-icons/io";
 import AddCategoryModal from "./addCategory";
 import EditCategoryModal from "./[id]";
+import Link from "next/link";
 
 
 interface Params {
@@ -17,20 +18,8 @@ interface Params {
 const CategoryEdit: React.FC = (props) => {
 
     const [isAddCategoryModalOpen, setAddCategoryModalOpen] = useState(false);
-    const openAddCategoryModalOpen = () => {
-        setAddCategoryModalOpen(true);
-    };
-
-    const closeAddCategoryModalOpen = () => {
-        setAddCategoryModalOpen(false);
-    };
-
-    const [isEditCategoryModalOpen, setEditCategoryModalOpen] = useState(false);
-
-    const closeEditCategoryModalOpen = () => {
-        setAddCategoryModalOpen(false);
-    };
-
+    const openAddCategoryModalOpen = () => { setAddCategoryModalOpen(true); };
+    const closeAddCategoryModalOpen = () => { setAddCategoryModalOpen(false); };
 
 
     const [params, setParams] = useState<Params>({
@@ -40,7 +29,6 @@ const CategoryEdit: React.FC = (props) => {
         totalPages: 1,
     });
 
-
     const [
         { data: categoriesData },
         getCategories
@@ -49,21 +37,11 @@ const CategoryEdit: React.FC = (props) => {
         method: "GET",
     });
 
-    const [
-        { data: productsData },
-        getProducts
-    ] = useAxios({
-        url: `/api/products?page=${params.page}&pageSize=${params.pageSize}&searchTerm=${params.searchKey}`,
-        method: "GET",
-    });
-
-
     const [filteredcategoryData, setFilteredcategoryData] = useState<Categories[]>([]);
 
 
     useEffect(() => {
         getCategories();
-        getProducts();
     }, [params]);
 
     useEffect(() => {
@@ -71,20 +49,9 @@ const CategoryEdit: React.FC = (props) => {
     }, [categoriesData]);
 
 
-    const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
-
-    const openEditCategoryModalOpen = (categoryId: number) => {
-        setSelectedCategoryId(categoryId);
-        setEditCategoryModalOpen(true);
-    };
-
-
-
-
     return (
-
-
         <div>
+            <Link href={'/products'}><IoIosArrowRoundBack size={20} /></Link>
             <div className="flex justify-between mx-2 mb-3">
                 <h2 className="font-semibold text-2xl">รายการประเภทสินค้า</h2>
                 <div className="flex">
@@ -130,7 +97,7 @@ const CategoryEdit: React.FC = (props) => {
                                 </td>
 
                                 <td className="px-6 py-3 flex">
-                                    <button onClick={() => openEditCategoryModalOpen(categories.id)}>edit</button>
+                                    <Link href={`/products/categories/${categories.id}`}>แก้ไข</Link>
                                 </td>
                             </tr>
                         ))}
@@ -139,7 +106,6 @@ const CategoryEdit: React.FC = (props) => {
                 </table>
             </div>
             <AddCategoryModal isAddCategoryModalOpen={isAddCategoryModalOpen} onClose={closeAddCategoryModalOpen} />
-            <EditCategoryModal isEditCategoryModalOpen={isEditCategoryModalOpen} onClose={closeEditCategoryModalOpen} />
         </div>
 
     )

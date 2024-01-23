@@ -215,7 +215,7 @@ const AboutPage: React.FC = (props) => {
                     <div className="md:flex justify-between mt-5 gap-5">
                         <div className="text-center">
                             <span className="font-semibold bg-amber-300 px-2 rounded-full text-xs">โลโก้</span>
-                            <div className="mb-3">
+                            <div className="mb-3 ">
                                 <img
                                     src={imglogoPreview
                                         ? `data:image/jpeg;base64,${imglogoPreview}`
@@ -225,7 +225,7 @@ const AboutPage: React.FC = (props) => {
                                     }
 
                                     alt="Image One Preview"
-                                    className="object-contain w-48 my-2 mx-auto"
+                                    className="object-contain w-48 my-2 mx-auto drop-shadow-lg"
                                     loading="lazy"
                                 />
 

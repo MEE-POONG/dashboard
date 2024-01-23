@@ -15,7 +15,7 @@ interface AddNewsModalProps {
 const AddNewsModal: React.FC<AddNewsModalProps> = ({ isAddModalOpen, onClose }) => {
     if (!isAddModalOpen) return null;
 
-    const [{ error: errorMessage, loading: BlogLoading }, executeBlog] = useAxios({ url: '/api/blog', method: 'POST' }, { manual: true });
+    const [{ error: errorMessage, loading: BlogLoading }, executeBlog] = useAxios({ url: '/api/news', method: 'POST' }, { manual: true });
     const [title, settitle] = useState<string>("");
     const [subtitle, setsubtitle] = useState<string>("");
     const [detail, setdetail] = useState<string>("");
