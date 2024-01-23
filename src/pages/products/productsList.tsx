@@ -170,6 +170,9 @@ const ProductsList: React.FC = (props) => {
                                 Product name
                             </th>
                             <th scope="col" className="px-6 py-3">
+                                Picture
+                            </th>
+                            <th scope="col" className="px-6 py-3">
                                 Category
                             </th>
                             <th scope="col" className="px-6 py-3">
@@ -194,6 +197,12 @@ const ProductsList: React.FC = (props) => {
                                     {products.productname}
                                 </th>
                                 <td className="px-6 py-3">
+                                    <img
+                                        className="p-2"
+                                        src={`https://imagedelivery.net/QZ6TuL-3r02W7wQjQrv5DA/${products.imgFirst}/public`} alt=""
+                                    />
+                                </td>
+                                <td className="px-6 py-3">
                                     <span className="ml-3 rounded-full bg-yellow-100 py-1 px-3 text-xs text-yellow-900 font-semibold">
                                         {categoriesMap[products.categoriesId || 0] || ""}
                                     </span>
@@ -202,7 +211,7 @@ const ProductsList: React.FC = (props) => {
                                     {products.price}
                                 </td>
                                 <td className="px-6 py-3">
-                                   999
+                                    999
                                 </td>
 
                                 <td className="px-6 py-3 flex">
@@ -213,9 +222,9 @@ const ProductsList: React.FC = (props) => {
                                         className="text-green-500 hover:text-green-700"
                                     >
                                         <MdOutlineEdit />
-                                        
+
                                     </Link>
-                                    
+
                                 </td>
                             </tr>
                         ))}
