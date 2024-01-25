@@ -34,7 +34,7 @@ const AboutPage: React.FC = (props) => {
     const [subtitleOne, setSubtitleOne] = useState<string>("");
     const [subtitleTwo, setSubtitleTwo] = useState<string>("");
     const [description, setDescription] = useState<string>("");
-    const [imgLogo, setImgLogo] = useState<string>("");
+    const [imgLogo, setImgLogo] = useState<File[]>([]);
     const [imgbanner, setImgBanner] = useState<string>("");
     const [phoneOne, setPhoneOne] = useState<string>("");
     const [phoneTwo, setPhoneTwo] = useState<string>("");
@@ -239,10 +239,6 @@ const AboutPage: React.FC = (props) => {
                             </div>
 
                         </div>
-
-
-
-
 
                         <div className="relative mt-5 md:mt-1 p-2 border w-full rounded-md bg-white mb-5">
                             <span className="absolute -top-2 md:-top-3 font-semibold bg-amber-300 px-2 rounded-full text-xs"> เกี่ยวกับ MNR  </span>

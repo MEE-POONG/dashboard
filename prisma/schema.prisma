@@ -23,6 +23,7 @@ model Products {
   description  String?
   productcost  String?
   price        String?
+  stock        String?
   imgFirst     String?
   imgSecond    String?
   imgThird     String?
