@@ -1,18 +1,9 @@
 import EditModalAlert from '@/components/Modal/EditAlertModal';
-import { Categories } from '@prisma/client';
 import axios from 'axios';
 import useAxios from 'axios-hooks';
 import { useRouter } from 'next/router';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { MdClose } from 'react-icons/md';
-
-
-interface EditProductModalProps {
-  checkAlertShow: string;
-  setCheckAlertShow: React.Dispatch<React.SetStateAction<string>>;
-  checkBody: string;
-}
-
 
 interface ProductData {
   productname: string;
@@ -35,9 +26,7 @@ interface UploadResponse {
   };
 }
 
-
-
-const EditProductModal: React.FC<EditProductModalProps> = (props) => {
+const EditProductModal: React.FC = () => {
   const router = useRouter();
   const { id } = router.query;
   const [
@@ -55,8 +44,7 @@ const EditProductModal: React.FC<EditProductModalProps> = (props) => {
   const [imgSecond, setImgSecond] = useState<string>('');
   const [imgThird, setImgThird] = useState<string>('');
   const [imgFourth, setImgFourth] = useState<string>('');
-  const [categories, setCategories] = useState<Categories[]>([]);
-  const [categoriesId, setCategoriesId] = useState<string>('');
+  const [categoriesId, setCategoriesId] = useState('');
 
   const [alertForm, setAlertForm] = useState<string>("not");
   const [inputForm, setInputForm] = useState<boolean>(false);
@@ -82,19 +70,6 @@ const EditProductModal: React.FC<EditProductModalProps> = (props) => {
   const reloadPage = () => {
     window.location.reload();
   };
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get('/api/categories'); // Replace with your API endpoint
-        setCategories(response.data); // Assuming the response contains an array of categories
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      }
-    };
-
-    fetchCategories();
-  }, []);
 
   useEffect(() => {
     if (productData) {
@@ -219,7 +194,6 @@ const EditProductModal: React.FC<EditProductModalProps> = (props) => {
 
   return (
     <div className="p-5">
-       
       <h4 className='text-xl font-bold'>แก้ไขรายการสินค้า</h4>
       <EditModalAlert checkAlertShow={alertForm} setCheckAlertShow={setAlertForm} checkBody={checkBody} />
       <div className='mt-5 border-b py-3'>
@@ -227,7 +201,7 @@ const EditProductModal: React.FC<EditProductModalProps> = (props) => {
           <div className='md:col-span-3 lg:col-span-4 '>
             <div className="relative md:mt-2 border rounded-md bg-white mb-5">
               <label htmlFor="" className="absolute -top-2 md:-top-3 ml-2 font-semibold bg-amber-300 px-2 rounded-full text-xs">ชื่อสินค้า</label>
-              <input
+              <input 
                 className={`mt-1 p-2 border-0 w-full rounded-md text-xs md:text-base ${inputForm && productname === '' ? 'border-red-500' : 'border-gray-300'
                   }`}
                 type="text"
@@ -263,7 +237,7 @@ const EditProductModal: React.FC<EditProductModalProps> = (props) => {
         <div className="mb-3 md:flex gap-3 mt-2">
           <div className="relative md:mt-2 border rounded-md bg-white mb-5">
             <label htmlFor="" className="absolute -top-2 md:-top-3 ml-2 font-semibold bg-amber-300 px-2 rounded-full text-xs">ประเภทของสินค้า</label>
-            {/* <input
+            <input
               className={`mt-1 p-2 border-0 w-full rounded-md text-xs md:text-base ${inputForm && categoriesId === '' ? 'border-red-500' : 'border-gray-300'
                 }`}
               type="text"
@@ -274,8 +248,7 @@ const EditProductModal: React.FC<EditProductModalProps> = (props) => {
                   setCategoriesId(newValue);
                 }
               }}
-            /> */}
-
+            />
           </div>
           <div className="relative mt-5 md:mt-2 border rounded-md bg-white mb-5">
             <label htmlFor="" className="absolute -top-2 md:-top-3 ml-2 font-semibold bg-amber-300 px-2 rounded-full text-xs">จำนวน <span className="text-gray-500">(เครื่อง/ชิ้น/อัน)</span></label>
