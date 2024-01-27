@@ -54,7 +54,7 @@ const AddModalAlert: React.FC<AddModalAlertProps> = ({ checkAlertShow, setCheckA
     return (
         <>
             {checkAlertShow !== 'not' && (
-                <div className="fixed top-0 left-0 w-full h-screen flex items-center justify-center bg-gray-800 bg-opacity-50">
+                <div className="fixed z-10 top-0 left-0 w-full h-screen flex items-center justify-center bg-gray-800 bg-opacity-50">
                     <div className={`p-6 rounded-md shadow-md ${variant}`}>
                         <div className="">
                             <div className='flex justify-between mb-4 gap-5'>

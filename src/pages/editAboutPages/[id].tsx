@@ -237,7 +237,6 @@ const AboutPage: React.FC = (props) => {
                                     className="mt-1 border rounded-md focus:outline-none focus:border-indigo-500 w-full text-xs"
                                 />
                             </div>
-
                         </div>
 
                         <div className="relative mt-5 md:mt-1 p-2 border w-full rounded-md bg-white mb-5">

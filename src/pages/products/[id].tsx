@@ -1,6 +1,7 @@
 import EditModalAlert from '@/components/Modal/EditAlertModal';
 import axios from 'axios';
 import useAxios from 'axios-hooks';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { MdClose } from 'react-icons/md';
@@ -201,7 +202,7 @@ const EditProductModal: React.FC = () => {
           <div className='md:col-span-3 lg:col-span-4 '>
             <div className="relative md:mt-2 border rounded-md bg-white mb-5">
               <label htmlFor="" className="absolute -top-2 md:-top-3 ml-2 font-semibold bg-amber-300 px-2 rounded-full text-xs">ชื่อสินค้า</label>
-              <input 
+              <input
                 className={`mt-1 p-2 border-0 w-full rounded-md text-xs md:text-base ${inputForm && productname === '' ? 'border-red-500' : 'border-gray-300'
                   }`}
                 type="text"
@@ -383,13 +384,16 @@ const EditProductModal: React.FC = () => {
 
         </div>
       </div>
-      <div className="text-center mt-5">
+      <div className="flex justify-center gap-5 mt-5">
         <button
           onClick={handleSubmit}
           className='bg-teal-500 text-white hover:bg-teal-300 hover:text-black px-3 py-1 rounded'
         >
           Save
         </button>
+        <Link href='/editNews' className='bg-gray-950 text-white hover:bg-gray-300 hover:text-black px-3 py-1 rounded'>
+          Back
+        </Link>
       </div>
     </div>
   );

@@ -1,13 +1,9 @@
 import React, { useState, ChangeEvent, useEffect } from 'react';
-import ReactDOM from 'react-dom';
-import { FaSpinner, FaEdit } from 'react-icons/fa';
-import handler from '../../pages/api/hello';
 import useAxios from 'axios-hooks';
-import { MdClose } from 'react-icons/md';
 import { useRouter } from 'next/router';
-import DashboardLayout from '@/components/layout';
 import EditModalAlert from '@/components/Modal/EditAlertModal';
 import Link from 'next/link';
+import axios from 'axios';
 
 
 interface EditNewsModalProps {
@@ -30,7 +26,10 @@ const EditNewsModal: React.FC<EditNewsModalProps> = ({ isEditModalOpen, onClose 
     const [detail, setdetail] = useState<string>("");
     const [date, setdate] = useState<string>("");
     const [author, setauthor] = useState<string>("");
-    const [img, setimg] = useState<string>("");
+    const [img, setImg] = useState<string>("");
+
+    const [imgPreview, setImgPreview] = useState<string | null>(null);
+
     const [alertForm, setAlertForm] = useState<string>("not");
     const [inputForm, setInputForm] = useState<boolean>(false);
     const [checkBody, setCheckBody] = useState<string>("");
@@ -59,35 +58,66 @@ const EditNewsModal: React.FC<EditNewsModalProps> = ({ isEditModalOpen, onClose 
                 detail,
                 date,
                 author,
-                img: imageId, // Use the uploaded image ID
             } = NewsData;
             settitle(title);
             setsubtitle(subtitle);
             setdetail(detail);
             setdate(date);
             setauthor(author);
-            setimg(img);
         }
     }, [NewsData]);
 
 
-    const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileUpload = (
+        event: ChangeEvent<HTMLInputElement>,
+        setImage: React.Dispatch<React.SetStateAction<File | null>>,
+        setPreview: React.Dispatch<React.SetStateAction<string | null>>
+    ) => {
         const file = event.target.files && event.target.files[0];
         if (file) {
+            setImage(file);
             const reader = new FileReader();
             reader.onloadend = () => {
                 const base64String = reader.result as string;
-                const splittedString = base64String.split(",")[1]; // ตัดส่วน "data:image/png;base64," ออก
-                setimg(splittedString);
+                setPreview(base64String);
             };
             reader.readAsDataURL(file);
         }
+    };
+    const deleteImage = async (imageId: string) => {
+        try {
+            await axios.delete(`https://upload-image.me-prompt-technology.com/?name=${imageId}`);
+        } catch (error) {
+            console.error("Delete failed: ", error);
+        }
+    };
+    const uploadImage = async (img: any, image: any) => {
+        const uploadFormData = new FormData();
+        uploadFormData.append("file", image);
+        try {
+            const uploadResponse = await axios.post(
+                "https://upload-image.me-prompt-technology.com/",
+                uploadFormData
+            );
+
+            if (uploadResponse?.status === 200) {
+                deleteImage(img);
+                return uploadResponse?.data?.result?.id;
+            }
+        } catch (error) {
+            console.error("Upload failed: ", error);
+        }
+        return null;
     };
 
 
     const handleSubmit = async (event: React.MouseEvent<HTMLElement>) => {
         event.preventDefault();
-        event.stopPropagation();
+        event.stopPropagation(); const imageIDs = await Promise.all([
+            img ? uploadImage(NewsData?.img, img) : null,
+
+        ]);
+
         let missingFields = [];
         if (!title) missingFields.push("NewsTitle");
         if (!subtitle) missingFields.push("NewsSubTitle");
@@ -109,8 +139,7 @@ const EditNewsModal: React.FC<EditNewsModalProps> = ({ isEditModalOpen, onClose 
                     detail,
                     date,
                     author,
-                    // newImg,
-                    /*img,*/
+                    img: imageIDs[0] !== null ? imageIDs[0] : NewsData?.img,
                 };
 
 
@@ -151,6 +180,31 @@ const EditNewsModal: React.FC<EditNewsModalProps> = ({ isEditModalOpen, onClose 
 
 
                     <div>
+                        <div className="text-center">
+                            <span className="font-semibold bg-amber-300 px-2 rounded-full text-xs">โลโก้</span>
+                            <div className="mb-3 ">
+                                <img
+                                    src={imgPreview
+                                        ? `data:image/jpeg;base64,${imgPreview}`
+                                        : NewsData?.img
+                                            ? `https://imagedelivery.net/QZ6TuL-3r02W7wQjQrv5DA/${NewsData.img}/500`
+                                            : `https://imagedelivery.net/QZ6TuL-3r02W7wQjQrv5DA/4500f404-dbac-40f3-6696-ae768a38e800/500`
+                                    }
+
+                                    alt="Image One Preview"
+                                    className="object-contain w-48 my-2 mx-auto drop-shadow-lg"
+                                    loading="lazy"
+                                />
+
+                                <input
+                                    id="img"
+                                    name="img"
+                                    type="file"
+                                    onChange={(event) => handleFileUpload(event, setImg, setImgPreview)}
+                                    className="mt-1 border rounded-md focus:outline-none focus:border-indigo-500 w-full text-xs"
+                                />
+                            </div>
+                        </div>
                         <div className="md:grid grid-cols-2 gap-4 my-5">
                             <div>
                                 <label className="block text-sm font-medium ">ชื่อข่าว</label>

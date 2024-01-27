@@ -15,7 +15,7 @@ interface AddNewsModalProps {
 const AddNewsModal: React.FC<AddNewsModalProps> = ({ isAddModalOpen, onClose }) => {
     if (!isAddModalOpen) return null;
 
-    const [{ error: errorMessage, loading: BlogLoading }, executeBlog] = useAxios({ url: '/api/news', method: 'POST' }, { manual: true });
+    const [{ error: errorMessage, loading: NewsLoading }, executeNews] = useAxios({ url: '/api/news', method: 'POST' }, { manual: true });
     const [title, settitle] = useState<string>("");
     const [subtitle, setsubtitle] = useState<string>("");
     const [detail, setdetail] = useState<string>("");
@@ -65,12 +65,9 @@ const AddNewsModal: React.FC<AddNewsModalProps> = ({ isAddModalOpen, onClose }) 
         if (!title) missingFields.push("title");
         if (!subtitle) missingFields.push("subtitle");
         if (!detail) missingFields.push("detail");
-
         if (!date) missingFields.push("date");
         if (!author) missingFields.push("author");
-
         if (!img) missingFields.push("blogImg");
-
 
         if (missingFields.length > 0) {
             // Handle missing fields...
@@ -105,7 +102,7 @@ const AddNewsModal: React.FC<AddNewsModalProps> = ({ isAddModalOpen, onClose }) 
 
                         };
 
-                        const response = await executeBlog({ data });
+                        const response = await executeNews({ data });
                         if (response && response.status === 201) {
                             setAlertForm("success");
                             setTimeout(() => {
