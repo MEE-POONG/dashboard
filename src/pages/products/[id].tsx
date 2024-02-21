@@ -4,7 +4,10 @@ import useAxios from 'axios-hooks';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ChangeEvent, useEffect, useState } from 'react';
+import { BsArrowBarLeft } from 'react-icons/bs';
 import { MdClose } from 'react-icons/md';
+
+
 
 interface ProductData {
   productname: string;
@@ -27,7 +30,7 @@ interface UploadResponse {
   };
 }
 
-const EditProductModal: React.FC = () => {
+const EditProductModal: React.FC = (props) => {
   const router = useRouter();
   const { id } = router.query;
   const [
@@ -46,6 +49,8 @@ const EditProductModal: React.FC = () => {
   const [imgThird, setImgThird] = useState<string>('');
   const [imgFourth, setImgFourth] = useState<string>('');
   const [categoriesId, setCategoriesId] = useState('');
+
+  
 
   const [alertForm, setAlertForm] = useState<string>("not");
   const [inputForm, setInputForm] = useState<boolean>(false);
@@ -195,7 +200,8 @@ const EditProductModal: React.FC = () => {
 
   return (
     <div className="p-5">
-      <h4 className='text-xl font-bold'>แก้ไขรายการสินค้า</h4>
+      <Link href='/products' className='hover:text-amber-400 font-bold flex items-center'><BsArrowBarLeft/> กลับ</Link>
+      <h4 className='text-xl font-bold mt-5 '>แก้ไขรายการสินค้า</h4>
       <EditModalAlert checkAlertShow={alertForm} setCheckAlertShow={setAlertForm} checkBody={checkBody} />
       <div className='mt-5 border-b py-3'>
         <div className='grid md:grid-cols-5 gap-3'>
@@ -238,7 +244,12 @@ const EditProductModal: React.FC = () => {
         <div className="mb-3 md:flex gap-3 mt-2">
           <div className="relative md:mt-2 border rounded-md bg-white mb-5">
             <label htmlFor="" className="absolute -top-2 md:-top-3 ml-2 font-semibold bg-amber-300 px-2 rounded-full text-xs">ประเภทของสินค้า</label>
-            <input
+           <select name="" id="" className={`mt-1 p-2 border-0 w-full rounded-md text-xs md:text-base ${inputForm && categoriesId === '' ? 'border-red-500' : 'border-gray-300'
+                }`}>
+            <option value="">Select a Category</option>
+            <option value=""></option>
+           </select >
+            {/* <input
               className={`mt-1 p-2 border-0 w-full rounded-md text-xs md:text-base ${inputForm && categoriesId === '' ? 'border-red-500' : 'border-gray-300'
                 }`}
               type="text"
@@ -249,7 +260,7 @@ const EditProductModal: React.FC = () => {
                   setCategoriesId(newValue);
                 }
               }}
-            />
+            /> */}
           </div>
           <div className="relative mt-5 md:mt-2 border rounded-md bg-white mb-5">
             <label htmlFor="" className="absolute -top-2 md:-top-3 ml-2 font-semibold bg-amber-300 px-2 rounded-full text-xs">จำนวน <span className="text-gray-500">(เครื่อง/ชิ้น/อัน)</span></label>
@@ -391,7 +402,7 @@ const EditProductModal: React.FC = () => {
         >
           Save
         </button>
-        <Link href='/editNews' className='bg-gray-950 text-white hover:bg-gray-300 hover:text-black px-3 py-1 rounded'>
+        <Link href='/products' className='bg-gray-950 text-white hover:bg-gray-300 hover:text-black px-3 py-1 rounded'>
           Back
         </Link>
       </div>

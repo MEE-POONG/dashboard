@@ -157,17 +157,17 @@ model User {
 }
 
 model About {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  title       String?
-  imgLogo     String?
-  description String?
-  imgbanner   String?
-  subtitleOne String?
-  subtitleTwo String?
-  Address     String?
-  email       String?
-  phoneOne    String?
-  phoneTwo    String?
-  FBname      String?
-  line        String?
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  imgLogo     String
+  description String
+  imgbanner   String
+  subtitleOne String
+  subtitleTwo String
+  Address     String
+  email       String
+  phoneOne    String @default("000-000-0000")
+  phoneTwo    String @default("000-000-0000")
+  FBname      String
+  line        String
 }

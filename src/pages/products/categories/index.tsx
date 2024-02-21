@@ -5,6 +5,7 @@ import { IoIosArrowRoundBack, IoMdAdd } from "react-icons/io";
 import AddCategoryModal from "./addCategory";
 import EditCategoryModal from "./[id]";
 import Link from "next/link";
+import DeleteMemberModal from "@/components/Modal/DeleteAlertModal";
 
 
 interface Params {
@@ -39,6 +40,10 @@ const CategoryEdit: React.FC = (props) => {
 
     const [filteredcategoryData, setFilteredcategoryData] = useState<Categories[]>([]);
 
+    const [
+        { loading: deleteCategoryLoading, error: deleteCategoryError },
+        executeCategoryDelete,
+    ] = useAxios({}, { manual: true });
 
     useEffect(() => {
         getCategories();
@@ -47,6 +52,17 @@ const CategoryEdit: React.FC = (props) => {
     useEffect(() => {
         setFilteredcategoryData(categoriesData?.categories ?? []);
     }, [categoriesData]);
+
+    const deleteCategory = (id: string): Promise<any> => {
+        return executeCategoryDelete({
+          url: "/api/categories/" + id,
+          method: "DELETE",
+        }).then(() => {
+            setFilteredcategoryData((prevcategories) =>
+            prevcategories.filter((categories) => categories.id !== id)
+          );
+        });
+      };
 
 
     return (
@@ -97,6 +113,8 @@ const CategoryEdit: React.FC = (props) => {
                                 </td>
 
                                 <td className="px-6 py-3 flex">
+                                    <DeleteMemberModal data={categories} apiDelete={() => deleteCategory(categories.id)} />
+
                                     <Link href={`/products/categories/${categories.id}`}>แก้ไข</Link>
                                 </td>
                             </tr>

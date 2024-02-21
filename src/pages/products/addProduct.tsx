@@ -1,7 +1,10 @@
 import AddModalAlert from "@/components/Modal/AddAlertModal";
+import { Categories } from "@prisma/client";
 import axios from "axios";
-import { useState } from "react";
+import useAxios from "axios-hooks";
+import { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
+import CategoryEdit from './categories/index';
 
 interface AddProductModalProps {
     isAddModalOpen: boolean;
@@ -13,68 +16,49 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isAddModalOpen, onClo
     if (!isAddModalOpen) return null;
 
     const [productname, setProductName] = useState<string>('');
-    const [productbrand, setProductBrand] = useState<string>('');
-    const [productmodel, srtProductModel] = useState<string>('');
     const [description, setDescription] = useState<string>('');
-    const [productcost, setProductCost] = useState<string>('');
     const [price, setPrice] = useState<string>('');
-    const [imgFirst, setImgFirst] = useState<File | null>(null);
-    const [imgSecond, setImgSecond] = useState<File | null>(null);
-    const [imgThird, setImgThird] = useState<File | null>(null);
-    const [imgFourth, setImgFourth] = useState<File | null>(null);
     const [stock, setStock] = useState<string>('');
-    const [categoriesId, setCategoriesId] = useState('');
+    const [imgFirst, setImgFirst] = useState<File | null>(null);
+    const [categoriesId, setCategoriesId] = useState<string>('');
 
-    const [alertForm, setAlertForm] = useState<string>("not");
+    const [alertForm, setAlertForm] = useState<string>('not');
     const [inputForm, setInputForm] = useState<boolean>(false);
-    const [checkBody, setCheckBody] = useState<string>("");
+    const [checkBody, setCheckBody] = useState<string>('');
 
-    const handleInputChange = (setter: any) => (event: any) => {
+    const [categoriesMap, setCategoriesMap] = useState<Record<number, string>>({});
+
+    const [
+        { data: categoriesData },
+        getCategories
+    ] = useAxios({
+        url: "/api/categories", // Assuming this endpoint exists
+        method: "GET",
+    });
+    const [filteredcategoryData, setFilteredcategoryData] = useState<Categories[]>([]);
+
+    useEffect(() => {
+        setFilteredcategoryData(categoriesData?.categories ?? []);
+    }, [categoriesData]);
+
+    const handleInputChange = (setter: React.Dispatch<React.SetStateAction<string>>) => (event: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = event.target.value;
-        if (!isNaN(newValue) && !newValue.includes('.')) {
+        if (!isNaN(Number(newValue)) && !newValue.includes('.')) {
             setter(newValue);
         }
     };
-    const reloadPage = () => {
-        clear();
-    };
-
-
-    // const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>, imgKey: string) => {
-    //     const file = event.target.files && event.target.files[0];
-    //     if (file) {
-    //         switch (imgKey) {
-    //             case 'imgFirst':
-    //                 setImgFirst(URL.createObjectURL(file));
-    //                 break;
-    //             case 'imgSecond':
-    //                 setImgSecond(URL.createObjectURL(file));
-    //                 break;
-    //             case 'imgThird':
-    //                 setImgThird(URL.createObjectURL(file));
-    //                 break;
-    //             case 'imgFourth':
-    //                 setImgFourth(URL.createObjectURL(file));
-    //                 break;
-    //             default:
-    //                 break;
-    //         }
-    //     }
-    // };
 
     const clear = () => {
-        setProductName("");
-        setDescription("");
-        setPrice("");
-        setStock("");
+        setProductName('');
+        setDescription('');
+        setPrice('');
+        setStock('');
         setImgFirst(null);
-        setImgSecond(null);
-        setImgThird(null);
-        setImgFourth(null),
-        setAlertForm("not");
+        setAlertForm('not');
         setInputForm(false);
-        setCheckBody("");
+        setCheckBody('');
     };
+
     const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files && event.target.files[0];
         if (file) {
@@ -85,25 +69,26 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isAddModalOpen, onClo
     const handleSubmit = async (event: React.MouseEvent<HTMLElement>) => {
         event.preventDefault();
         event.stopPropagation();
-        let missingFields = [];
-        if (!productname) missingFields.push("productname");
-        if (!description) missingFields.push("description");
-        if (!price) missingFields.push("price");
-        if (!stock) missingFields.push("stock");
-        if (!imgFirst) missingFields.push("imgFirst");
+
+        const missingFields: string[] = [];
+        if (!productname) missingFields.push('productname');
+        if (!description) missingFields.push('description');
+        if (!price) missingFields.push('price');
+        if (!stock) missingFields.push('stock');
+        if (!imgFirst) missingFields.push('imgFirst');
 
         if (missingFields.length > 0) {
-            setAlertForm("warning");
+            setAlertForm('warning');
             setInputForm(true);
             setCheckBody(`กรอกข้อมูลไม่ครบ: ${missingFields.join(', ')}`);
         } else {
             try {
-                setAlertForm("primary");
+                setAlertForm('primary');
                 if (imgFirst) {
                     const formData = new FormData();
-                    formData.append("file", imgFirst);
+                    formData.append('file', imgFirst);
                     const uploadResponse = await axios.post(
-                        "https://upload-image.me-prompt-technology.com/",
+                        'https://upload-image.me-prompt-technology.com/',
                         formData
                     );
 
@@ -120,28 +105,31 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isAddModalOpen, onClo
                             imgSecond: imageId,
                             imgThird: imageId,
                             imgFourth: imageId,
+                            categoriesId,
                         };
 
-                        const response = await axios.post("/api/products", data);
+                        const response = await axios.post('/api/products', data);
+
                         if (response && response.status === 201) {
-                            setAlertForm("success");
+                            setAlertForm('success');
                             setTimeout(() => {
                                 clear();
                             }, 5000);
                         } else {
-                            setAlertForm("danger");
+                            setAlertForm('danger');
                             throw new Error('Failed to send data');
                         }
                     } else {
-                        setAlertForm("danger");
+                        setAlertForm('danger');
                         throw new Error('Image upload failed');
                     }
                 }
             } catch (error) {
-                setAlertForm("danger");
+                setAlertForm('danger');
             }
         }
     };
+
 
 
 
@@ -181,21 +169,26 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isAddModalOpen, onClo
                             <div className="mb-3 md:flex gap-3">
                                 <div className="relative md:mt-2 border rounded-md bg-white mb-5">
                                     <label htmlFor="" className="absolute -top-2 md:-top-3 ml-2 font-semibold bg-amber-300 px-2 rounded-full text-xs">ประเภทของสินค้า</label>
-                                    <select name="" id=""
+                                    <select
+                                        name=""
+                                        id=""
                                         onChange={(e) => setCategoriesId(e.target.value)}
-                                        className={`mt-1 p-2 border-0 w-full rounded-md text-xs md:text-base ${inputForm && categoriesId === "" ? 'border-red-500' : 'border-gray-300'}`}>
+                                        className={`mt-1 p-2 border-0 w-full rounded-md text-xs md:text-base ${inputForm && categoriesId === "" ? "border-red-500" : "border-gray-300"
+                                            }`}
+                                    >
                                         <option value="">เลือกประเภท</option>
-                                        <option value="">ประเภท ก</option>
-                                        <option value="">ประเภท ข</option>
-                                        <option value="">ประเภท ค</option>
-                                        <option value="">ประเภท ง</option>
+                                        {filteredcategoryData?.map((categories) => (
+                                            <option key={categories.id} value={categories.id.toString()}>
+                                                {categories.name}
+                                            </option>
+                                        ))}
                                     </select>
                                 </div>
                                 <div className="relative md:mt-2 border rounded-md bg-white mb-5">
                                     <label htmlFor="" className="absolute -top-2 md:-top-3 ml-2 font-semibold bg-amber-300 px-2 rounded-full text-xs">จำนวน <span className="text-gray-500">(เครื่อง/ชิ้น/อัน)</span></label>
                                     <input type="number" name="" id="" min={0}
                                         onChange={(e) => setStock(e.target.value)}
-                                        className={`mt-1 p-2 border-0 w-full rounded-md text-xs md:text-base ${inputForm && stock === "" ? 'border-red-500' : 'border-gray-300'}`} />
+                                        className={`mt-1 p-2 border-0 w-full rounded-md text-xs text-right md:text-base ${inputForm && stock === "" ? 'border-red-500' : 'border-gray-300'}`} />
                                 </div>
 
                             </div>
@@ -227,60 +220,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isAddModalOpen, onClo
                                         placeholder="รูปภาพ 1"
                                     />
                                 </div>
-                                <div className="">
-                                    <label className="block text-sm font-semibold text-gray-950">รูปภาพ 2</label>
-                                    {imgSecond && (
-                                        <div className="mt-2 w-24">
-                                            <img
-                                                src={URL.createObjectURL(imgSecond)}
-                                                alt="Selected Image"
-                                                className="max-w-full h-auto"
-                                            />
-                                        </div>
-                                    )}
-                                    <input
-                                        type="file"
-                                        onChange={handleFileUpload}
-                                        className={`mt-1 border text-xs w-full ${inputForm && imgSecond === null ? 'border-red-500' : 'border-gray-300'} rounded-md`}
-                                        placeholder="รูปภาพ 2"
-                                    />
-                                </div>
-                                {/* <div className="">
-                                    <label className="block text-sm font-semibold text-gray-950">รูปภาพ 3</label>
-                                    {imgThird && (
-                                        <div className="mt-2 w-24">
-                                            <img
-                                                src={imgThird}
-                                                alt="Selected Image"
-                                                className="max-w-full h-auto"
-                                            />
-                                        </div>
-                                    )}
-                                    <input
-                                        type="file"
-                                        onChange={(e) => handleFileUpload(e, 'imgThird')}
-                                        className={`mt-1 border text-xs w-full ${inputForm && imgThird === '' ? 'border-red-500' : 'border-gray-300'} rounded-md`}
-                                        placeholder="รูปภาพ 3"
-                                    />
-                                </div>
-                                <div className="">
-                                    <label className="block text-sm font-semibold text-gray-950">รูปภาพ 4</label>
-                                    {imgFourth && (
-                                        <div className="mt-2 w-24">
-                                            <img
-                                                src={imgFourth}
-                                                alt="Selected Image"
-                                                className="max-w-full h-auto"
-                                            />
-                                        </div>
-                                    )}
-                                    <input
-                                        type="file"
-                                        onChange={(e) => handleFileUpload(e, 'imgFourth')}
-                                        className={`mt-1 border text-xs w-full ${inputForm && imgFourth === '' ? 'border-red-500' : 'border-gray-300'} rounded-md`}
-                                        placeholder="รูปภาพ 4"
-                                    />
-                                </div> */}
+
                             </div>
 
                         </div>

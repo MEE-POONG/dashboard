@@ -37,7 +37,7 @@ const Products: React.FC = (props) => {
                 </div>
             </div>
             <ProductsList />
-            <AddProductModal isAddModalOpen={isAddProductModalOpen} onClose={closeAddModal} />
+            <AddProductModal isAddModalOpen={isAddProductModalOpen} onClose={closeAddModal}  />
 
         </div>
 

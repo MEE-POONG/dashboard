@@ -211,7 +211,7 @@ const ProductsList: React.FC = (props) => {
                   {products.price}
                 </td>
                 <td className="px-6 py-3">
-                  999
+                  {products.stock}
                 </td>
 
                 <td className="px-6 py-3 flex">
