@@ -31,6 +31,7 @@ model Products {
   imgFifth     String?
   Categories   Categories? @relation(fields: [categoriesId], references: [id])
   categoriesId String?     @db.ObjectId
+  OrderList    OrderList[]
 }
 
 model Categories {
@@ -94,6 +95,7 @@ model Address {
   userId      String?       @db.ObjectId
   Repairman   Repairman?    @relation(fields: [repairmanId], references: [id])
   repairmanId String?       @db.ObjectId
+  Order       Order[]
 }
 
 model Repairman {
@@ -139,22 +141,7 @@ model Appointment {
   addressId   String?    @db.ObjectId
 }
 
-model User {
-  id              String  @id @default(auto()) @map("_id") @db.ObjectId
-  fname           String?
-  lname           String?
-  birthday        String?
-  email           String?
-  password        String?
-  comfirmPassword String?
-  tel             String?
-  secretKey       String?
-  facebook        String?
-  google          String?
 
-  Appointment Appointment[]
-  Address     Address[]
-}
 
 model About {
   id          String @id @default(auto()) @map("_id") @db.ObjectId
@@ -170,4 +157,66 @@ model About {
   phoneTwo    String @default("000-000-0000")
   FBname      String
   line        String
+}
+
+model Payment {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  img         String?
+  paymentType String?
+  name        String?
+  lname       String?
+  phonenumber String?
+  typeaddress String?
+  addressline String?
+  zipcode     String?
+  province    String?
+  district    String?
+  subdistrict String?
+  note        String?
+  vat         Float?
+  Order       Order[]
+}
+
+model Order {
+  id        String      @id @default(auto()) @map("_id") @db.ObjectId
+  date      String?
+  status    String?
+  OrderList OrderList[]
+  User      User?       @relation(fields: [userId], references: [id])
+  userId    String?     @db.ObjectId
+  Payment   Payment?    @relation(fields: [paymentId], references: [id])
+  paymentId String?     @db.ObjectId
+  Address   Address?    @relation(fields: [addressId], references: [id])
+  addressId String?     @db.ObjectId
+}
+
+model OrderList {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  date      String?
+  discount  String?
+  quantity  Int?
+  Order     Order?    @relation(fields: [orderId], references: [id])
+  orderId   String?   @db.ObjectId
+  Products  Products? @relation(fields: [productId], references: [id])
+  productId String?   @db.ObjectId
+  User      User?     @relation(fields: [userId], references: [id])
+  userId    String?   @db.ObjectId
+}
+model User {
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  fname           String?
+  lname           String?
+  birthday        String?
+  email           String?
+  password        String?
+  comfirmPassword String?
+  tel             String?
+  secretKey       String?
+  facebook        String?
+  google          String?
+
+  Appointment Appointment[]
+  Address     Address[]
+  Order       Order[]
+  OrderList   OrderList[]
 }
