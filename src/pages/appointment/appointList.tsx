@@ -62,17 +62,17 @@ const AppointmentList: React.FC = () => {
         }));
     };
 
-    useEffect(() => {
-        if (appointmentData?.appointment) {
-            const filteredData = appointmentData.appointment.filter((appointment: any) =>
-                appointment.fname.toLowerCase().includes(params.searchKey.toLowerCase()) ||
-                appointment.lname.toLowerCase().includes(params.searchKey.toLowerCase()) ||
-                appointment.email.toLowerCase().includes(params.searchKey.toLowerCase()) ||
-                appointment.tel.toLowerCase().includes(params.searchKey.toLowerCase())
-            );
-            setFilteredappointmentsData(filteredData);
-        }
-    }, [appointmentData, params.searchKey]);
+    // useEffect(() => {
+    //     if (appointmentData?.appointment) {
+    //         const filteredData = appointmentData.appointment.filter((appointment: any) =>
+    //             appointment.fname.toLowerCase().includes(params.searchKey.toLowerCase()) ||
+    //             appointment.lname.toLowerCase().includes(params.searchKey.toLowerCase()) ||
+    //             appointment.email.toLowerCase().includes(params.searchKey.toLowerCase()) ||
+    //             appointment.tel.toLowerCase().includes(params.searchKey.toLowerCase())
+    //         );
+    //         setFilteredappointmentsData(filteredData);
+    //     }
+    // }, [appointmentData, params.searchKey]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -133,7 +133,7 @@ const AppointmentList: React.FC = () => {
                         })
                         .sort((a, b) => new Date(a.time || '').getTime() - new Date(b.time || '').getTime())
                         .map((appointment, index) => (
-                            <tr
+                            <tr key={appointment.id}
                                 className="bg-gray-50 hover:bg-gray-100 flex lg:table-row flex-row lg:flex-row flex-wrap 
                                 lg:flex-no-wrap mb-10 lg:mb-0 shadow-xl rounded-lg text-xs md:text-base" >
                                 <td className="flex items-center lg:table-cell w-full lg:w-auto border-b">
@@ -183,17 +183,19 @@ const AppointmentList: React.FC = () => {
                                     <span className=" bg-[#1e293b] text-white lg:hidden p-2 w-20 h-full">Actions</span>
                                     <div className="flex justify-end px-5 gap-3">
                                         {/* เช็คว่า district ตรงกันและยังไม่ได้รับการซ่อม */}
-                                        {appointment.Address?.district === loggedInUser?.fname && !appointmentSentToRepairman.includes(appointment.id) && (
-                                            <button
-                                                className="text-red-400 hover:text-red-900"
-                                                onClick={() => markAsRepairedss(appointment.id)}
-                                            >
-                                                รับซ่อม
-                                            </button>
-                                        )}
-                                        {appointment.Address?.district !== loggedInUser?.fname && (
+
+                                        <button
+                                            className={`text-red-400 hover:text-red-900 ${appointment.status !== "กำลังดำเนินการ" ? 'text-gray-400 cursor-not-allowed' : ''}`}
+                                            onClick={() => appointment.status === "กำลังดำเนินการ" && markAsRepaired(appointment.id)}
+                                            disabled={appointment.status !== "กำลังดำเนินการ"}
+                                        >
+                                            รับซ่อม
+                                        </button>
+
+
+                                        {/* {appointment.Address?.district !== loggedInUser?.fname && (
                                             <span className="text-gray-400">ที่อยู่ไม่ตรงกับคุณ</span>
-                                        )}
+                                        )} */}
                                     </div>
                                 </td>
                             </tr>
