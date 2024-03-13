@@ -60,6 +60,7 @@ model Blog {
   img1     String?
   date     String?
   author   String?
+  source   String?
 }
 
 model Promote {
@@ -141,10 +142,8 @@ model Appointment {
   addressId   String?    @db.ObjectId
 }
 
-
-
 model About {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
   title       String?
   imgLogo     String?
   description String?
@@ -153,8 +152,8 @@ model About {
   subtitleTwo String?
   Address     String?
   email       String?
-  phoneOne    String? 
-  phoneTwo    String? 
+  phoneOne    String?
+  phoneTwo    String?
   FBname      String?
   line        String?
 }
@@ -202,6 +201,7 @@ model OrderList {
   User      User?     @relation(fields: [userId], references: [id])
   userId    String?   @db.ObjectId
 }
+
 model User {
   id              String  @id @default(auto()) @map("_id") @db.ObjectId
   fname           String?

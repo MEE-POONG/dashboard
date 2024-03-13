@@ -309,8 +309,8 @@ const EditProductModal: React.FC = (props) => {
               />
 
               <input
-                id="imgLogo"
-                name="imgLogo"
+                id="img1"
+                name="img1"
                 type="file"
                 onChange={(event) => handleFileUpload(event, setImgFrist, setimgPreview)}
                 className="mt-1 border rounded-md focus:outline-none focus:border-indigo-500 w-full text-xs"

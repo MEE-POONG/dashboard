@@ -29,6 +29,7 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({ isEditModalOpen, onClose 
     const [date, setdate] = useState<string>("");
     const [author, setauthor] = useState<string>("");
     const [img, setImg] = useState<File[]>([])
+    const [source, setSource] = useState<string>("");
     const [img1, setimg1] = useState<string>("");
     const [alertForm, setAlertForm] = useState<string>("not");
     const [inputForm, setInputForm] = useState<boolean>(false);
@@ -59,12 +60,14 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({ isEditModalOpen, onClose 
                 detail,
                 date,
                 author,
+                source,
             } = blogData;
             settitle(title);
             setsubtitle(subtitle);
             setdetail(detail);
             setdate(date);
             setauthor(author);
+            setSource(source);
         }
     }, [blogData]);
 
@@ -181,7 +184,7 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({ isEditModalOpen, onClose 
                     </div>
                     <div>
                         <div className="text-center">
-                            <span className="font-semibold bg-amber-300 px-2 rounded-full text-xs">โลโก้</span>
+                            <span className="font-semibold bg-amber-300 px-2 rounded-full text-xs">ภาพประกอบ</span>
                             <div className="mb-3 ">
                                 <img
                                     src={imgPreview
@@ -219,7 +222,7 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({ isEditModalOpen, onClose 
                                             settitle(newValue);
                                         }
                                     }}
-                                    placeholder="name@example.com"
+                                    placeholder="หัวข้อ"
                                 />
                             </div>
                             <div>
@@ -268,6 +271,17 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({ isEditModalOpen, onClose 
                             placeholder="NewsSubDetail"
                             style={{ width: '100%', height: '200px' }}
                         />
+                        <div>
+                            <label className="block text-sm font-medium">ที่มาของบทความ</label>
+                            <input
+                                className={`mt-1 p-2 border w-full rounded-md text-sm lg:text-base  ${inputForm && source === '' ? 'border-red-500' : 'border-gray-300'
+                                    }`}
+                                type="text"
+                                value={source}
+                                onChange={(e) => setSource(e.target.value)}
+                                placeholder="source"
+                            />
+                        </div>
 
 
                         <div className='flex justify-center gap-5 mt-5'>

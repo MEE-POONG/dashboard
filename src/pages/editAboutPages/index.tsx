@@ -27,7 +27,7 @@ const EditAboutPage: React.FC = (props) => {
                     <h2 className="font-semibold text-lg lg:text-2xl">จัดการหน้าเว็บ - หน้าเกี่ยวกับเรา</h2>
                 </div>
                 {filteredaboutData.map((about) => (
-                    <div key={about.id} className="bg-gray-100/75 w-full shadow-md rounded px-2 md:px-10 py-6 ">
+                    <div key={about.id} className="bg-blue-900/75 w-full shadow-md rounded px-2 md:px-10 py-6 ">
                         <div className="mb-10 text-end">
                             <Link href={`/editAboutPages/${about.id}`} passHref
                                 className="bg-purple-600 p-1 rounded hover:bg-violet-400 text-white text-sm lg:text-base"

@@ -192,7 +192,7 @@ const AboutPage: React.FC = (props) => {
                     <h2 className="font-semibold lg:text-2xl">แก้ไข</h2>
                 </div>
 
-                <div className="bg-gray-100 w-full shadow-md rounded p-5">
+                <div className="bg-blue-100 w-full shadow-md rounded p-5">
                     <EditModalAlert checkAlertShow={alertForm} setCheckAlertShow={setAlertForm} checkBody={checkBody} />
 
                     <div className="relative mt-5 md:mt-1 border w-full rounded-md text-xs md:text-base bg-white">
