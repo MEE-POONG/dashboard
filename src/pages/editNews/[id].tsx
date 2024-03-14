@@ -26,6 +26,7 @@ const EditNewsModal: React.FC<EditNewsModalProps> = ({ isEditModalOpen, onClose 
     const [detail, setdetail] = useState<string>("");
     const [date, setdate] = useState<string>("");
     const [author, setauthor] = useState<string>("");
+    const [linksource, setLinkSource] = useState<string>("");
     const [img, setImg] = useState<string>("");
 
     const [imgPreview, setImgPreview] = useState<string | null>(null);
@@ -58,12 +59,14 @@ const EditNewsModal: React.FC<EditNewsModalProps> = ({ isEditModalOpen, onClose 
                 detail,
                 date,
                 author,
+                linksource
             } = NewsData;
             settitle(title);
             setsubtitle(subtitle);
             setdetail(detail);
             setdate(date);
             setauthor(author);
+            setLinkSource(linksource);
         }
     }, [NewsData]);
 
@@ -265,6 +268,19 @@ const EditNewsModal: React.FC<EditNewsModalProps> = ({ isEditModalOpen, onClose 
                             placeholder="NewsSubDetail"
                             style={{ width: '100%', height: '200px' }}
                         />
+                        <div>
+                            <label className="block text-sm font-medium">ที่มาของบทความ</label>
+                            <input
+                                className={`mt-1 p-2 border w-full rounded-md text-sm lg:text-base  ${inputForm && linksource === '' ? 'border-red-500' : 'border-gray-300'
+                                    }`}
+                                type="text"
+                                value={linksource}
+                                onChange={(e) => setLinkSource(e.target.value)}
+                                placeholder="source"
+                            />
+                        </div>
+
+
 
                         <div className='flex justify-center gap-5 mt-5'>
                             <button

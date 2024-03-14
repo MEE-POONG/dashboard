@@ -1,10 +1,9 @@
-import React, { useEffect, useState, ChangeEvent } from "react";
+import React, { useEffect, useState, ChangeEvent, MouseEvent } from "react";
 import EditModalAlert from "@/components/Modal/EditAlertModal";
 import useAxios from "axios-hooks";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import axios from "axios";
-
 
 interface AboutData {
     id: number;
@@ -22,7 +21,6 @@ interface AboutData {
 }
 
 const AboutPage: React.FC = (props) => {
-
     const router = useRouter();
     const { id } = router.query;
     const [
@@ -34,7 +32,7 @@ const AboutPage: React.FC = (props) => {
     const [subtitleOne, setSubtitleOne] = useState<string>("");
     const [subtitleTwo, setSubtitleTwo] = useState<string>("");
     const [description, setDescription] = useState<string>("");
-    const [imgLogo, setImgLogo] = useState<File[]>([]);
+    const [imgLogo, setImgLogo] = useState<File | null>(null);
     const [imgbanner, setImgBanner] = useState<string>("");
     const [phoneOne, setPhoneOne] = useState<string>("");
     const [phoneTwo, setPhoneTwo] = useState<string>("");
@@ -49,15 +47,14 @@ const AboutPage: React.FC = (props) => {
     const [inputForm, setInputForm] = useState<boolean>(false);
     const [checkBody, setCheckBody] = useState<string>("");
 
-
-    const handleInputChange = (setter: any) => (event: any) => {
+    const handleInputChange = (setter: React.Dispatch<React.SetStateAction<string>>) => (event: ChangeEvent<HTMLInputElement>) => {
         const newValue = event.target.value;
-        if (!isNaN(newValue) && !newValue.includes('.')) {
+        if (!isNaN(Number(newValue)) && !newValue.includes('.')) {
             setter(newValue);
         }
     };
 
-    const [{ data: aboutData }, getAbout] = useAxios({
+    const [{ data: aboutData }, getAbout] = useAxios<AboutData>({
         url: `/api/about/${id}`,
         method: "GET",
     });
@@ -117,7 +114,8 @@ const AboutPage: React.FC = (props) => {
             console.error("Delete failed: ", error);
         }
     };
-    const uploadImage = async (img: any, image: any) => {
+
+    const uploadImage = async (img: string, image: File) => {
         const uploadFormData = new FormData();
         uploadFormData.append("file", image);
         try {
@@ -136,13 +134,11 @@ const AboutPage: React.FC = (props) => {
         return null;
     };
 
-
-    const handleSubmit = async (event: React.MouseEvent<HTMLElement>) => {
+    const handleSubmit = async (event: MouseEvent<HTMLElement>) => {
         event.preventDefault();
         event.stopPropagation();
         const imageIDs = await Promise.all([
             imgLogo ? uploadImage(aboutData?.imgLogo, imgLogo) : null,
-
         ]);
 
         try {
@@ -160,7 +156,6 @@ const AboutPage: React.FC = (props) => {
                 FBname,
                 line,
                 imgLogo: imageIDs[0] !== null ? imageIDs[0] : aboutData?.imgLogo,
-
             };
 
             // Execute the update
@@ -184,7 +179,6 @@ const AboutPage: React.FC = (props) => {
         }
     };
 
-
     return (
         <>
             <div>
@@ -192,7 +186,7 @@ const AboutPage: React.FC = (props) => {
                     <h2 className="font-semibold lg:text-2xl">แก้ไข</h2>
                 </div>
 
-                <div className="bg-blue-100 w-full shadow-md rounded p-5">
+                <div className="bg-gray-900/30 w-full shadow-md rounded p-5">
                     <EditModalAlert checkAlertShow={alertForm} setCheckAlertShow={setAlertForm} checkBody={checkBody} />
 
                     <div className="relative mt-5 md:mt-1 border w-full rounded-md text-xs md:text-base bg-white">
@@ -233,7 +227,7 @@ const AboutPage: React.FC = (props) => {
                                     id="imgLogo"
                                     name="imgLogo"
                                     type="file"
-                                     onChange={(event) => handleFileUpload(event, setImgLogo, setImgLogoPreview)}
+                                    onChange={(event) => handleFileUpload(event, setImgLogo, setImgLogoPreview)}
                                     className="mt-1 border rounded-md focus:outline-none focus:border-indigo-500 w-full text-xs"
                                 />
                             </div>

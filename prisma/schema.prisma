@@ -49,6 +49,7 @@ model News {
   author   String? //ผู้เขียน
   refer    String? //อ้างอิง
   img      String?
+  linksource   String?
 }
 
 model Blog {
@@ -60,7 +61,7 @@ model Blog {
   img1     String?
   date     String?
   author   String?
-  source   String?
+  linksource   String?
 }
 
 model Promote {

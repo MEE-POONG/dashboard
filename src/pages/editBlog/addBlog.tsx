@@ -22,6 +22,7 @@ const AddBlogModal: React.FC<AddBlogModalProps> = ({ isAddModalOpen, onClose }) 
     const [author, setauthor] = useState<string>("");
     const [img, setimg] = useState<File | null>(null);
     const [img1, setimg1] = useState<File | null>(null);
+    const [linksource, setLinkSource] = useState<string>("");
 
     const [alertForm, setAlertForm] = useState<string>("not");
     const [inputForm, setInputForm] = useState<boolean>(false);
@@ -44,6 +45,7 @@ const AddBlogModal: React.FC<AddBlogModalProps> = ({ isAddModalOpen, onClose }) 
         setdetail("");
         setdate("");
         setauthor("");
+        setLinkSource("");
         setimg(null);
         setimg1(null);
         setAlertForm("not");
@@ -67,6 +69,7 @@ const AddBlogModal: React.FC<AddBlogModalProps> = ({ isAddModalOpen, onClose }) 
         if (!detail) missingFields.push("detail");
         if (!date) missingFields.push("date");
         if (!author) missingFields.push("author");
+        if (!linksource) missingFields.push("linksource");
         if (!img) missingFields.push("img");
 
         if (missingFields.length > 0) {
@@ -94,6 +97,7 @@ const AddBlogModal: React.FC<AddBlogModalProps> = ({ isAddModalOpen, onClose }) 
                             detail,
                             date,
                             author,
+                            linksource,
                             img: imageId,
                             img1: imageId,
                         };
@@ -216,6 +220,16 @@ const AddBlogModal: React.FC<AddBlogModalProps> = ({ isAddModalOpen, onClose }) 
                             onChange={(e) => setdetail(e.target.value)}
                             className={`mt-1 p-2 border text-sm w-full h-64 ${inputForm && subtitle === "" ? 'border-red-500' : 'border-gray-300'} rounded-md`}
                             placeholder="รายละเอียด"
+                        />
+                    </div>
+                    <div className="mb-3 w-full">
+                        <label className="block text-sm font-seminbold text-gray-950">แหล่งอ้างอิง:</label>
+                        <input
+                            type="text"
+                            value={linksource}
+                            onChange={(e) => setLinkSource(e.target.value)}
+                            className={`mt-1 p-2 border text-sm w-full ${inputForm && linksource === "" ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+                            placeholder="แหล่งอ้างอิง"
                         />
                     </div>
 

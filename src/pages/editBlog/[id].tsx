@@ -14,9 +14,7 @@ interface EditBlogModalProps {
 }
 
 
-const EditBlogModal: React.FC<EditBlogModalProps> = ({ isEditModalOpen, onClose }) => {
-    // if (!isEditModalOpen) return null;
-
+const EditBlogModal: React.FC<EditBlogModalProps> = () => {
     const router = useRouter();
     const { id } = router.query;
     const [
@@ -29,7 +27,7 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({ isEditModalOpen, onClose 
     const [date, setdate] = useState<string>("");
     const [author, setauthor] = useState<string>("");
     const [img, setImg] = useState<File[]>([])
-    const [source, setSource] = useState<string>("");
+    const [linksource, setLinkSource] = useState<string>("");
     const [img1, setimg1] = useState<string>("");
     const [alertForm, setAlertForm] = useState<string>("not");
     const [inputForm, setInputForm] = useState<boolean>(false);
@@ -60,14 +58,14 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({ isEditModalOpen, onClose 
                 detail,
                 date,
                 author,
-                source,
+                linksource,
             } = blogData;
             settitle(title);
             setsubtitle(subtitle);
             setdetail(detail);
             setdate(date);
             setauthor(author);
-            setSource(source);
+            setLinkSource(linksource);
         }
     }, [blogData]);
 
@@ -274,11 +272,11 @@ const EditBlogModal: React.FC<EditBlogModalProps> = ({ isEditModalOpen, onClose 
                         <div>
                             <label className="block text-sm font-medium">ที่มาของบทความ</label>
                             <input
-                                className={`mt-1 p-2 border w-full rounded-md text-sm lg:text-base  ${inputForm && source === '' ? 'border-red-500' : 'border-gray-300'
+                                className={`mt-1 p-2 border w-full rounded-md text-sm lg:text-base  ${inputForm && linksource === '' ? 'border-red-500' : 'border-gray-300'
                                     }`}
                                 type="text"
-                                value={source}
-                                onChange={(e) => setSource(e.target.value)}
+                                value={linksource}
+                                onChange={(e) => setLinkSource(e.target.value)}
                                 placeholder="source"
                             />
                         </div>

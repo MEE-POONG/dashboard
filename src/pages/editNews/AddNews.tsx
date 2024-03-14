@@ -21,6 +21,7 @@ const AddNewsModal: React.FC<AddNewsModalProps> = ({ isAddModalOpen, onClose }) 
     const [detail, setdetail] = useState<string>("");
     const [date, setdate] = useState<string>("");
     const [author, setauthor] = useState<string>("");
+    const [linksource, setLinkSource] = useState<string>("");
     const [img, setimg] = useState<File | null>(null);
     const [alertForm, setAlertForm] = useState<string>("not");
     const [inputForm, setInputForm] = useState<boolean>(false);
@@ -126,8 +127,8 @@ const AddNewsModal: React.FC<AddNewsModalProps> = ({ isAddModalOpen, onClose }) 
 
 
     return (
-        <div className="fixed top-0 left-0 w-full h-screen flex items-center justify-center bg-black bg-opacity-25 p-2">
-            <div className="bg-white p-3 md:p-6 rounded shadow-md ">
+        <div className="fixed top-0 left-0 w-full h-screen flex items-center justify-center bg-black bg-opacity-25 p-2 mt-24">
+            <div className="bg-white p-3 md:p-6 rounded shadow-md md:w-3/4 ">
                 <AddModalAlert checkAlertShow={alertForm} setCheckAlertShow={setAlertForm} checkBody={checkBody} />
                 <div className='flex items-center justify-between'>
                     <h2 className='text-xl font-bold'>เพิ่มข่าว</h2>
@@ -137,8 +138,8 @@ const AddNewsModal: React.FC<AddNewsModalProps> = ({ isAddModalOpen, onClose }) 
                 </div>
 
                 <div>
-                    <div className="d-flex space-between my-10">
-                        <div className="mb-3">
+                    <div className="md:flex justify-between gap-5">
+                        <div className="mb-3 w-full">
                             <label className="block text-sm font-semibold text-gray-950">ชื่อข่าว</label>
                             <input
                                 type="text"
@@ -148,7 +149,7 @@ const AddNewsModal: React.FC<AddNewsModalProps> = ({ isAddModalOpen, onClose }) 
                                 placeholder="ชื่อข่าว"
                             />
                         </div>
-                        <div className="mb-3">
+                        <div className="mb-3 w-full">
                             <label className="block text-sm font-semibold text-gray-950">หัวข้อข่าวย่อย</label>
                             <input
                                 type="text"
@@ -158,17 +159,20 @@ const AddNewsModal: React.FC<AddNewsModalProps> = ({ isAddModalOpen, onClose }) 
                                 placeholder="หัวข้อข่าวย่อย"
                             />
                         </div>
-                        <div className="mb-3">
-                            <label className="block text-sm font-semibold text-gray-950">รายละเอียด</label>
+                    </div>
+                    <div className="md:flex justify-between gap-5">
+                        <div className="mb-3 w-full">
+                            <label className="block text-sm font-semibold text-gray-950">ผู้เขียน</label>
                             <input
                                 type="text"
-                                value={detail}
-                                onChange={(e) => setdetail(e.target.value)}
-                                className={`mt-1 p-2 border text-sm w-full ${inputForm && detail === "" ? 'border-red-500' : 'border-gray-300'} rounded-md`}
-                                placeholder="รายละเอียด"
+                                value={author}
+                                onChange={(e) => setauthor(e.target.value)}
+                                className={`mt-1 p-2 border text-sm w-full ${inputForm && author === "" ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+                                placeholder="ผู้เขียน"
                             />
+
                         </div>
-                        <div className="mb-3">
+                        <div className="mb-3 w-full">
                             <label className="block text-sm font-semibold text-gray-950">วันที่</label>
                             <input
                                 type="date"
@@ -178,35 +182,47 @@ const AddNewsModal: React.FC<AddNewsModalProps> = ({ isAddModalOpen, onClose }) 
                                 placeholder="วันที่"
                             />
                         </div>
-                        <div className="mb-3">
-                            <label className="block text-sm font-semibold text-gray-950">ผู้เขียน</label>
-                            <input
-                                type="text"
-                                value={author}
-                                onChange={(e) => setauthor(e.target.value)}
-                                className={`mt-1 p-2 border text-sm w-full ${inputForm && author === "" ? 'border-red-500' : 'border-gray-300'} rounded-md`}
-                                placeholder="ผู้เขียน"
-                            />
-                        </div>
-                        <div className="mb-3">
-                            <label className="block text-sm font-semibold text-gray-950">รูปภาพ</label>
-                            {img && (
-                                <div className="mt-2 w-24">
-                                    <img
-                                        src={URL.createObjectURL(img)}
-                                        alt="Selected Image"
-                                        className="max-w-full h-auto"
-                                    />
-                                </div>
-                            )}
-                            <input
-                                type="file"
-                                onChange={handleFileUpload}
-                                className={`mt-1 border text-sm w-full ${inputForm && img === null ? 'border-red-500' : 'border-gray-300'} rounded-md`}
-                                placeholder="รูปภาพ"
-                            />
-                        </div>
                     </div>
+
+                    <div className="mb-3">
+                        <label className="block text-sm font-semibold text-gray-950">รายละเอียด</label>
+                        <textarea
+                            value={detail}
+                            onChange={(e) => setdetail(e.target.value)}
+                            className={`mt-1 p-5 border text-sm w-full h-40 ${inputForm && detail === "" ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+                            placeholder="รายละเอียด"
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <label className="block text-sm font-semibold text-gray-950">รูปภาพ</label>
+                        {img && (
+                            <div className="mt-2 w-24">
+                                <img
+                                    src={URL.createObjectURL(img)}
+                                    alt="Selected Image"
+                                    className="max-w-full h-auto"
+                                />
+                            </div>
+                        )}
+                        <input
+                            type="file"
+                            onChange={handleFileUpload}
+                            className={`mt-1 border text-sm w-full ${inputForm && img === null ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+                            placeholder="รูปภาพ"
+                        />
+                    </div>
+
+                    <div className="mb-3 w-full">
+                        <label className="block text-sm font-seminbold text-gray-950">แหล่งอ้างอิง:</label>
+                        <input
+                            type="text"
+                            value={linksource}
+                            onChange={(e) => setLinkSource(e.target.value)}
+                            className={`mt-1 p-2 border text-sm w-full ${inputForm && linksource === "" ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+                            placeholder="แหล่งอ้างอิง"
+                        />
+                    </div>
+
                 </div>
                 <div className="text-end">
                     <button
@@ -221,7 +237,6 @@ const AddNewsModal: React.FC<AddNewsModalProps> = ({ isAddModalOpen, onClose }) 
                     >
                         ล้าง
                     </button>
-                    {/* <button onClick={onClose} className="bg-blue-500 text-white px-4 py-2 rounded-md mx-2">ปิด</button> */}
                 </div>
 
             </div>
