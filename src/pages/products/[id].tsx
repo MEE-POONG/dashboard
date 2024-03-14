@@ -249,18 +249,7 @@ const EditProductModal: React.FC = (props) => {
             <option value="">Select a Category</option>
             <option value=""></option>
            </select >
-            {/* <input
-              className={`mt-1 p-2 border-0 w-full rounded-md text-xs md:text-base ${inputForm && categoriesId === '' ? 'border-red-500' : 'border-gray-300'
-                }`}
-              type="text"
-              value={categoriesId}
-              onChange={(e) => {
-                const newValue = e.target.value;
-                if (newValue.length <= 50) {
-                  setCategoriesId(newValue);
-                }
-              }}
-            /> */}
+          
           </div>
           <div className="relative mt-5 md:mt-2 border rounded-md bg-white mb-5">
             <label htmlFor="" className="absolute -top-2 md:-top-3 ml-2 font-semibold bg-amber-300 px-2 rounded-full text-xs">จำนวน <span className="text-gray-500">(เครื่อง/ชิ้น/อัน)</span></label>

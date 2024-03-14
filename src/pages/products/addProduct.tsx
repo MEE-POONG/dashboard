@@ -21,6 +21,10 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isAddModalOpen, onClo
     const [stock, setStock] = useState<string>('');
     const [imgFirst, setImgFirst] = useState<File | null>(null);
     const [categoriesId, setCategoriesId] = useState<string>('');
+    // const [discount, setDiscount] = useState<number>(0);
+    const [discountPercent, setDiscountPercent] = useState<number>(0);
+
+
 
     const [alertForm, setAlertForm] = useState<string>('not');
     const [inputForm, setInputForm] = useState<boolean>(false);
@@ -106,6 +110,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isAddModalOpen, onClo
                             imgThird: imageId,
                             imgFourth: imageId,
                             categoriesId,
+                            discount: parseFloat(price) * discountPercent / 100
                         };
 
                         const response = await axios.post('/api/products', data);
@@ -165,6 +170,36 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isAddModalOpen, onClo
                                     </div>
                                 </div>
                             </div>
+
+                            {/* <div className="relative md:mt-2 border rounded-md bg-white mb-5">
+                                <label htmlFor="" className="absolute -top-2 md:-top-3 ml-2 font-semibold bg-amber-300 px-2 rounded-full text-xs">ส่วนลด (บาท)</label>
+                                <input type="number" min={0} name="" id=""
+                                    onChange={(e) => setDiscount(parseFloat(e.target.value))}
+                                    className={`mt-1 p-2 border-0 w-full rounded-md text-xs md:text-base text-right ${inputForm && discount === 0 ? 'border-red-500' : 'border-gray-300'}`} />
+                            </div>
+                            <div className="relative md:mt-2 border rounded-md bg-white mb-5">
+                                <label className="absolute -top-2 md:-top-3 ml-2 font-semibold bg-amber-300 px-2 rounded-full text-xs">ราคาสินค้าที่ลด</label>
+                                <input
+                                    value={(parseFloat(price) - discount).toFixed(2)}
+                                    readOnly
+                                    className={`mt-1 p-2 border-0 w-full rounded-md text-xs md:text-base ${inputForm && price === "" ? 'border-red-500' : 'border-gray-300'}`} />
+                            </div> */}
+                            <div className="relative md:mt-2 border rounded-md bg-white mb-5">
+                                <label htmlFor="" className="absolute -top-2 md:-top-3 ml-2 font-semibold bg-amber-300 px-2 rounded-full text-xs">ส่วนลด (%)</label>
+                                <input type="number" min={0} name="" id=""
+                                    onChange={(e) => setDiscountPercent(parseFloat(e.target.value))}
+                                    className={`mt-1 p-2 border-0 w-full rounded-md text-xs md:text-base text-right ${inputForm && discountPercent === 0 ? 'border-red-500' : 'border-gray-300'}`} />
+                            </div>
+                            <div className="relative md:mt-2 border rounded-md bg-white mb-5">
+                                <label className="absolute -top-2 md:-top-3 ml-2 font-semibold bg-amber-300 px-2 rounded-full text-xs">ราคาสินค้าที่ลด</label>
+                                <input
+                                    value={(parseFloat(price) - (parseFloat(price) * discountPercent / 100)).toFixed(2)}
+                                    readOnly
+                                    className={`mt-1 p-2 border-0 w-full rounded-md text-xs md:text-base ${inputForm && price === "" ? 'border-red-500' : 'border-gray-300'}`} />
+                            </div>
+
+
+
 
                             <div className="mb-3 md:flex gap-3">
                                 <div className="relative md:mt-2 border rounded-md bg-white mb-5">
