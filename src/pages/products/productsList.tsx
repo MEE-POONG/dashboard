@@ -8,6 +8,36 @@ import { FaSearch } from "react-icons/fa";
 import { Products, Categories } from '@prisma/client';
 
 
+interface Product {
+  id: string;
+  productname: string;
+  productbrand: string;
+  productcost: string;
+  productmodel: string;
+  description: string;
+  price: number;
+  stock: number;
+  imgFirst: string;
+  categoriesId: number | null;
+}
+
+interface Category {
+  id: number;
+  name: string;
+}
+
+interface ProductsData {
+  products: Product[];
+  pagination: {
+    total: number;
+  };
+}
+
+interface CategoriesData {
+  categories: Category[];
+}
+
+
 interface Params {
   page: number;
   pageSize: number;
@@ -24,8 +54,7 @@ const ProductsList: React.FC = (props) => {
     totalPages: 1,
   });
 
-  const [{ data: productsData }, getproducts] = useAxios({
-    // url: `/api/products?page=${params.page}&pageSize=${params.pageSize}&searchTerm=${params.searchKey}&include=categories`,
+  const [{ data: productsData }, getproducts] = useAxios<ProductsData>({
     url: `/api/products?page=${params.page}&pageSize=${params.pageSize}&searchTerm=${params.searchKey}`,
     method: "GET",
   });
@@ -33,7 +62,7 @@ const ProductsList: React.FC = (props) => {
   const [
     { data: categoriesData },
     getCategories
-  ] = useAxios({
+  ] = useAxios<CategoriesData>({
     url: "/api/categories", // Assuming this endpoint exists
     method: "GET",
   });
@@ -43,25 +72,26 @@ const ProductsList: React.FC = (props) => {
     executeproductDelete,
   ] = useAxios({}, { manual: true });
 
-  const [filteredproductsData, setFilteredproductsData] = useState<Products[]>([]);
+  const [filteredproductsData, setFilteredproductsData] = useState<Product[]>([]);
   const [categoriesMap, setCategoriesMap] = useState<Record<number, string>>({});
 
   useEffect(() => {
-    getCategories(); // Fetch category data on component mount
+    getCategories();
     getproducts();
-  }, []); // Fetch products and categories on component mount
+  }, []);
 
   useEffect(() => {
-    setFilteredproductsData(productsData?.products ?? []);
+    if (productsData?.products) {
+      setFilteredproductsData(productsData.products);
+    }
   }, [productsData]);
 
   useEffect(() => {
     if (categoriesData?.categories) {
-      // Create a map of category IDs to category names
       const categoriesMap = categoriesData.categories.reduce(
-        (map, categories) => ({
+        (map, category) => ({
           ...map,
-          [categories.id]: categories.name,
+          [category.id]: category.name,
         }),
         {}
       );
@@ -103,44 +133,50 @@ const ProductsList: React.FC = (props) => {
   };
 
   useEffect(() => {
-    if (productsData?.product) {
+    if (productsData?.products) {
       // Filter the product data based on searchKey
-      const filteredData = productsData.product.filter((products: Products | null) => {
-        if (products) {
-          const categoriesId = products.categoriesId || 0; // Default to 0 if categoriesId is undefined
-          const categoryName = categoriesMap[categoriesId] || ""; // Get category name from the map
-          // Extract properties and convert them to lowercase
-          const {
-            productname,
-            productbrand,
-            productcost,
-            productmodel,
-            description,
-            price,
-            stock,
-            imgFirst,
+      const filteredData = productsData.products.filter((product: Product | null): product is Product => {
+        if (!product) return false;
 
-          } = products;
+        const categoriesId = product.categoriesId ?? 0; // Using nullish coalescing operator instead of ||
+        const categoryName = categoriesMap[categoriesId];
+        // Extract properties and convert them to lowercase
+        const {
+          productname,
+          productbrand,
+          productcost,
+          productmodel,
+          description,
+          price,
+          stock,
+          imgFirst,
+        } = product;
 
-          // Check if any of the properties contain the searchKey
-          const containsSearchKey =
-            (productname?.toLowerCase().includes(params.searchKey.toLowerCase()) ?? false) ||
-            (productbrand?.toLowerCase().includes(params.searchKey.toLowerCase()) ?? false) ||
-            (productmodel?.toLowerCase().includes(params.searchKey.toLowerCase()) ?? false) ||
-            (description?.toLowerCase().includes(params.searchKey.toLowerCase()) ?? false) ||
-            (productcost?.toLowerCase().includes(params.searchKey.toLowerCase()) ?? false) ||
-            (price?.toLowerCase().includes(params.searchKey.toLowerCase()) ?? false) ||
-            (stock?.toLowerCase().includes(params.searchKey.toLowerCase()) ?? false) ||
-            (imgFirst?.toLowerCase().includes(params.searchKey.toLowerCase()) ?? false);
+        // Convert numeric properties to string and all properties to lowercase for comparison
+        const searchKeyLower = params.searchKey.toLowerCase();
+        const priceStr = price.toString().toLowerCase();
+        const stockStr = stock.toString().toLowerCase();
 
-          return containsSearchKey;
-        }
-        return false; // If product is null, don't include it in the filtered results
+        // Check if any of the properties contain the searchKey
+        const containsSearchKey = [
+          productname,
+          productbrand,
+          productcost,
+          productmodel,
+          description,
+          imgFirst
+        ].some(property => property?.toLowerCase().includes(searchKeyLower)) ||
+          priceStr.includes(searchKeyLower) ||
+          stockStr.includes(searchKeyLower);
+
+        return containsSearchKey;
       });
 
       setFilteredproductsData(filteredData);
     }
   }, [productsData, params.searchKey, categoriesMap]);
+
+
 
 
   return (
@@ -236,7 +272,7 @@ const ProductsList: React.FC = (props) => {
 
       <Pagination
         page={params.page}
-        totalPages={productsData?.pagination?.total}
+        totalPages={productsData?.pagination?.total ?? 0}
         onChangePage={handleChangePage}
         onChangePageSize={handleChangePageSize}
       />

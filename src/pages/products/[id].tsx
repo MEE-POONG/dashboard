@@ -3,24 +3,11 @@ import axios from 'axios';
 import useAxios from 'axios-hooks';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BsArrowBarLeft } from 'react-icons/bs';
-import { MdClose } from 'react-icons/md';
 
 
 
-interface ProductData {
-  productname: string;
-  price: string;
-  imgFirst: string;
-  imgSecond: string;
-  imgThird: string;
-  imgFourth: string;
-  stock: string;
-  categoriesId: string;
-}
-
-// Add this above your component definition
 interface UploadResponse {
   status: number;
   data: {
@@ -38,19 +25,15 @@ const EditProductModal: React.FC = (props) => {
     executeProductPut,
   ] = useAxios({}, { manual: true });
   const [productname, setProductName] = useState<string>('');
-  const [productbrand, setProductBrand] = useState<string>('');
-  const [productmodel, srtProductModel] = useState<string>('');
   const [description, setDescription] = useState<string>('');
-  const [productcost, setProductCost] = useState<string>('');
   const [price, setPrice] = useState<string>('');
   const [stock, setStock] = useState<string>('');
   const [imgFirst, setImgFrist] = useState<string>('');
   const [imgSecond, setImgSecond] = useState<string>('');
   const [imgThird, setImgThird] = useState<string>('');
   const [imgFourth, setImgFourth] = useState<string>('');
+  const [discountPercent, setDiscountPercent] = useState<number>(0);
   const [categoriesId, setCategoriesId] = useState('');
-
-  
 
   const [alertForm, setAlertForm] = useState<string>("not");
   const [inputForm, setInputForm] = useState<boolean>(false);
@@ -121,34 +104,43 @@ const EditProductModal: React.FC = (props) => {
   };
 
   // Update deleteImage function
-  const deleteImage = async (imageId: string) => {
+  const deleteImage = async (imgId: string): Promise<void> => {
     try {
-      await axios.delete(`https://upload-image.me-prompt-technology.com/?name=${imageId}`);
+      await axios.delete(`https://upload-image.me-prompt-technology.com/?name=${imgId}`);
     } catch (error) {
       console.error('Delete failed: ', error);
     }
   };
+  interface UploadResponseData {
+    result: {
+      id: string;
+    };
+  }
 
   // Update uploadImage function
-  const uploadImage = async (img: string, image: File) => {
+  const uploadImage = async (img: string, image: File): Promise<string | null> => {
     const uploadFormData = new FormData();
     uploadFormData.append('file', image);
-    try {
-      const uploadResponse = await axios.post<UploadResponse>(
-        'https://upload-image.me-prompt-technology.com/',
-        uploadFormData
-      );
 
-      if (uploadResponse?.status === 200) {
-        deleteImage(img);
-        return uploadResponse?.data?.result?.id;
+    try {
+      const response = await axios.post<UploadResponseData>('https://upload-image.me-prompt-technology.com/', uploadFormData);
+
+      if (response.status === 200 && response.data.result.id) {
+        await deleteImage(img); // Consider if this is the right place for deletion.
+        return response.data.result.id;
       }
     } catch (error) {
-      console.error('Upload failed: ', error);
+      if (axios.isAxiosError(error)) {
+        // error.response is the HTTP response
+        console.error('Upload failed:', error.response?.data);
+      } else {
+        // error is not from Axios
+        console.error('An unexpected error occurred:', error);
+      }
     }
+
     return null;
   };
-
 
   const handleSubmit = async (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
@@ -200,7 +192,7 @@ const EditProductModal: React.FC = (props) => {
 
   return (
     <div className="p-5">
-      <Link href='/products' className='hover:text-amber-400 font-bold flex items-center'><BsArrowBarLeft/> กลับ</Link>
+      <Link href='/products' className='hover:text-amber-400 font-bold flex items-center'><BsArrowBarLeft /> กลับ</Link>
       <h4 className='text-xl font-bold mt-5 '>แก้ไขรายการสินค้า</h4>
       <EditModalAlert checkAlertShow={alertForm} setCheckAlertShow={setAlertForm} checkBody={checkBody} />
       <div className='mt-5 border-b py-3'>
@@ -244,12 +236,12 @@ const EditProductModal: React.FC = (props) => {
         <div className="mb-3 md:flex gap-3 mt-2">
           <div className="relative md:mt-2 border rounded-md bg-white mb-5">
             <label htmlFor="" className="absolute -top-2 md:-top-3 ml-2 font-semibold bg-amber-300 px-2 rounded-full text-xs">ประเภทของสินค้า</label>
-           <select name="" id="" className={`mt-1 p-2 border-0 w-full rounded-md text-xs md:text-base ${inputForm && categoriesId === '' ? 'border-red-500' : 'border-gray-300'
-                }`}>
-            <option value="">Select a Category</option>
-            <option value=""></option>
-           </select >
-          
+            <select name="" id="" className={`mt-1 p-2 border-0 w-full rounded-md text-xs md:text-base ${inputForm && categoriesId === '' ? 'border-red-500' : 'border-gray-300'
+              }`}>
+              <option value="">Select a Category</option>
+              <option value=""></option>
+            </select >
+
           </div>
           <div className="relative mt-5 md:mt-2 border rounded-md bg-white mb-5">
             <label htmlFor="" className="absolute -top-2 md:-top-3 ml-2 font-semibold bg-amber-300 px-2 rounded-full text-xs">จำนวน <span className="text-gray-500">(เครื่อง/ชิ้น/อัน)</span></label>

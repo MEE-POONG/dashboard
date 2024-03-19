@@ -19,9 +19,8 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isAddModalOpen, onClo
     const [description, setDescription] = useState<string>('');
     const [price, setPrice] = useState<string>('');
     const [stock, setStock] = useState<string>('');
-    const [imgFirst, setImgFirst] = useState<File | null>(null);
+    const [images, setImages] = useState<File[]>([]);
     const [categoriesId, setCategoriesId] = useState<string>('');
-    // const [discount, setDiscount] = useState<number>(0);
     const [discountPercent, setDiscountPercent] = useState<number>(0);
 
 
@@ -57,16 +56,23 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isAddModalOpen, onClo
         setDescription('');
         setPrice('');
         setStock('');
-        setImgFirst(null);
         setAlertForm('not');
         setInputForm(false);
         setCheckBody('');
     };
 
     const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files && event.target.files[0];
-        if (file) {
-            setImgFirst(file);
+        const files = event.target.files;
+        if (files) {
+            const selectedImages = Array.from(files);
+            setImages(selectedImages);
+        }
+    };
+    const handleAdditionalFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const files = event.target.files;
+        if (files && files.length > 0 && images.length < 4) {
+            const selectedImages = Array.from(files);
+            setImages(prevImages => [...prevImages, ...selectedImages.slice(0, 4 - prevImages.length)]);
         }
     };
 
@@ -79,7 +85,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isAddModalOpen, onClo
         if (!description) missingFields.push('description');
         if (!price) missingFields.push('price');
         if (!stock) missingFields.push('stock');
-        if (!imgFirst) missingFields.push('imgFirst');
+        if (images.length === 0) missingFields.push('images');
 
         if (missingFields.length > 0) {
             setAlertForm('warning');
@@ -88,46 +94,43 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isAddModalOpen, onClo
         } else {
             try {
                 setAlertForm('primary');
-                if (imgFirst) {
-                    const formData = new FormData();
-                    formData.append('file', imgFirst);
-                    const uploadResponse = await axios.post(
-                        'https://upload-image.me-prompt-technology.com/',
-                        formData
-                    );
 
+                const imageIDs = await Promise.all(images.map(async (image) => {
+                    const formData = new FormData();
+                    formData.append('file', image);
+                    const uploadResponse = await axios.post('https://upload-image.me-prompt-technology.com/', formData);
                     if (uploadResponse.status === 200) {
                         const responseData = uploadResponse.data;
-                        const imageId = responseData.result.id;
-
-                        const data = {
-                            productname,
-                            description,
-                            price,
-                            stock,
-                            imgFirst: imageId,
-                            imgSecond: imageId,
-                            imgThird: imageId,
-                            imgFourth: imageId,
-                            categoriesId,
-                            discount: parseFloat(price) * discountPercent / 100
-                        };
-
-                        const response = await axios.post('/api/products', data);
-
-                        if (response && response.status === 201) {
-                            setAlertForm('success');
-                            setTimeout(() => {
-                                clear();
-                            }, 5000);
-                        } else {
-                            setAlertForm('danger');
-                            throw new Error('Failed to send data');
-                        }
+                        return responseData.result.id;
                     } else {
-                        setAlertForm('danger');
                         throw new Error('Image upload failed');
                     }
+                }));
+
+                const data = {
+                    productname,
+                    description,
+                    price,
+                    stock,
+                    imgFirst: imageIDs[0],
+                    imgSecond: imageIDs[1],
+                    imgThird: imageIDs[2],
+                    imgFourth: imageIDs[3],
+                    categoriesId,
+                    // discount: parseFloat(price) * discountPercent / 100   
+                    // Add more fields as needed
+                };
+
+                const response = await axios.post('/api/products', data);
+
+                if (response && response.status === 201) {
+                    setAlertForm('success');
+                    setTimeout(() => {
+                        clear();
+                    }, 5000);
+                } else {
+                    setAlertForm('danger');
+                    throw new Error('Failed to send data');
                 }
             } catch (error) {
                 setAlertForm('danger');
@@ -171,34 +174,23 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isAddModalOpen, onClo
                                 </div>
                             </div>
 
-                            {/* <div className="relative md:mt-2 border rounded-md bg-white mb-5">
-                                <label htmlFor="" className="absolute -top-2 md:-top-3 ml-2 font-semibold bg-amber-300 px-2 rounded-full text-xs">ส่วนลด (บาท)</label>
-                                <input type="number" min={0} name="" id=""
-                                    onChange={(e) => setDiscount(parseFloat(e.target.value))}
-                                    className={`mt-1 p-2 border-0 w-full rounded-md text-xs md:text-base text-right ${inputForm && discount === 0 ? 'border-red-500' : 'border-gray-300'}`} />
-                            </div>
-                            <div className="relative md:mt-2 border rounded-md bg-white mb-5">
-                                <label className="absolute -top-2 md:-top-3 ml-2 font-semibold bg-amber-300 px-2 rounded-full text-xs">ราคาสินค้าที่ลด</label>
-                                <input
-                                    value={(parseFloat(price) - discount).toFixed(2)}
-                                    readOnly
-                                    className={`mt-1 p-2 border-0 w-full rounded-md text-xs md:text-base ${inputForm && price === "" ? 'border-red-500' : 'border-gray-300'}`} />
+
+                            {/* ส่วนลด */}
+                            {/* <div className="flex justify-end gap-4">
+                                <div className="relative md:mt-2 border rounded-md bg-white mb-5">
+                                    <label htmlFor="" className="absolute -top-2 md:-top-3 ml-2 font-semibold bg-amber-300 px-2 rounded-full text-xs">ส่วนลด (%)</label>
+                                    <input type="number" min={0} name="" id=""
+                                        onChange={(e) => setDiscountPercent(parseFloat(e.target.value))}
+                                        className={`mt-1 p-2 border-0 w-full rounded-md text-xs md:text-base text-right ${inputForm && discountPercent === 0 ? 'border-red-500' : 'border-gray-300'}`} />
+                                </div>
+                                <div className="relative md:mt-2 border rounded-md bg-white mb-5">
+                                    <label className="absolute -top-2 md:-top-3 ml-2 font-semibold bg-amber-300 px-2 rounded-full text-xs">ราคาสินค้าที่ลด</label>
+                                    <input
+                                        value={(parseFloat(price) - (parseFloat(price) * discountPercent / 100)).toFixed(2)}
+                                        readOnly
+                                        className={`mt-1 p-2 border-0 w-full rounded-md text-xs md:text-base ${inputForm && price === "" ? 'border-red-500' : 'border-gray-300'}`} />
+                                </div>
                             </div> */}
-                            <div className="relative md:mt-2 border rounded-md bg-white mb-5">
-                                <label htmlFor="" className="absolute -top-2 md:-top-3 ml-2 font-semibold bg-amber-300 px-2 rounded-full text-xs">ส่วนลด (%)</label>
-                                <input type="number" min={0} name="" id=""
-                                    onChange={(e) => setDiscountPercent(parseFloat(e.target.value))}
-                                    className={`mt-1 p-2 border-0 w-full rounded-md text-xs md:text-base text-right ${inputForm && discountPercent === 0 ? 'border-red-500' : 'border-gray-300'}`} />
-                            </div>
-                            <div className="relative md:mt-2 border rounded-md bg-white mb-5">
-                                <label className="absolute -top-2 md:-top-3 ml-2 font-semibold bg-amber-300 px-2 rounded-full text-xs">ราคาสินค้าที่ลด</label>
-                                <input
-                                    value={(parseFloat(price) - (parseFloat(price) * discountPercent / 100)).toFixed(2)}
-                                    readOnly
-                                    className={`mt-1 p-2 border-0 w-full rounded-md text-xs md:text-base ${inputForm && price === "" ? 'border-red-500' : 'border-gray-300'}`} />
-                            </div>
-
-
 
 
                             <div className="mb-3 md:flex gap-3">
@@ -239,21 +231,69 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isAddModalOpen, onClo
                             <div className="mt-5 flex flex-wrap justify-between gap-4">
                                 <div className="">
                                     <label className="block text-sm font-semibold text-gray-950">รูปภาพ 1</label>
-                                    {imgFirst && (
-                                        <div className="mt-2 w-24">
-                                            <img
-                                                src={URL.createObjectURL(imgFirst)}
-                                                alt="Selected Image"
-                                                className="max-w-full h-auto"
-                                            />
-                                        </div>
-                                    )}
                                     <input
                                         type="file"
-                                        onChange={handleFileUpload}
-                                        className={`mt-1 border text-xs w-full ${inputForm && imgFirst === null ? 'border-red-500' : 'border-gray-300'} rounded-md`}
-                                        placeholder="รูปภาพ 1"
+                                        onChange={handleAdditionalFileUpload}
+                                        className={`mt-1 border text-xs w-full ${inputForm && images.length < 1 ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+                                        placeholder="รูปภาพ 2"
                                     />
+                                    {images[0] && (
+                                        <img
+                                            src={URL.createObjectURL(images[0])}
+                                            alt="Selected Image 2"
+                                            className="mt-2 w-24"
+                                        />
+                                    )}
+                                </div>
+
+
+                                <div className="">
+                                    <label htmlFor="" className="block text-sm font-semibold text-gray-950">รูปภาพ 2</label>
+                                    <input
+                                        type="file"
+                                        onChange={handleAdditionalFileUpload}
+                                        className={`mt-1 border text-xs w-full ${inputForm && images.length < 2 ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+                                        placeholder="รูปภาพ 2"
+                                    />
+                                    {images[1] && (
+                                        <img
+                                            src={URL.createObjectURL(images[1])}
+                                            alt="Selected Image 2"
+                                            className="mt-2 w-24"
+                                        />
+                                    )}
+                                </div>
+                                <div className="">
+                                    <label htmlFor="" className="block text-sm font-semibold text-gray-950">รูปภาพ 3</label>
+                                    <input
+                                        type="file"
+                                        onChange={handleAdditionalFileUpload}
+                                        className={`mt-1 border text-xs w-full ${inputForm && images.length < 3 ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+                                        placeholder="รูปภาพ 3"
+                                    />
+                                    {images[2] && (
+                                        <img
+                                            src={URL.createObjectURL(images[2])}
+                                            alt="Selected Image 3"
+                                            className="mt-2 w-24"
+                                        />
+                                    )}
+                                </div>
+                                <div className="">
+                                    <label htmlFor="" className="block text-sm font-semibold text-gray-950">รูปภาพ 4</label>
+                                    <input
+                                        type="file"
+                                        onChange={handleAdditionalFileUpload}
+                                        className={`mt-1 border text-xs w-full ${inputForm && images.length < 4 ? 'border-red-500' : 'border-gray-300'} rounded-md`}
+                                        placeholder="รูปภาพ 3"
+                                    />
+                                    {images[3] && (
+                                        <img
+                                            src={URL.createObjectURL(images[3])}
+                                            alt="Selected Image 3"
+                                            className="mt-2 w-24"
+                                        />
+                                    )}
                                 </div>
 
                             </div>

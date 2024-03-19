@@ -16,22 +16,23 @@ model UserName {
 }
 
 model Products {
-  id           String      @id @default(auto()) @map("_id") @db.ObjectId
-  productname  String?
-  productbrand String?
-  productmodel String?
-  description  String?
-  productcost  String?
-  price        String?
-  stock        String?
-  imgFirst     String?
-  imgSecond    String?
-  imgThird     String?
-  imgFourth    String?
-  imgFifth     String?
-  Categories   Categories? @relation(fields: [categoriesId], references: [id])
-  categoriesId String?     @db.ObjectId
-  OrderList    OrderList[]
+  id              String      @id @default(auto()) @map("_id") @db.ObjectId
+  productname     String?
+  productbrand    String?
+  productmodel    String?
+  description     String?
+  productcost     String?
+  price           String?
+  stock           String?
+  imgFirst        String?
+  imgSecond       String?
+  imgThird        String?
+  imgFourth       String?
+  imgFifth        String?
+  discountPercent String?
+  Categories      Categories? @relation(fields: [categoriesId], references: [id])
+  categoriesId    String?     @db.ObjectId
+  OrderList       OrderList[]
 }
 
 model Categories {
@@ -41,27 +42,27 @@ model Categories {
 }
 
 model News {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  title    String?
-  subtitle String?
-  detail   String?
-  date     String?
-  author   String? //ผู้เขียน
-  refer    String? //อ้างอิง
-  img      String?
-  linksource   String?
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  title      String?
+  subtitle   String?
+  detail     String?
+  date       String?
+  author     String? //ผู้เขียน
+  refer      String? //อ้างอิง
+  img        String?
+  linksource String?
 }
 
 model Blog {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  title    String?
-  subtitle String?
-  detail   String?
-  img      String?
-  img1     String?
-  date     String?
-  author   String?
-  linksource   String?
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  title      String?
+  subtitle   String?
+  detail     String?
+  img        String?
+  img1       String?
+  date       String?
+  author     String?
+  linksource String?
 }
 
 model Promote {
