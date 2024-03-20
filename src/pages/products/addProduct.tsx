@@ -4,7 +4,6 @@ import axios from "axios";
 import useAxios from "axios-hooks";
 import { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
-import CategoryEdit from './categories/index';
 
 interface AddProductModalProps {
     isAddModalOpen: boolean;
@@ -29,7 +28,6 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ isAddModalOpen, onClo
     const [inputForm, setInputForm] = useState<boolean>(false);
     const [checkBody, setCheckBody] = useState<string>('');
 
-    const [categoriesMap, setCategoriesMap] = useState<Record<number, string>>({});
 
     const [
         { data: categoriesData },

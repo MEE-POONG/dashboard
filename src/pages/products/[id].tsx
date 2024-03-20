@@ -1,4 +1,5 @@
 import EditModalAlert from '@/components/Modal/EditAlertModal';
+import { Categories } from '@prisma/client';
 import axios from 'axios';
 import useAxios from 'axios-hooks';
 import Link from 'next/link';
@@ -33,7 +34,7 @@ const EditProductModal: React.FC = (props) => {
   const [imgThird, setImgThird] = useState<string>('');
   const [imgFourth, setImgFourth] = useState<string>('');
   const [discountPercent, setDiscountPercent] = useState<number>(0);
-  const [categoriesId, setCategoriesId] = useState('');
+  const [categoriesId, setCategoriesId] = useState<string>('');
 
   const [alertForm, setAlertForm] = useState<string>("not");
   const [inputForm, setInputForm] = useState<boolean>(false);
@@ -55,6 +56,31 @@ const EditProductModal: React.FC = (props) => {
     url: `/api/products/${id}`,
     method: "GET",
   });
+
+  const [
+    { data: categoriesData },
+    getCategories
+  ] = useAxios({
+    url: "/api/categories", // Assuming this endpoint exists
+    method: "GET",
+  });
+  const [filteredcategoryData, setFilteredcategoryData] = useState<Categories[]>([]);
+
+  useEffect(() => {
+    setFilteredcategoryData(categoriesData?.categories ?? []);
+  }, [categoriesData]);
+
+  useEffect(() => {
+    getCategories();
+  }, []);
+  useEffect(() => {
+    if (productData) {
+      // Assuming productData has a structure that includes categoriesId
+      setCategoriesId(productData.categoriesId.toString());
+      // Set other states as necessary
+    }
+  }, [productData]);
+
 
   const reloadPage = () => {
     window.location.reload();
@@ -159,6 +185,7 @@ const EditProductModal: React.FC = (props) => {
         productname,
         price,
         stock,
+        description,
         categoriesId,
         imgFirst: imageIDs[0] !== null ? imageIDs[0] : productData?.imgFirst,
         imgSecond: imageIDs[1] !== null ? imageIDs[1] : productData?.imgSecond,
@@ -236,11 +263,21 @@ const EditProductModal: React.FC = (props) => {
         <div className="mb-3 md:flex gap-3 mt-2">
           <div className="relative md:mt-2 border rounded-md bg-white mb-5">
             <label htmlFor="" className="absolute -top-2 md:-top-3 ml-2 font-semibold bg-amber-300 px-2 rounded-full text-xs">ประเภทของสินค้า</label>
-            <select name="" id="" className={`mt-1 p-2 border-0 w-full rounded-md text-xs md:text-base ${inputForm && categoriesId === '' ? 'border-red-500' : 'border-gray-300'
-              }`}>
+            <select
+              name="categoriesId"
+              id="categoriesId"
+              value={categoriesId}
+              onChange={(e) => setCategoriesId(e.target.value)}
+              className={`mt-1 p-2 border-0 w-full rounded-md text-xs md:text-base ${inputForm && categoriesId === '' ? 'border-red-500' : 'border-gray-300'}`}
+            >
               <option value="">Select a Category</option>
-              <option value=""></option>
-            </select >
+              {filteredcategoryData.map((category: Categories) => (
+                <option key={category.id} value={category.id.toString()}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+
 
           </div>
           <div className="relative mt-5 md:mt-2 border rounded-md bg-white mb-5">
