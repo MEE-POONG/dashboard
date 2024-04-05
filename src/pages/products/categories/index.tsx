@@ -1,4 +1,4 @@
-import { Categories } from "@prisma/client";
+import { Categories as PrismaCategories } from "@prisma/client";
 import useAxios from "axios-hooks";
 import { useEffect, useState } from "react";
 import { IoIosArrowRoundBack, IoMdAdd } from "react-icons/io";
@@ -15,13 +15,16 @@ interface Params {
     totalPages: number;
 }
 
+interface CategoryWithStock extends PrismaCategories {
+    stock: number;
+}
+
 
 const CategoryEdit: React.FC = (props) => {
 
     const [isAddCategoryModalOpen, setAddCategoryModalOpen] = useState(false);
     const openAddCategoryModalOpen = () => { setAddCategoryModalOpen(true); };
     const closeAddCategoryModalOpen = () => { setAddCategoryModalOpen(false); };
-
 
     const [params, setParams] = useState<Params>({
         page: 1,
@@ -38,7 +41,8 @@ const CategoryEdit: React.FC = (props) => {
         method: "GET",
     });
 
-    const [filteredcategoryData, setFilteredcategoryData] = useState<Categories[]>([]);
+    // const [filteredcategoryData, setFilteredcategoryData] = useState<Categories[]>([]);
+    const [filteredcategoryData, setFilteredcategoryData] = useState<CategoryWithStock[]>([]);
 
     const [
         { loading: deleteCategoryLoading, error: deleteCategoryError },
@@ -55,14 +59,14 @@ const CategoryEdit: React.FC = (props) => {
 
     const deleteCategory = (id: string): Promise<any> => {
         return executeCategoryDelete({
-          url: "/api/categories/" + id,
-          method: "DELETE",
+            url: "/api/categories/" + id,
+            method: "DELETE",
         }).then(() => {
             setFilteredcategoryData((prevcategories) =>
-            prevcategories.filter((categories) => categories.id !== id)
-          );
+                prevcategories.filter((categories) => categories.id !== id)
+            );
         });
-      };
+    };
 
 
     return (
@@ -99,23 +103,22 @@ const CategoryEdit: React.FC = (props) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredcategoryData.map((categories, index) => (
-
-                            <tr key={categories.id} className="bg-white border-b ">
+                        {filteredcategoryData.map((category, index) => (
+                            <tr key={category.id} className="bg-white border-b ">
                                 <td className="text-center border-r">{index + 1}</td>
-                                <th className="px-6 py-3 font-medium text-gray-900 whitespace-nowrap">
-                                    {categories.name}
+                                <th scope="row" className="px-6 py-3 font-medium text-gray-900 whitespace-nowrap">
+                                    {category.name}
                                 </th>
                                 <td className="px-6 py-3">
                                     <span className="ml-3 rounded-full bg-yellow-100 py-1 px-3 text-xs text-yellow-900 font-semibold">
-                                        2
+                                        {category.stock} {/* This will now be typed correctly */}
                                     </span>
                                 </td>
-
                                 <td className="px-6 py-3 flex">
-                                    <DeleteMemberModal data={categories} apiDelete={() => deleteCategory(categories.id)} />
-
-                                    <Link href={`/products/categories/${categories.id}`}>แก้ไข</Link>
+                                    <DeleteMemberModal data={category} apiDelete={() => deleteCategory(category.id)} />
+                                    <Link className="text-indigo-600 hover:text-indigo-900" href={`/products/categories/${category.id}`}>
+                                        แก้ไข
+                                    </Link>
                                 </td>
                             </tr>
                         ))}
